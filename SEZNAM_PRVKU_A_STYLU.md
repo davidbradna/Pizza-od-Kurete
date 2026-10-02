@@ -10,7 +10,32 @@ Když chcete změnit barvu libovolného prvku, stačí k němu přiřadit přís
 
 ---
 
-## 1. Medailonek pizzy na webu & Dlaždice v administraci (`css/karty-a-seznamy.css`)
+## 0. Struktura souborů ve složce `css/`
+
+| Soubor na disku | Co přesně obsahuje |
+| :--- | :--- |
+| **`css/barvy-a-vzhled.css`** | Seznam všech barev webu, písma a rámečků. Zde se mění globální odstíny. |
+| **`css/boxy-a-panely.css`** | Velké obalovací boxy formulářů, informační panely a akční karty. |
+| **`css/prepinace.css`** | Kapslové přepínače (stálé/týdne, dlaždice/seznam, maso, pálivost, alergeny). |
+| **`css/tlacitka.css`** | Textová tlačítka (uložit, zrušit), podbarvený pruh + přidat a čtvercové ikony tužky/koše. |
+| **`css/vstupni-pole.css`** | Vyhledávací pole, textové a číselné vstupy a tlačítko pro výběr fotky. |
+| **`css/karty-a-seznamy.css`** | Medailonky pizzy na webu, dlaždice v administraci, řádkový seznam a tabulky. |
+| **`css/stitky-a-zpravy.css`** | Štítek verze v1.2.0, označení Pizza týdne, zelené a červené zprávy. |
+| **`css/administrace.css`** | Hlavní spojovací soubor administrace. |
+
+---
+
+## 1. Boxy a panely (`css/boxy-a-panely.css`)
+
+| Základní prvek | Dostupné barevné varianty | Popis a použití |
+| :--- | :--- | :--- |
+| **`.box-formular`** | `.box-formular-zeleny`<br>`.box-formular-tmavy`<br>`.box-formular-zlaty`<br>`.box-formular-cerveny` | Velký podbarvený obalovací box pro přidání nebo úpravu pizzy / suroviny. Má zaoblení 14px a vnitřní odsazení. |
+| **`.panel-informace`** | `.panel-informace-zeleny`<br>`.panel-informace-zlaty` | Informační rámeček s textem (např. vysvětlení funkce verzování v záložce Zálohy). |
+| **`.karta-rychla-akce`** | *tmavé pozadí* | Karty v záložce verzování pro vytvoření zálohy, export a import. |
+
+---
+
+## 2. Medailonek pizzy na webu & Dlaždice v administraci (`css/karty-a-seznamy.css`)
 
 | Prvek | Podprvky a součásti | Popis a chování |
 | :--- | :--- | :--- |
@@ -20,7 +45,7 @@ Když chcete změnit barvu libovolného prvku, stačí k němu přiřadit přís
 
 ---
 
-## 2. Přepínače a volby (`css/prepinace.css`)
+## 3. Přepínače a volby (`css/prepinace.css`)
 
 | Základní prvek | Dostupné barevné varianty | Kde se na webu používá |
 | :--- | :--- | :--- |
@@ -30,7 +55,7 @@ Když chcete změnit barvu libovolného prvku, stačí k němu přiřadit přís
 
 ---
 
-## 3. Tlačítka a ikony (`css/tlacitka.css`)
+## 4. Tlačítka a ikony (`css/tlacitka.css`)
 
 | Základní prvek | Dostupné barevné varianty | Kde se na webu používá |
 | :--- | :--- | :--- |
@@ -40,7 +65,7 @@ Když chcete změnit barvu libovolného prvku, stačí k němu přiřadit přís
 
 ---
 
-## 4. Vstupní textová a číselná pole (`css/vstupni-pole.css`)
+## 5. Vstupní textová a číselná pole (`css/vstupni-pole.css`)
 
 | Základní prvek | Účelové varianty | Vzhled a chování |
 | :--- | :--- | :--- |
@@ -49,7 +74,7 @@ Když chcete změnit barvu libovolného prvku, stačí k němu přiřadit přís
 
 ---
 
-## 5. Zprávy a informační štítky (`css/stitky-a-zpravy.css`)
+## 6. Zprávy a informační štítky (`css/stitky-a-zpravy.css`)
 
 | Základní prvek | Barevné varianty | Použití |
 | :--- | :--- | :--- |
@@ -59,7 +84,7 @@ Když chcete změnit barvu libovolného prvku, stačí k němu přiřadit přís
 
 ---
 
-## 6. Globální paleta barev (`css/barvy-a-vzhled.css`)
+## 7. Globální paleta barev (`css/barvy-a-vzhled.css`)
 
 | Název proměnné | Kód barvy | Použití v design systému |
 | :--- | :--- | :--- |

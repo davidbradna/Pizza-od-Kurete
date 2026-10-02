@@ -1,0 +1,83 @@
+/* ==========================================================================
+   BOXY A PANELY (DESIGN SYSTÉM - PIZZA OD KUŘETE)
+   css/boxy-a-panely.css
+   Obalovací boxy formulářů, informační panely a akční karty.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. VELKÝ OBALOVACÍ BOX FORMULÁŘE (+ Přidat novou pizzu / úprava)
+   -------------------------------------------------------------------------- */
+.box-formular,
+.admin-samostatny-box-formular {
+  border-radius: var(--zaobleni-velke, 14px);
+  padding: 10px 20px;
+  margin-bottom: 24px;
+  transition: var(--prechod-stredni, all 0.3s ease);
+}
+
+/* --- BAREVNÉ VARIANTY BOXU FORMULÁŘE --- */
+
+/* Zelená varianta (výchozí pro přidání nové pizzy) */
+.box-formular-zeleny,
+.admin-samostatny-box-formular {
+  background-color: var(--barva-zelena-jemna, rgba(46, 213, 115, 0.08));
+  border: 1px solid var(--barva-zelena-ramecek, rgba(46, 213, 115, 0.35));
+}
+
+/* Tmavá neutrální varianta */
+.box-formular-tmavy {
+  background-color: var(--barva-pozadi-karet, #161616);
+  border: 1px solid var(--barva-ramecku-tmava, #2a2a2a);
+}
+
+/* Zlatá varianta (pro úpravu Pizzy týdne) */
+.box-formular-zlaty {
+  background-color: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+/* Červená varianta */
+.box-formular-cerveny {
+  background-color: rgba(229, 9, 20, 0.08);
+  border: 1px solid rgba(229, 9, 20, 0.35);
+}
+
+
+/* --------------------------------------------------------------------------
+   2. INFORMAČNÍ PANELY (Např. popis v záložce verzování)
+   -------------------------------------------------------------------------- */
+.panel-informace {
+  border-radius: var(--zaobleni-velke, 12px);
+  padding: 18px 24px;
+  margin-bottom: 26px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Zelený info panel */
+.panel-informace-zeleny {
+  background: rgba(46, 213, 115, 0.08);
+  border: 1px solid rgba(46, 213, 115, 0.3);
+  color: #e0e0e0;
+}
+
+/* Zlatý info panel */
+.panel-informace-zlaty {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #e0e0e0;
+}
+
+
+/* --------------------------------------------------------------------------
+   3. KARTY RYCHLÝCH AKCÍ (Karty v záložce verzování databáze)
+   -------------------------------------------------------------------------- */
+.karta-rychla-akce {
+  background-color: var(--barva-pozadi-karet, #161616);
+  border: 1px solid var(--barva-ramecku-tmava, #2a2a2a);
+  border-radius: var(--zaobleni-velke, 14px);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

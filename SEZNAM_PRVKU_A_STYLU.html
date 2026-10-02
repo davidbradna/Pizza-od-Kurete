@@ -153,9 +153,106 @@
       Všechny prvky sdílejí stejný tvar, velikost, rámeček a zaoblení. Když chcete změnit barvu prvku, stačí k němu přiřadit příslušnou barevnou variantu (např. <code>prepinac-kapsle prepinac-kapsle-cerveny</code>). Změna barvy jednoho prvku nikdy neovlivní ostatní.
     </div>
 
-    <!-- 1. MEDAILONEK PIZZY NA WEBU VS DLAŽDICE V ADMINISTRACI -->
+    <!-- 0. STRUKTURA SOUBORŮ V CSS/ -->
     <div class="karta-sekce">
-      <h2>1. Medailonek pizzy na webu &amp; Dlaždice v administraci (css/karty-a-seznamy.css)</h2>
+      <h2>0. Seznam souborů v css/ (Co který soubor obsahuje)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 32%;">Soubor na disku</th>
+            <th>Co přesně obsahuje</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>css/barvy-a-vzhled.css</code></td>
+            <td>Seznam všech barev webu, písma a rámečků. Zde se mění globální odstíny.</td>
+          </tr>
+          <tr>
+            <td><code>css/boxy-a-panely.css</code></td>
+            <td>Velké obalovací boxy formulářů, informační panely a akční karty.</td>
+          </tr>
+          <tr>
+            <td><code>css/prepinace.css</code></td>
+            <td>Kapslové přepínače (stálé/týdne, dlaždice/seznam, maso, pálivost, alergeny).</td>
+          </tr>
+          <tr>
+            <td><code>css/tlacitka.css</code></td>
+            <td>Textová tlačítka (uložit, zrušit), podbarvený pruh + přidat a čtvercové ikony tužky/koše.</td>
+          </tr>
+          <tr>
+            <td><code>css/vstupni-pole.css</code></td>
+            <td>Vyhledávací pole, textové a číselné vstupy a tlačítko pro výběr fotky.</td>
+          </tr>
+          <tr>
+            <td><code>css/karty-a-seznamy.css</code></td>
+            <td>Medailonky pizzy na webu, dlaždice v administraci, řádkový seznam a tabulky.</td>
+          </tr>
+          <tr>
+            <td><code>css/stitky-a-zpravy.css</code></td>
+            <td>Štítek verze v1.2.0, označení Pizza týdne, zelené a červené zprávy.</td>
+          </tr>
+          <tr>
+            <td><code>css/administrace.css</code></td>
+            <td>Hlavní spojovací soubor administrace.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 1. BOXY A PANELY -->
+    <div class="karta-sekce">
+      <h2>1. Boxy a panely (css/boxy-a-panely.css)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 25%;">Základní prvek</th>
+            <th style="width: 35%;">Dostupné barevné varianty</th>
+            <th>Popis a použití</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <strong>Box formuláře:</strong><br>
+              <code>.box-formular</code>
+            </td>
+            <td>
+              <span class="stitek-varianta var-zelena">.box-formular-zeleny</span>
+              <span class="stitek-varianta var-seda">.box-formular-tmavy</span>
+              <span class="stitek-varianta var-zlata">.box-formular-zlaty</span>
+              <span class="stitek-varianta var-cervena">.box-formular-cerveny</span>
+            </td>
+            <td>Velký podbarvený obalovací box pro přidání nebo úpravu pizzy / suroviny. Má zaoblení 14px a vnitřní odsazení.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Informační panel:</strong><br>
+              <code>.panel-informace</code>
+            </td>
+            <td>
+              <span class="stitek-varianta var-zelena">.panel-informace-zeleny</span>
+              <span class="stitek-varianta var-zlata">.panel-informace-zlaty</span>
+            </td>
+            <td>Informační rámeček s textem (např. vysvětlení funkce verzování v záložce Zálohy).</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Karta rychlé akce:</strong><br>
+              <code>.karta-rychla-akce</code>
+            </td>
+            <td>
+              <span class="stitek-varianta var-seda">tmavé pozadí</span>
+            </td>
+            <td>Karty v záložce verzování pro vytvoření zálohy, export a import.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 2. MEDAILONEK PIZZY NA WEBU VS DLAŽDICE V ADMINISTRACI -->
+    <div class="karta-sekce">
+      <h2>2. Medailonek pizzy na webu &amp; Dlaždice v administraci (css/karty-a-seznamy.css)</h2>
       <table>
         <thead>
           <tr>
@@ -168,8 +265,7 @@
           <tr>
             <td>
               <strong>Medailonek na webu:</strong><br>
-              <code>.medailonek-pizzy</code><br>
-              <small>(alias <code>.karta-pizzy</code>)</small>
+              <code>.medailonek-pizzy</code>
             </td>
             <td>
               • <code>.medailonek-pizzy-cislo</code> (číslo v rohu)<br>
@@ -187,8 +283,7 @@
           <tr>
             <td>
               <strong>Dlaždice v administraci:</strong><br>
-              <code>.admin-pizza-dlazdice</code><br>
-              <small>(alias <code>.pizza-dlazdice</code>)</small>
+              <code>.admin-pizza-dlazdice</code>
             </td>
             <td>
               • <code>.admin-pizza-dlazdice-fotka-obal</code> (obdélníková fotka)<br>
@@ -217,9 +312,9 @@
       </table>
     </div>
 
-    <!-- 2. PŘEPÍNAČE A VOLBY -->
+    <!-- 3. PŘEPÍNAČE A VOLBY -->
     <div class="karta-sekce">
-      <h2>2. Přepínače a volby (css/prepinace.css)</h2>
+      <h2>3. Přepínače a volby (css/prepinace.css)</h2>
       <table>
         <thead>
           <tr>
@@ -261,9 +356,9 @@
       </table>
     </div>
 
-    <!-- 3. TLAČÍTKA A IKONY -->
+    <!-- 4. TLAČÍTKA A IKONY -->
     <div class="karta-sekce">
-      <h2>3. Tlačítka a ikony (css/tlacitka.css)</h2>
+      <h2>4. Tlačítka a ikony (css/tlacitka.css)</h2>
       <table>
         <thead>
           <tr>
@@ -306,9 +401,9 @@
       </table>
     </div>
 
-    <!-- 4. VSTUPNÍ POLE A FORMULÁŘE -->
+    <!-- 5. VSTUPNÍ POLE A FORMULÁŘE -->
     <div class="karta-sekce">
-      <h2>4. Vstupní textová a číselná pole (css/vstupni-pole.css)</h2>
+      <h2>5. Vstupní textová a číselná pole (css/vstupni-pole.css)</h2>
       <table>
         <thead>
           <tr>
@@ -337,9 +432,9 @@
       </table>
     </div>
 
-    <!-- 5. OZNÁMENÍ A ŠTÍTKY -->
+    <!-- 6. OZNÁMENÍ A ŠTÍTKY -->
     <div class="karta-sekce">
-      <h2>5. Zprávy a informační štítky (css/stitky-a-zpravy.css)</h2>
+      <h2>6. Zprávy a informační štítky (css/stitky-a-zpravy.css)</h2>
       <table>
         <thead>
           <tr>
@@ -372,9 +467,9 @@
       </table>
     </div>
 
-    <!-- 6. PŘEHLED BAREV -->
+    <!-- 7. PŘEHLED BAREV -->
     <div class="karta-sekce">
-      <h2>6. Globální paleta barev (css/barvy-a-vzhled.css)</h2>
+      <h2>7. Globální paleta barev (css/barvy-a-vzhled.css)</h2>
       <table>
         <thead>
           <tr>

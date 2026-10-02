@@ -6,6 +6,7 @@
 
 /* 1. IMPORT MODULŮ DESIGN SYSTÉMU */
 @import url('barvy-a-vzhled.css');
+@import url('boxy-a-panely.css');
 @import url('prepinace.css');
 @import url('tlacitka.css');
 @import url('vstupni-pole.css');
