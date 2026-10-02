@@ -4,11 +4,22 @@
    Vsechny nazvy funkcii a promennych jsou v cestine bez diakritiky
    ========================================================================== */
 
-$cestaKDatabazi = __DIR__ . '/databaze.json';
+require_once __DIR__ . '/nastaveni.php';
+
+$cestaKDatabazi = defined('CESTA_DATABAZE') ? CESTA_DATABAZE : (__DIR__ . '/data/databaze.json');
 
 // Funkce pro nacteni cele databaze z JSON
 function nactiDatabazi() {
   global $cestaKDatabazi;
+  // Pokud jeste neexistuje v data/, zkusime puvodni v korenu a zkopirujeme
+  if (!file_exists($cestaKDatabazi) && file_exists(__DIR__ . '/databaze.json')) {
+    $adresarData = dirname($cestaKDatabazi);
+    if (!is_dir($adresarData)) {
+      @mkdir($adresarData, 0777, true);
+    }
+    @copy(__DIR__ . '/databaze.json', $cestaKDatabazi);
+  }
+
   if (!file_exists($cestaKDatabazi)) {
     return ['suroviny' => [], 'pizzy' => []];
   }
@@ -18,7 +29,7 @@ function nactiDatabazi() {
 
 // Funkce pro ziskani adresare zaloh
 function ziskatAdresarZaloh() {
-  $adresar = __DIR__ . '/zalohy';
+  $adresar = defined('CESTA_ZALOHY') ? CESTA_ZALOHY : (__DIR__ . '/data/zalohy');
   if (!is_dir($adresar)) {
     @mkdir($adresar, 0777, true);
   }

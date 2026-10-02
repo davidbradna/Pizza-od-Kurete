@@ -4,6 +4,7 @@
    Vsechny nazvy trid, ID a komentarov jsou v cestine bez diakritiky
    ========================================================================== */
 
+require_once __DIR__ . '/nastaveni.php';
 require_once __DIR__ . '/databaze.php';
 
 $suroviny = ziskatSuroviny();
@@ -89,7 +90,7 @@ $pizzy = ziskatPizzy();
     </div>
   </div>
 
-  <script src="aplikace.js?v=<?php echo time(); ?>"></script>
-  <script src="ingredience.js?v=<?php echo time(); ?>"></script>
+  <script src="js/aplikace.js?v=<?php echo time(); ?>"></script>
+  <script src="js/ingredience.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>

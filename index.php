@@ -4,6 +4,7 @@
    Vsechny nazvy trid, ID a komentarov jsou v cestine bez diakritiky
    ========================================================================== */
 
+require_once __DIR__ . '/nastaveni.php';
 require_once __DIR__ . '/databaze.php';
 
 $pizzy = ziskatPizzy();
@@ -403,6 +404,6 @@ $suroviny = ziskatSuroviny();
     <span class="pocitadlo-kosiku" id="pocitadlo-kosiku-cislo">0</span>
   </button>
 
-  <script src="aplikace.js?v=<?php echo time(); ?>"></script>
+  <script src="js/aplikace.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>
