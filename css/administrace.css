@@ -12,6 +12,9 @@
 @import url('vstupni-pole.css');
 @import url('karty-a-seznamy.css');
 @import url('stitky-a-zpravy.css');
+@import url('modalni-okna.css');
+@import url('kosik-a-objednavka.css');
+@import url('hlavicka-a-paticka.css');
 
 /* 2. ZÁKLADNÍ ROZLOŽENÍ ADMINISTRACE */
 body {

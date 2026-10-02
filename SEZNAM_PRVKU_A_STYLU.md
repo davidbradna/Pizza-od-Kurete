@@ -6,7 +6,7 @@ Tento dokument slouží jako přehled všech základních stavebních prvků web
 ---
 
 ### Zlaté pravidlo systému (Základní prvek + Barevná varianta)
-Když chcete změnit barvu libovolného prvku, stačí k němu přiřadit příslušnou barevnou variantu (např. `prepinac-kapsle prepinac-kapsle-cerveny`). Změna barvy jednoho prvku nikdy neovlivní ostatní.
+Když chcete změnit barvu libovolného prvku, stačí k němu přiřadit příslušnou barevnou variantu (např. `box-formular box-formular-bily` nebo `prepinac-kapsle prepinac-kapsle-cerveny`). Změna barvy jednoho prvku nikdy neovlivní ostatní.
 
 ---
 
@@ -15,11 +15,14 @@ Když chcete změnit barvu libovolného prvku, stačí k němu přiřadit přís
 | Soubor na disku | Co přesně obsahuje |
 | :--- | :--- |
 | **`css/barvy-a-vzhled.css`** | Seznam všech barev webu, písma a rámečků. Zde se mění globální odstíny. |
-| **`css/boxy-a-panely.css`** | Velké obalovací boxy formulářů, informační panely a akční karty. |
+| **`css/boxy-a-panely.css`** | Velké obalovací boxy formulářů (zelený, bílý, tmavý, zlatý, červený), info panely a akční karty. |
 | **`css/prepinace.css`** | Kapslové přepínače (stálé/týdne, dlaždice/seznam, maso, pálivost, alergeny). |
 | **`css/tlacitka.css`** | Textová tlačítka (uložit, zrušit), podbarvený pruh + přidat a čtvercové ikony tužky/koše. |
 | **`css/vstupni-pole.css`** | Vyhledávací pole, textové a číselné vstupy a tlačítko pro výběr fotky. |
 | **`css/karty-a-seznamy.css`** | Medailonky pizzy na webu, dlaždice v administraci, řádkový seznam a tabulky. |
+| **`css/modalni-okna.css`** | Vyskakovací modální okna (detail pizzy s alergeny, mapa rozvozů, zavírací křížek). |
+| **`css/kosik-a-objednavka.css`** | Plovoucí objednávkový pruh, nákupní lístek a tlačítka pro změnu počtu kusů (+ / -). |
+| **`css/hlavicka-a-paticka.css`** | Horní lišta s kontakty, přepínač poboček Rychnov / Ústí a spodní patička webu. |
 | **`css/stitky-a-zpravy.css`** | Štítek verze v1.2.0, označení Pizza týdne, zelené a červené zprávy. |
 | **`css/administrace.css`** | Hlavní spojovací soubor administrace. |
 
@@ -29,7 +32,7 @@ Když chcete změnit barvu libovolného prvku, stačí k němu přiřadit přís
 
 | Základní prvek | Dostupné barevné varianty | Popis a použití |
 | :--- | :--- | :--- |
-| **`.box-formular`** | `.box-formular-zeleny`<br>`.box-formular-tmavy`<br>`.box-formular-zlaty`<br>`.box-formular-cerveny` | Velký podbarvený obalovací box pro přidání nebo úpravu pizzy / suroviny. Má zaoblení 14px a vnitřní odsazení. |
+| **`.box-formular`** | `.box-formular-zeleny`<br>`.box-formular-bily`<br>`.box-formular-tmavy`<br>`.box-formular-zlaty`<br>`.box-formular-cerveny` | Velký podbarvený obalovací box pro přidání nebo úpravu pizzy / suroviny. Má zaoblení 14px a vnitřní odsazení. |
 | **`.panel-informace`** | `.panel-informace-zeleny`<br>`.panel-informace-zlaty` | Informační rámeček s textem (např. vysvětlení funkce verzování v záložce Zálohy). |
 | **`.karta-rychla-akce`** | *tmavé pozadí* | Karty v záložce verzování pro vytvoření zálohy, export a import. |
 
@@ -65,26 +68,17 @@ Když chcete změnit barvu libovolného prvku, stačí k němu přiřadit přís
 
 ---
 
-## 5. Vstupní textová a číselná pole (`css/vstupni-pole.css`)
+## 5. Modální okna, Košík a Hlavička (`css/modalni-okna.css`, `kosik-a-objednavka.css`, `hlavicka-a-paticka.css`)
 
-| Základní prvek | Účelové varianty | Vzhled a chování |
+| Prvek | Součásti | Popis a funkce |
 | :--- | :--- | :--- |
-| **`.vstup-pole`** | `.vstup-pole-hledani`<br>`.vstup-pole-nazev`<br>`.vstup-pole-cena`<br>`.vstup-pole-cislo` | Jednotný tmavý vzhled (`#161616`), jemný rámeček (`#333333`), šedý placeholder, při kliknutí zlatý rámeček. |
-| **`.vyber-fotky-tlacitko`** | `.vyber-fotky-nazev-souboru` | Tlačítko "Vybrat fotku" pro výběr obrázku + šedý popisek s názvem souboru. |
+| **`.modal-okno`** | `.modal-pozadi`, `.modal-zavrit` | Vyskakovací dialog s rozostřeným pozadím a kulatým křížkem pro detail pizzy a mapy rozvozu. |
+| **`.lista-objednavka-plovouci`** | `.lista-objednavka-pocet-kusu`, `.lista-objednavka-cena-celkem` | Plovoucí spodní lišta objednávky na webu s celkovou cenou a počtem vybraných pizz. |
+| **`.prepinac-pobocky-mesta`** | `.prepinac-pobocky-polozka` | Horní přepínač měst v hlavičce webu (Rychnov n. K. vs Ústí n. O.). |
 
 ---
 
-## 6. Zprávy a informační štítky (`css/stitky-a-zpravy.css`)
-
-| Základní prvek | Barevné varianty | Použití |
-| :--- | :--- | :--- |
-| **`.oznameni-pruh`** | `.oznameni-zelene`<br>`.oznameni-cervene`<br>`.oznameni-oranzove` | Pruhové hlášky nahoře (úspěšné uložení pizzy / chybové hlášení). |
-| **`.odznak-verze`** | Tmavý se zlatým textem | Štítek **v1.2.0** v horní liště administrace. |
-| **`.odznak-pizza-tydne`** | Zlatý gradient | Štítek **PIZZA TÝDNE** v pravém horním rohu fotky na dlaždici. |
-
----
-
-## 7. Globální paleta barev (`css/barvy-a-vzhled.css`)
+## 6. Globální paleta barev (`css/barvy-a-vzhled.css`)
 
 | Název proměnné | Kód barvy | Použití v design systému |
 | :--- | :--- | :--- |
