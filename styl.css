@@ -1,0 +1,1394 @@
+/* ==========================================================================
+   STYLY PRO WEB PIZZA OD KURETE
+   Vsechny tridy a komentare jsou v cestine bez diakritiky pro snadnou orientaci
+   ========================================================================== */
+
+/* DEFINICE LOKÁLNÍCH FONTŮ BRITANNIC */
+@font-face {
+  font-family: 'Britannic';
+  src: local('Britannic Light'), local('Britannic-Light'),
+       url('fonty/Britannic-Light.otf') format('opentype'),
+       url('fonty/Britannic-Light.otf') format('truetype'),
+       url('fonty/Britannic-Light.otf');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Britannic';
+  src: local('Britannic Medium'), local('Britannic-Medium'), local('Britannic'),
+       url('fonty/Britannic-Medium.otf') format('opentype'),
+       url('fonty/Britannic-Medium.otf') format('truetype'),
+       url('fonty/Britannic-Medium.otf');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Britannic';
+  src: local('Britannic Medium'), local('Britannic-Medium'), local('Britannic'),
+       url('fonty/Britannic-Medium.otf') format('opentype'),
+       url('fonty/Britannic-Medium.otf') format('truetype'),
+       url('fonty/Britannic-Medium.otf');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Britannic';
+  src: local('Britannic Bold'), local('Britannic-Bold'), local('Britannic'),
+       url('fonty/Britannic-Bold.otf') format('opentype'),
+       url('fonty/Britannic-Bold.otf') format('truetype'),
+       url('fonty/Britannic-Bold.otf');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Britannic';
+  src: local('Britannic Bold'), local('Britannic-Bold'), local('Britannic'),
+       url('fonty/Britannic-Bold.otf') format('opentype'),
+       url('fonty/Britannic-Bold.otf') format('truetype'),
+       url('fonty/Britannic-Bold.otf');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Britannic';
+  src: local('Britannic Bold'), local('Britannic-Bold'), local('Britannic'),
+       url('fonty/Britannic-Bold.otf') format('opentype'),
+       url('fonty/Britannic-Bold.otf') format('truetype'),
+       url('fonty/Britannic-Bold.otf');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Britannic';
+  src: local('Britannic D Ultra'), local('Britannic-D-Ultra'), local('Britannic Ultra'),
+       url('fonty/Britannic-D-Ultra.otf') format('opentype'),
+       url('fonty/Britannic-D-Ultra.otf') format('truetype'),
+       url('fonty/Britannic-D-Ultra.otf');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Britannic Compress';
+  src: local('Britannic Compress D Medium'), local('Britannic-Compress-D-Medium'),
+       url('fonty/Britannic-Compress-D-Medium.otf') format('opentype'),
+       url('fonty/Britannic-Compress-D-Medium.otf') format('truetype'),
+       url('fonty/Britannic-Compress-D-Medium.otf');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Zakladni nastaveni a promenne barev */
+:root {
+  --barva-pozadi-tmava: #0d0d0d;
+  --barva-pozadi-karty: #161616;
+  --barva-pozadi-sekce: #1a1a1a;
+  --barva-cervena-hlavni: #e50914;
+  --barva-cervena-tmava: #b20710;
+  --barva-zlata-akcent: #f59e0b;
+  --barva-pismo-hlavni: #ffffff;
+  --barva-pismo-sekundarni: #cccccc;
+  --barva-pismo-tlumene: #888888;
+  --barva-ramcek: #2a2a2a;
+  --font-hlavni: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --stin-karty: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --prechod-rychly: all 0.25s ease-in-out;
+}
+
+/* Reset okraju a box-sizing */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, a, span, label {
+  font-family: var(--font-hlavni);
+}
+
+body {
+  background-color: var(--barva-pozadi-tmava);
+  color: var(--barva-pismo-hlavni);
+  font-family: var(--font-hlavni);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Obalujici kontejner pro zarovnani */
+.kontejner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* --------------------------------------------------------------------------
+   1. HORNI LISTA A HLAVICKA (HERO SEKCE)
+   -------------------------------------------------------------------------- */
+.horni-kontakty-lista {
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.kontakty-obsah {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.kontakt-položka {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: var(--barva-pismo-sekundarni);
+}
+
+.kontakt-položka strong {
+  color: var(--barva-pismo-hlavni);
+}
+
+.telefonni-odkaz {
+  color: var(--barva-pismo-hlavni);
+  text-decoration: none;
+  font-weight: 700;
+  transition: var(--prechod-rychly);
+}
+
+.telefonni-odkaz:hover {
+  color: var(--barva-zlata-akcent);
+}
+
+/* Hero Uvodni Sekce s Pozadim */
+.sekce-uvod-hero {
+  position: relative;
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(13, 13, 13, 0.4) 0%, rgba(13, 13, 13, 0.95) 100%),
+              url('https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;
+  padding: 60px 20px;
+}
+
+.obsah-hero {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo-kure-ikona {
+  display: inline-block;
+  max-width: 180px;
+  margin-bottom: 20px;
+  text-decoration: none;
+}
+
+.logo-kure-ikona img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.nadpis-hlavni {
+  font-size: 3.8rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--barva-pismo-hlavni);
+  text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.8);
+  margin-bottom: 5px;
+}
+
+.podnadpis-hlavni {
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--barva-pismo-sekundarni);
+  font-style: italic;
+  margin-bottom: 15px;
+}
+
+.oteviraci-doba-stitek {
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-size: 1rem;
+  color: var(--barva-pismo-sekundarni);
+  margin-bottom: 35px;
+}
+
+/* Navigacni Tlacitka v Hero */
+.tlacitka-hlavicka-skupina {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.tlacitko {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: var(--prechod-rychly);
+}
+
+.tlacitko-cervene {
+  background-color: var(--barva-cervena-hlavni);
+  color: #ffffff;
+}
+
+.tlacitko-cervene:hover {
+  background-color: var(--barva-cervena-tmava);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(229, 9, 20, 0.4);
+}
+
+.tlacitko-cervene-tmave {
+  background-color: #8b0000;
+  color: #ffffff;
+}
+
+.tlacitko-cervene-tmave:hover {
+  background-color: var(--barva-cervena-hlavni);
+  transform: translateY(-3px);
+}
+
+.tlacitko-sede {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  backdrop-filter: blur(5px);
+}
+
+.tlacitko-sede:hover {
+  background-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-3px);
+}
+
+/* --------------------------------------------------------------------------
+   2. SEKCE: ROZDIL V CHUTI POZNATE NA PRVNI ZOBNUTI
+   -------------------------------------------------------------------------- */
+.sekce-rozdil-v-chuti {
+  padding: 90px 0;
+  background-color: var(--barva-pozadi-tmava);
+}
+
+.mrizka-rozdil {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+}
+
+.nadpis-sekce {
+  font-size: 2.4rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  color: var(--barva-pismo-hlavni);
+}
+
+.text-popis {
+  font-size: 1.1rem;
+  color: var(--barva-pismo-sekundarni);
+  margin-bottom: 30px;
+  line-height: 1.7;
+}
+
+.obale-fotky-picer {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--stin-karty);
+  border: 1px solid var(--barva-ramcek);
+}
+
+.obale-fotky-picer img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.obale-fotky-picer:hover img {
+  transform: scale(1.03);
+}
+
+/* --------------------------------------------------------------------------
+   3. SEKCE: JIDELNI LISTEK (MENU)
+   -------------------------------------------------------------------------- */
+.sekce-jidelni-listek {
+  padding: 80px 0;
+  background-color: var(--barva-pozadi-sekce);
+}
+
+.hlavicka-jidelniku {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.podnadpis-vyberte {
+  color: var(--barva-pismo-sekundarni);
+  font-size: 1.2rem;
+  margin-top: 5px;
+}
+
+/* Filtry (Zaklikavaci policka sugo, bily zaklad, atd.) */
+.obalo-filtru {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  margin-bottom: 50px;
+}
+
+/* STYLY PRO MINI KAPSLOVE PREPINACE V JIDELNIM LISTKU */
+.mrizka-prepinacu-filtrum {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+.mini-kapsle-prepinac {
+  display: inline-flex;
+  align-items: center;
+  background-color: #161616;
+  border: 1px solid #333333;
+  padding: 4px;
+  border-radius: 30px;
+  user-select: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.mini-kapsle-tlacitko {
+  background: transparent;
+  border: none;
+  color: var(--barva-pismo-sekundarni);
+  font-family: var(--font-hlavni);
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.mini-kapsle-tlacitko:hover {
+  color: #ffffff;
+}
+
+.mini-kapsle-tlacitko.aktivni {
+  background-color: var(--barva-cervena-hlavni);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(229, 9, 20, 0.5);
+}
+
+.alergeny-klikaci-stitek {
+  font-size: 0.8rem;
+  color: #e53e3e;
+  font-weight: 700;
+  margin-bottom: 12px;
+  cursor: pointer;
+  display: inline-block;
+  transition: color 0.2s;
+}
+
+.alergeny-klikaci-stitek:hover {
+  color: #f87171;
+}
+
+.stitek-policko {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--barva-pismo-sekundarni);
+  user-select: none;
+}
+
+.stitek-policko input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--barva-cervena-hlavni);
+  cursor: pointer;
+}
+
+.skupina-kategorii {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+.tlacitko-kategorie {
+  background-color: var(--barva-pozadi-tmava);
+  color: var(--barva-pismo-hlavni);
+  border: 1px solid var(--barva-ramcek);
+  padding: 10px 22px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: var(--prechod-rychly);
+}
+
+.tlacitko-kategorie:hover {
+  border-color: #555555;
+}
+
+.tlacitko-kategorie.aktivni {
+  background-color: var(--barva-cervena-hlavni);
+  color: #ffffff;
+  border-color: var(--barva-cervena-hlavni);
+  box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
+}
+
+.tlacitko-kategorie[data-kategorie="doporucujeme"].aktivni {
+  background-color: var(--barva-zlata-akcent);
+  color: #000000;
+  border-color: var(--barva-zlata-akcent);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+/* Mrizka Karty Pizz */
+.mrizka-pizz {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+.karta-pizzy {
+  background-color: var(--barva-pozadi-karty);
+  border-radius: 12px;
+  padding: 25px;
+  border: 1px solid var(--barva-ramcek);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: var(--prechod-rychly);
+}
+
+.karta-pizzy:hover {
+  transform: translateY(-5px);
+  border-color: rgba(229, 9, 20, 0.4);
+  box-shadow: var(--stin-karty);
+}
+
+.ciselny-odznak {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: var(--barva-cervena-hlavni);
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 1.1rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  z-index: 2;
+}
+
+.odznak-zlata {
+  background-color: var(--barva-zlata-akcent);
+  color: #000000;
+}
+
+.obrazek-pizzy-obal {
+  width: 100%;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.obrazek-pizzy-obal img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.6));
+  transition: transform 0.4s ease;
+}
+
+.karta-pizzy:hover .obrazek-pizzy-obal img {
+  transform: scale(1.08) rotate(3deg);
+}
+
+.nazev-pizzy {
+  font-size: 1.4rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--barva-pismo-hlavni);
+}
+
+.slozeni-pizzy {
+  font-size: 0.95rem;
+  color: var(--barva-pismo-sekundarni);
+  margin-bottom: 20px;
+  flex-grow: 1;
+
+}
+
+.patka-karty-pizzy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cena-pizzy {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--barva-pismo-hlavni);
+}
+
+.tlacitko-pridat-plus {
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  width: 38px;
+  height: 38px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--prechod-rychly);
+}
+
+.tlacitko-pridat-plus:hover {
+  background-color: var(--barva-cervena-hlavni);
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   4. SEKCE: ROZVOZ
+   -------------------------------------------------------------------------- */
+.sekce-rozvoz {
+  padding: 80px 0;
+  background-color: #121212;
+  text-align: center;
+}
+
+.podnadpis-rozvozu {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--barva-pismo-sekundarni);
+  margin-bottom: 25px;
+}
+
+.podnadpis-rozvozu span {
+  color: var(--barva-zlata-akcent);
+}
+
+.informace-rozvozu-box {
+  background-color: var(--barva-pozadi-karty);
+  max-width: 700px;
+  margin: 0 auto 40px auto;
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid var(--barva-ramcek);
+}
+
+.radek-cenik {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  color: var(--barva-pismo-sekundarni);
+}
+
+.radek-cenik strong {
+  color: var(--barva-zlata-akcent);
+}
+
+.zlaty-text-platba {
+  font-weight: 800;
+  color: var(--barva-zlata-akcent);
+  margin-top: 15px;
+  letter-spacing: 1px;
+}
+
+.mrizka-kontakty-rozvoz {
+  display: flex;
+  justify-content: center;
+  max-width: 700px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.karta-kontakt-rozvozu {
+  background-color: var(--barva-pozadi-karty);
+  padding: 35px 40px;
+  border-radius: 12px;
+  border: 1px solid var(--barva-ramcek);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  width: 100%;
+  text-align: center;
+}
+
+.mesto-nazev {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--barva-pismo-sekundarni);
+  text-align: center;
+}
+
+.telefon-velky {
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: var(--barva-zlata-akcent);
+  text-decoration: none;
+  text-align: center;
+}
+
+.tlacitko-mapa-bez-zalamovani {
+  white-space: nowrap !important;
+  width: auto !important;
+  min-width: 240px;
+  padding: 14px 35px !important;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   5. SEKCE: PROVOZOVNY
+   -------------------------------------------------------------------------- */
+.sekce-provozovny {
+  padding: 90px 0;
+  background-color: var(--barva-pozadi-tmava);
+}
+
+.mrizka-provozovny {
+  display: flex;
+  justify-content: center;
+}
+
+.karta-provozovny {
+  background-color: var(--barva-pozadi-karty);
+  border-radius: 12px;
+  border: 1px solid var(--barva-ramcek);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.obsah-provozovny {
+  padding: 35px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nazev-provozovny {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.adresa-provozovny {
+  color: var(--barva-pismo-sekundarni);
+  margin-bottom: 20px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.blok-hodin {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.nadpis-hodin {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--barva-pismo-hlavni);
+  text-align: center;
+}
+
+.cas-hodin {
+  color: var(--barva-pismo-sekundarni);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.fotka-provozovny-obal {
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  position: relative;
+}
+
+.fotka-provozovny-obal img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Karusel fotek provozovny (pod textovým blokem) */
+.karusel-provozovny-obal {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.karusel-snimky-pas {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.karusel-snimek {
+  min-width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.karusel-snimek img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.karusel-popisek {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, transparent 100%);
+  padding: 15px;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Tlacitka sipky karuselu */
+.karusel-sipka {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  z-index: 10;
+  transition: var(--prechod-rychly);
+}
+
+.karusel-sipka:hover {
+  background-color: var(--barva-cervena-hlavni);
+  border-color: var(--barva-cervena-hlavni);
+}
+
+.karusel-sipka-vlevo {
+  left: 12px;
+}
+
+.karusel-sipka-vpravo {
+  right: 12px;
+}
+
+/* Indikatory tecky karuselu */
+.karusel-tecky-obalo {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.karusel-tecka {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
+  border: none;
+  cursor: pointer;
+  transition: var(--prechod-rychly);
+}
+
+.karusel-tecka.aktivni {
+  background-color: var(--barva-zlata-akcent);
+  width: 24px;
+  border-radius: 10px;
+}
+
+
+/* --------------------------------------------------------------------------
+   6. MODALNI OKNA A KOSIK
+   -------------------------------------------------------------------------- */
+.modalni-okno-pozadi {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.modalni-okno-pozadi.zobrazeno {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modalni-okno-obsah {
+  background-color: var(--barva-pozadi-karty);
+  border: 1px solid var(--barva-ramcek);
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  padding: 35px;
+  position: relative;
+  box-shadow: var(--stin-karty);
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.zavrit-modal {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: var(--barva-pismo-sekundarni);
+  font-size: 2rem;
+  cursor: pointer;
+  transition: var(--prechod-rychly);
+}
+
+.zavrit-modal:hover {
+  color: var(--barva-cervena-hlavni);
+}
+
+/* Plovuci kosik tlacitko */
+.plovuci-kosik-tlacitko {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background-color: var(--barva-cervena-hlavni);
+  color: #ffffff;
+  border: none;
+  padding: 15px 25px;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(229, 9, 20, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 500;
+  transition: transform 0.2s ease;
+}
+
+.plovuci-kosik-tlacitko:hover {
+  transform: scale(1.05);
+  background-color: var(--barva-cervena-tmava);
+}
+
+.pocitadlo-kosiku {
+  background-color: #ffffff;
+  color: var(--barva-cervena-hlavni);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 0.9rem;
+}
+
+/* Polozky v kosiku */
+.seznam-polozek-kosiku {
+  margin: 20px 0;
+}
+
+.polozka-kosiku {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--barva-ramcek);
+}
+
+.celkova-cena-kosiku {
+  font-size: 1.4rem;
+  font-weight: 800;
+  text-align: right;
+  margin-top: 20px;
+  color: var(--barva-zlata-akcent);
+}
+
+/* --------------------------------------------------------------------------
+   7. RESPONZIVITA (MOBILNI ZOBRAZENI PODLE MOBILE.PDF)
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .nadpis-hlavni {
+    font-size: 2.6rem;
+  }
+  
+  .podnadpis-hlavni {
+    font-size: 1.2rem;
+  }
+
+  .kontakty-obsah {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .tlacitka-hlavicka-skupina {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .tlacitko {
+    width: 100%;
+  }
+
+  .mrizka-rozdil,
+  .mrizka-kontakty-rozvoz,
+  .mrizka-provozovny,
+  .karta-provozovny {
+    grid-template-columns: 1fr;
+  }
+
+  .skupina-zaškrtavatelna {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .skupina-kategorii {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .tlacitko-kategorie {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   8. STYLY PRO SAMOSTATNOU STRANKU INGREDIENCE (INGREDIENCE.HTML)
+   -------------------------------------------------------------------------- */
+.sekce-uvod-ingredience {
+  background: linear-gradient(180deg, rgba(13, 13, 13, 0.7) 0%, rgba(13, 13, 13, 0.98) 100%),
+              url('https://images.unsplash.com/photo-1595295333158-4742f28fbd85?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;
+  padding: 80px 20px 50px 20px;
+  text-align: center;
+}
+
+.mrizka-ingredienci {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.karta-ingredience {
+  background-color: var(--barva-pozadi-karty);
+  border-radius: 12px;
+  border: 1px solid var(--barva-ramcek);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: var(--prechod-rychly);
+  position: relative;
+}
+
+.karta-ingredience:hover {
+  transform: translateY(-5px);
+  border-color: var(--barva-zlata-akcent);
+  box-shadow: var(--stin-karty);
+}
+
+.fotka-ingredience-obal {
+  width: 100%;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+}
+
+.fotka-ingredience-obal img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.karta-ingredience:hover .fotka-ingredience-obal img {
+  transform: scale(1.05);
+}
+
+.odznak-puvodu {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: rgba(0, 0, 0, 0.85);
+  border: 1px solid var(--barva-zlata-akcent);
+  color: var(--barva-zlata-akcent);
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  backdrop-filter: blur(5px);
+}
+
+.obsah-ingredience {
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.nazev-ingredience {
+  font-size: 1.4rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--barva-pismo-hlavni);
+}
+
+.popis-ingredience {
+  font-size: 0.95rem;
+  color: var(--barva-pismo-sekundarni);
+  line-height: 1.6;
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+.stitek-alergen-maly {
+  display: inline-block;
+  background-color: rgba(255, 255, 255, 0.08);
+  color: var(--barva-pismo-tlumene);
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-bottom: 15px;
+}
+
+.tlacitko-pizzy-surovina {
+  width: 100%;
+  background-color: transparent;
+  color: var(--barva-zlata-akcent);
+  border: 1px solid var(--barva-zlata-akcent);
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--prechod-rychly);
+}
+
+.tlacitko-pizzy-surovina:hover {
+  background-color: var(--barva-zlata-akcent);
+  color: #000000;
+}
+
+/* --------------------------------------------------------------------------
+   9. KAPSULOVY PREPINAC POBOCEK (DLE VLADANI)
+   -------------------------------------------------------------------------- */
+.horni-kontakty-lista {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 10px 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  transition: padding 0.3s ease;
+}
+
+/* Zkompaktnena hlavička pri scrollovani */
+.horni-kontakty-lista.skrolovalo-se {
+  padding: 6px 20px;
+}
+
+/* PLOVUCI KULATE TLACITKO VOLANI (FAB - PRAVO DOLE NAD KOSIKEM) */
+.plovuci-volani-tlacitko {
+  position: fixed;
+  bottom: 90px;
+  right: 25px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--barva-cervena-hlavni);
+  border: 2px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 25px rgba(229, 9, 20, 0.7);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
+  animation: pulzovani-volani 2.5s infinite ease-in-out;
+}
+
+.plovuci-volani-tlacitko.zobrazeno {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.plovuci-volani-tlacitko:hover {
+  transform: scale(1.12);
+  background-color: var(--barva-cervena-tmava);
+}
+
+@keyframes pulzovani-volani {
+  0%, 100% { box-shadow: 0 0 15px rgba(229, 9, 20, 0.6); }
+  50% { box-shadow: 0 0 28px rgba(229, 9, 20, 0.95); }
+}
+
+.kontakty-obsah-stredovy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+
+
+/* Kapslovy track (Cerveny podklad jako na obrazku) */
+.kapsle-prepinac-pobocky {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--barva-cervena-hlavni);
+  padding: 5px;
+  border-radius: 40px;
+  user-select: none;
+  touch-action: manipulation;
+  box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+  min-width: 340px;
+}
+
+/* Bily vnitrni slajdr pill */
+.kapsle-slajdr-bily {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  left: 5px;
+  width: calc(50% - 5px);
+  background-color: #ffffff;
+  border-radius: 35px;
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  z-index: 1;
+}
+
+.kapsle-prepinac-pobocky[data-aktivni="usti"] .kapsle-slajdr-bily {
+  transform: translateX(100%);
+}
+
+.kapsle-polozka {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  text-align: center;
+  padding: 10px 24px;
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: #ffffff;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  white-space: nowrap;
+  border: none;
+  background: none;
+  font-family: var(--font-hlavni);
+  letter-spacing: 0.02em;
+}
+
+.kapsle-polozka.aktivni {
+  color: var(--barva-cervena-hlavni);
+}
+
+/* --------------------------------------------------------------------------
+   CERNOBILY KAPSULOVY PREPINAC PRO SEKCI PROVOZOVNA
+   -------------------------------------------------------------------------- */
+.kapsle-prepinac-cernobily {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #161616;
+  border: 1px solid #333333;
+  padding: 5px;
+  border-radius: 40px;
+  user-select: none;
+  touch-action: manipulation;
+  min-width: 340px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.kapsle-slajdr-bily-cb {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  left: 5px;
+  width: calc(50% - 5px);
+  background-color: #ffffff;
+  border-radius: 35px;
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.kapsle-prepinac-cernobily[data-aktivni="usti"] .kapsle-slajdr-bily-cb {
+  transform: translateX(100%);
+}
+
+.kapsle-polozka-cb {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  text-align: center;
+  padding: 10px 24px;
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: #ffffff;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  white-space: nowrap;
+  border: none;
+  background: none;
+  font-family: var(--font-hlavni);
+  letter-spacing: 0.02em;
+}
+
+.kapsle-polozka-cb.aktivni {
+  color: #000000;
+}
+
+.telefon-pod-switchem {
+  display: block !important;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+  text-align: center;
+}
+
+.telefon-pod-switchem a {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.telefon-pod-switchem a:hover {
+  color: var(--barva-zlata-akcent);
+}
+
+.karta-provozovny.skryta-pobocka {
+  display: none !important;
+}
+
+/* PRO DESKTOP (PC) */
+@media (min-width: 769px) {
+  .telefon-pod-switchem {
+    display: block !important;
+  }
+  .plovuci-volani-tlacitko {
+    display: none !important;
+  }
+}
+
+/* PRO MOBILNI ZARIZENI - Telefon v lište ZŮSTÁVÁ VIDITELNÝ přímo pod switchem */
+@media (max-width: 768px) {
+  .kapsle-prepinac-pobocky,
+  .kapsle-prepinac-cernobily {
+    min-width: 270px;
+  }
+  .kapsle-polozka,
+  .kapsle-polozka-cb {
+    padding: 8px 14px;
+    font-size: 0.88rem;
+  }
+  .telefon-pod-switchem {
+    display: block !important;
+    font-size: 1.05rem;
+    margin-top: 3px;
+  }
+  .plovuci-volani-tlacitko {
+    display: none !important;
+  }
+}
+
+
+
+
+

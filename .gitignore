@@ -1,0 +1,9 @@
+# Ignorované soubory
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.online
+
+# Složka s automatickými zálohami databáze (zůstává na lokálu / serveru)
+zalohy/
