@@ -1,0 +1,62 @@
+/* ==========================================================================
+   BARVY A VZHLED (DESIGN SYSTÉM - PIZZA OD KUŘETE)
+   css/barvy-a-vzhled.css
+   Zde se nastavují všechny globální barvy, písma, rámečky a zaoblení.
+   ========================================================================== */
+
+:root {
+  /* --- 1. ZÁKLADNÍ BARVY POZADÍ A POVRCHŮ --- */
+  --barva-pozadi-stranky: #0d0d0d;
+  --barva-pozadi-karet: #161616;
+  --barva-pozadi-sekce: #1a1a1a;
+  --barva-pozadi-vstupu: #161616;
+  --barva-pozadi-hlavicky: rgba(0, 0, 0, 0.85);
+
+  /* --- 2. RÁMEČKY A LINKY --- */
+  --barva-ramecku-tmava: #2a2a2a;
+  --barva-ramecku-vstupu: #333333;
+  --barva-ramecku-jemna: rgba(255, 255, 255, 0.08);
+
+  /* --- 3. VÝRAZNÉ AKCENTNÍ BARVY (PRO VARIANTY PRVKŮ) --- */
+  --barva-cervena-hlavni: #e50914;
+  --barva-cervena-tmava: #b20710;
+  
+  --barva-zelena-hlavni: #2ed573;
+  --barva-zelena-tmava: #1e824c;
+  --barva-zelena-jemna: rgba(46, 213, 115, 0.12);
+  --barva-zelena-ramecek: rgba(46, 213, 115, 0.35);
+
+  --barva-zlata-hlavni: #f59e0b;
+  --barva-zlata-tmava: #d97706;
+
+  --barva-oranzova-hlavni: #e67e22;
+  --barva-oranzova-tmava: #d35400;
+
+  --barva-modra-hlavni: #3b82f6;
+
+  /* --- 4. BARVY PÍSMA A IKON --- */
+  --barva-textu-bila: #ffffff;
+  --barva-textu-seda: #cccccc;
+  --barva-textu-tlumena: #888888;
+  --barva-textu-tmava: #000000;
+  --barva-placeholder: #777777;
+
+  /* --- 5. PÍSMO A TYPOGRAFIE --- */
+  --font-hlavni: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-logo: 'Britannic', sans-serif;
+
+  /* --- 6. ZAOBLENÍ ROHŮ (RADIUS) --- */
+  --zaobleni-male: 6px;
+  --zaobleni-stredni: 10px;
+  --zaobleni-velke: 14px;
+  --zaobleni-karty: 16px;
+  --zaobleni-kapsle: 30px;
+  --zaobleni-kruh: 50%;
+
+  /* --- 7. STÍNY A PŘECHODY --- */
+  --stin-karty: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --stin-karty-hover: 0 12px 32px rgba(245, 158, 11, 0.2);
+  --stin-tisk: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --prechod-rychly: all 0.2s ease-in-out;
+  --prechod-stredni: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}

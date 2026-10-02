@@ -1,0 +1,133 @@
+/* ==========================================================================
+   HLAVNÍ STYLY ADMINISTRACE (PIZZA OD KUŘETE)
+   css/administrace.css
+   Propojuje všechny stavební bloky design systému.
+   ========================================================================== */
+
+/* 1. IMPORT MODULŮ DESIGN SYSTÉMU */
+@import url('barvy-a-vzhled.css');
+@import url('prepinace.css');
+@import url('tlacitka.css');
+@import url('vstupni-pole.css');
+@import url('karty-a-seznamy.css');
+@import url('stitky-a-zpravy.css');
+
+/* 2. ZÁKLADNÍ ROZLOŽENÍ ADMINISTRACE */
+body {
+  background-color: var(--barva-pozadi-stranky, #0d0d0d);
+  color: var(--barva-textu-bila, #ffffff);
+  font-family: var(--font-hlavni);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+.admin-kontejner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px 80px 20px;
+}
+
+.admin-horni-panel {
+  background-color: var(--barva-pozadi-hlavicky, rgba(0, 0, 0, 0.85));
+  backdrop-filter: blur(10px);
+  padding: 14px 0;
+  border-bottom: 1px solid var(--barva-ramecku-jemna);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.admin-horni-obal {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-hlavni-nadpis {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.admin-sekce-nadpis {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--barva-zlata-hlavni, #f59e0b);
+  margin: 30px 0 20px 0;
+  letter-spacing: 0.5px;
+}
+
+.admin-zalozka-obsah {
+  display: none;
+}
+
+.admin-zalozka-obsah.je-aktivni {
+  display: block;
+  animation: animaceZalozky 0.25s ease;
+}
+
+@keyframes animaceZalozky {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 3. OVLÁDACÍ LIŠTA: FILTR + HLEDÁNÍ VLEVO, DLAŽDICE/SEZNAM VPRAVO */
+.admin-ovladaci-lista {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 24px 0;
+  flex-wrap: wrap;
+}
+
+.admin-ovladaci-leva-cast {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  max-width: 800px;
+}
+
+.admin-vyhledavani-obal {
+  flex: 1;
+  min-width: 240px;
+  max-width: 420px;
+}
+
+.admin-ovladaci-lista .prepinac-kapsle-vpravo {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* 4. MOBILNÍ PŘIZPŮSOBENÍ */
+@media (max-width: 850px) {
+  .admin-ovladaci-lista {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+  .admin-ovladaci-leva-cast {
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 100%;
+    gap: 14px;
+  }
+  .admin-ovladaci-lista #sw-filtr-pizz-tydne {
+    align-self: flex-end;
+  }
+  .admin-vyhledavani-obal {
+    width: 100%;
+    max-width: 100%;
+  }
+  .admin-ovladaci-lista .prepinac-kapsle-vpravo {
+    align-self: flex-end;
+    margin-left: auto;
+  }
+}

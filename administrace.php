@@ -335,6 +335,7 @@ $seznamEuAlergen = [
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styl.css?v=<?php echo time(); ?>">
+  <link rel="stylesheet" href="css/administrace.css?v=<?php echo time(); ?>">
   <style>
     body { background-color: #0d0d0d; color: #ffffff; padding-bottom: 80px; }
     .admin-kontejner { max-width: 1240px; margin: 30px auto; padding: 0 20px; }

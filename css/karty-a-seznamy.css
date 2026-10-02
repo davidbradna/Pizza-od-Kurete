@@ -1,0 +1,202 @@
+/* ==========================================================================
+   KARTY, SEZNAMY A TABULKY (DESIGN SYSTÉM - PIZZA OD KUŘETE)
+   css/karty-a-seznamy.css
+   Dlaždicový pohled, řádkový seznam a tabulky.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. KONTEJNER PRO PIZZY (MŘÍŽKA VS SEZNAM)
+   -------------------------------------------------------------------------- */
+.pizzy-kontejner-zobrazeni {
+  margin-top: 25px;
+}
+
+/* --- DLAŽDICOVÝ POHLED --- */
+.pizzy-kontejner-zobrazeni.pohled-dlazdice {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 22px;
+}
+
+/* --- SEZNAMOVÝ POHLED --- */
+.pizzy-kontejner-zobrazeni.pohled-seznam {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+/* --------------------------------------------------------------------------
+   2. DLAŽDICE PIZZY (Karta s fotkou)
+   -------------------------------------------------------------------------- */
+.karta-pizza-dlazdice {
+  background-color: var(--barva-pozadi-karet, #161616);
+  border: 1px solid var(--barva-ramecku-tmava, #2a2a2a);
+  border-radius: var(--zaobleni-karty, 16px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: var(--prechod-stredni, all 0.3s ease);
+  box-shadow: var(--stin-karty);
+  position: relative;
+}
+
+.karta-pizza-dlazdice:hover {
+  border-color: var(--barva-zlata-hlavni, #f59e0b);
+  box-shadow: var(--stin-karty-hover);
+  transform: translateY(-4px);
+}
+
+.karta-pizza-dlazdice-fotka-obal {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  background-color: #0d0d0d;
+  overflow: hidden;
+}
+
+.karta-pizza-dlazdice-fotka {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.karta-pizza-dlazdice:hover .karta-pizza-dlazdice-fotka {
+  transform: scale(1.06);
+}
+
+.karta-pizza-dlazdice-telo {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.karta-pizza-dlazdice-nazev {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--barva-textu-bila, #ffffff);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.karta-pizza-dlazdice-slozeni {
+  color: var(--barva-textu-tlumena, #888888);
+  font-size: 0.88rem;
+  line-height: 1.4;
+  margin-bottom: 12px;
+  flex-grow: 1;
+}
+
+.karta-pizza-dlazdice-paticka {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--barva-ramecku-tmava, #2a2a2a);
+  padding-top: 14px;
+  margin-top: auto;
+}
+
+.karta-pizza-dlazdice-cena {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--barva-zlata-hlavni, #f59e0b);
+}
+
+.karta-pizza-dlazdice-akce {
+  display: flex;
+  gap: 8px;
+}
+
+
+/* --------------------------------------------------------------------------
+   3. ŘÁDKOVÝ SEZNAM PIZZ (#. NÁZEV PIZZY, CENA, AKCE)
+   -------------------------------------------------------------------------- */
+.pohled-seznam .karta-pizza-dlazdice {
+  flex-direction: row;
+  align-items: center;
+  padding: 12px 20px;
+  border-radius: var(--zaobleni-velke, 12px);
+  transform: none !important;
+  box-shadow: none;
+}
+
+.pohled-seznam .karta-pizza-dlazdice:hover {
+  border-color: #444444;
+  background-color: #1a1a1a;
+}
+
+.pohled-seznam .karta-pizza-dlazdice-fotka-obal,
+.pohled-seznam .karta-pizza-dlazdice-slozeni,
+.pohled-seznam .odznak-pizza-cislo-foto {
+  display: none !important;
+}
+
+.pohled-seznam .karta-pizza-dlazdice-telo {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  width: 100%;
+}
+
+.pohled-seznam .karta-pizza-dlazdice-nazev {
+  font-size: 1.1rem;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pohled-seznam .karta-pizza-dlazdice-paticka {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 0;
+  gap: 24px;
+}
+
+
+/* --------------------------------------------------------------------------
+   4. UNIVERZÁLNÍ TABULKA PRO ADMINISTRACI (Ingredience, Zálohy)
+   -------------------------------------------------------------------------- */
+.tabulka-administrace-obal {
+  background-color: var(--barva-pozadi-karet, #161616);
+  border: 1px solid var(--barva-ramecku-tmava, #2a2a2a);
+  border-radius: var(--zaobleni-velke, 14px);
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.tabulka-administrace {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.tabulka-administrace th {
+  background-color: #1a1a1a;
+  color: #888888;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--barva-ramecku-tmava, #2a2a2a);
+}
+
+.tabulka-administrace td {
+  padding: 14px 20px;
+  border-bottom: 1px solid #202020;
+  color: var(--barva-textu-seda, #cccccc);
+  font-size: 0.95rem;
+  vertical-align: middle;
+}
+
+.tabulka-administrace tr:last-child td {
+  border-bottom: none;
+}
+
+.tabulka-administrace tr:hover td {
+  background-color: #1c1c1c;
+}

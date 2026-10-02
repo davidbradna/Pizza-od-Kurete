@@ -1,0 +1,194 @@
+/* ==========================================================================
+   TLAČÍTKA A IKONY (DESIGN SYSTÉM - PIZZA OD KUŘETE)
+   css/tlacitka.css
+   Základní prvky tlačítek a jejich barevné varianty.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. ZÁKLADNÍ TEXTOVÉ TLAČÍTKO (Společný tvar, zaoblení, písmo, přechody)
+   -------------------------------------------------------------------------- */
+.tlacitko {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: var(--zaobleni-male, 6px);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: var(--prechod-rychly, all 0.2s ease);
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.tlacitko:active {
+  transform: translateY(1px);
+}
+
+/* --- BAREVNÉ VARIANTY PRO ZÁKLADNÍ TLAČÍTKO --- */
+
+/* Hlavní červené tlačítko */
+.tlacitko-cervene {
+  background-color: var(--barva-cervena-hlavni, #e50914);
+  color: #ffffff;
+  border-color: var(--barva-cervena-hlavni, #e50914);
+}
+.tlacitko-cervene:hover {
+  background-color: var(--barva-cervena-tmava, #b20710);
+  border-color: var(--barva-cervena-tmava, #b20710);
+  box-shadow: 0 4px 14px rgba(229, 9, 20, 0.4);
+}
+
+/* Vedlejší tmavě šedé tlačítko */
+.tlacitko-sede {
+  background-color: #222222;
+  color: #ffffff;
+  border-color: #333333;
+}
+.tlacitko-sede:hover {
+  background-color: #333333;
+  border-color: #555555;
+}
+
+/* Zelené tlačítko (akce, vytvoření) */
+.tlacitko-zelene {
+  background-color: var(--barva-zelena-hlavni, #2ed573);
+  color: #000000;
+  border-color: var(--barva-zelena-hlavni, #2ed573);
+  font-weight: 800;
+}
+.tlacitko-zelene:hover {
+  background-color: #26af5f;
+  box-shadow: 0 4px 14px rgba(46, 213, 115, 0.4);
+}
+
+/* Oranžové tlačítko (obnovení ze zálohy) */
+.tlacitko-oranzove {
+  background-color: var(--barva-oranzova-hlavni, #e67e22);
+  color: #ffffff;
+  border-color: var(--barva-oranzova-hlavni, #e67e22);
+}
+.tlacitko-oranzove:hover {
+  background-color: var(--barva-oranzova-tmava, #d35400);
+  box-shadow: 0 4px 14px rgba(230, 126, 34, 0.4);
+}
+
+
+/* --------------------------------------------------------------------------
+   2. PODBARVENÝ PRUH PRO PŘIDÁNÍ (Zelený pruh "+ Přidat novou pizzu")
+   -------------------------------------------------------------------------- */
+.tlacitko-pruh-pridat {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  border-radius: var(--zaobleni-velke, 14px);
+  cursor: pointer;
+  transition: var(--prechod-rychly, all 0.2s ease);
+  font-size: 1.05rem;
+  font-weight: 800;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #ffffff;
+  font-family: inherit;
+  text-align: left;
+}
+
+.tlacitko-pruh-pridat .ikona-plus {
+  font-size: 1.3rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+/* --- BAREVNÉ VARIANTY PRO PODBARVENÝ PRUH --- */
+
+/* Zelená varianta (výchozí) */
+.tlacitko-pruh-zeleny {
+  background: var(--barva-zelena-jemna, rgba(46, 213, 115, 0.12));
+  border-color: var(--barva-zelena-ramecek, rgba(46, 213, 115, 0.35));
+  color: #ffffff;
+}
+.tlacitko-pruh-zeleny:hover {
+  background: rgba(46, 213, 115, 0.18);
+  border-color: var(--barva-zelena-hlavni, #2ed573);
+}
+
+/* Červená varianta */
+.tlacitko-pruh-cerveny {
+  background: rgba(229, 9, 20, 0.12);
+  border-color: rgba(229, 9, 20, 0.35);
+  color: #ffffff;
+}
+.tlacitko-pruh-cerveny:hover {
+  background: rgba(229, 9, 20, 0.18);
+  border-color: var(--barva-cervena-hlavni, #e50914);
+}
+
+/* Zlatá varianta */
+.tlacitko-pruh-zlaty {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #ffffff;
+}
+.tlacitko-pruh-zlaty:hover {
+  background: rgba(245, 158, 11, 0.18);
+  border-color: var(--barva-zlata-hlavni, #f59e0b);
+}
+
+
+/* --------------------------------------------------------------------------
+   3. ČTVERCOVÉ IKONOVÉ TLAČÍTKO (Tužka / Koš v dlaždicích a seznamech)
+   -------------------------------------------------------------------------- */
+.tlacitko-ikona-ctverec {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--zaobleni-male, 8px);
+  border: none;
+  cursor: pointer;
+  transition: var(--prechod-rychly, all 0.2s ease);
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.tlacitko-ikona-ctverec:hover {
+  transform: scale(1.08);
+}
+
+/* --- BAREVNÉ VARIANTY PRO ČTVERCOVÉ IKONY --- */
+
+/* Bílé tlačítko (pro úpravu / tužku) */
+.tlacitko-ikona-bila {
+  background-color: #ffffff;
+  color: #000000;
+}
+.tlacitko-ikona-bila:hover {
+  background-color: #f0f0f0;
+}
+
+/* Červené tlačítko (pro smazání / koš) */
+.tlacitko-ikona-cervena {
+  background-color: var(--barva-cervena-hlavni, #e50914);
+  color: #ffffff;
+}
+.tlacitko-ikona-cervena:hover {
+  background-color: var(--barva-cervena-tmava, #b20710);
+}
+
+/* Zelené tlačítko */
+.tlacitko-ikona-zelena {
+  background-color: var(--barva-zelena-hlavni, #2ed573);
+  color: #000000;
+}
+
+/* Zlaté tlačítko */
+.tlacitko-ikona-zlata {
+  background-color: var(--barva-zlata-hlavni, #f59e0b);
+  color: #000000;
+}

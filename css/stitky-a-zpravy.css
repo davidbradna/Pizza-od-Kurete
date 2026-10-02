@@ -1,0 +1,109 @@
+/* ==========================================================================
+   ŠTÍTKY, ODZNAKY A OZNÁMENÍ (DESIGN SYSTÉM - PIZZA OD KUŘETE)
+   css/stitky-a-zpravy.css
+   Štítky verzí, odznaky na kartách a informační proužky.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. INFORMAČNÍ OZNAMOVACÍ PRUHY (Zprávy o úspěchu nebo chybě)
+   -------------------------------------------------------------------------- */
+.oznameni-pruh {
+  padding: 14px 20px;
+  border-radius: var(--zaobleni-stredni, 10px);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+
+.oznameni-zavrit {
+  background: transparent;
+  border: none;
+  color: currentColor;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0 4px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+  line-height: 1;
+}
+
+.oznameni-zavrit:hover {
+  opacity: 1;
+}
+
+/* --- BAREVNÉ VARIANTY OZNÁMENÍ --- */
+
+/* Zelené úspěšné oznámení */
+.oznameni-zelene {
+  background-color: rgba(46, 213, 115, 0.12);
+  border: 1px solid var(--barva-zelena-hlavni, #2ed573);
+  color: #2ed573;
+}
+
+/* Červené chybové oznámení */
+.oznameni-cervene {
+  background-color: rgba(220, 38, 38, 0.15);
+  border: 1px solid var(--barva-cervena-hlavni, #e50914);
+  color: #ff6b6b;
+}
+
+/* Oranžové / Žluté upozornění */
+.oznameni-oranzove {
+  background-color: rgba(245, 158, 11, 0.12);
+  border: 1px solid var(--barva-zlata-hlavni, #f59e0b);
+  color: #f59e0b;
+}
+
+
+/* --------------------------------------------------------------------------
+   2. ODZNAKY A MALÉ ŠTÍTKY (Verze, Pizza týdne, Číslo)
+   -------------------------------------------------------------------------- */
+.odznak {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Štítek verze v hlavičce */
+.odznak-verze {
+  background-color: #1f1f1f;
+  border: 1px solid #333333;
+  color: var(--barva-zlata-hlavni, #f59e0b);
+}
+
+/* Štítek Pizza týdne na dlaždici */
+.odznak-pizza-tydne {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: linear-gradient(135deg, #d97706, #b45309);
+  color: #ffffff;
+  padding: 5px 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+
+/* Číslo pizzy v rohu fotky */
+.odznak-pizza-cislo-foto {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background-color: var(--barva-cervena-hlavni, #e50914);
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}

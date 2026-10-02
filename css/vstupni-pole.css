@@ -1,0 +1,127 @@
+/* ==========================================================================
+   VSTUPNÍ POLÍČKA A FORMULÁŘE (DESIGN SYSTÉM - PIZZA OD KUŘETE)
+   css/vstupni-pole.css
+   Základní formulářová pole a jejich velikostní a stylové varianty.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. ZÁKLADNÍ VSTUPNÍ POLE (Společný tmavý vzhled, rámeček, font a focus)
+   -------------------------------------------------------------------------- */
+.vstup-pole {
+  width: 100%;
+  background-color: var(--barva-pozadi-vstupu, #161616);
+  border: 1px solid var(--barva-ramecku-vstupu, #333333);
+  color: var(--barva-textu-bila, #ffffff);
+  padding: 10px 16px;
+  border-radius: var(--zaobleni-stredni, 10px);
+  font-size: 0.95rem;
+  font-weight: 500;
+  outline: none;
+  transition: var(--prechod-rychly, all 0.2s ease);
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.vstup-pole::placeholder {
+  color: var(--barva-placeholder, #777777);
+  font-weight: normal;
+}
+
+.vstup-pole:focus {
+  border-color: var(--barva-zlata-hlavni, #f59e0b);
+  background-color: #1a1a1a;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+}
+
+/* --- VELIKOSTNÍ A ÚČELOVÉ VARIANTY PRO VSTUPNÍ POLE --- */
+
+/* Vyhledávací pole (tmavé s lupou, zaoblení kapsle) */
+.vstup-pole-hledani {
+  background-color: #161616;
+  border-color: #333333;
+  border-radius: var(--zaobleni-kapsle, 30px);
+  padding: 9px 20px;
+  font-size: 0.92rem;
+}
+
+/* Široké textové pole pro název */
+.vstup-pole-nazev {
+  flex: 2;
+  min-width: 220px;
+}
+
+/* Užší číselné pole pro cenu */
+.vstup-pole-cena {
+  width: 130px;
+  flex-shrink: 0;
+}
+
+/* Velmi úzké pole pro pořadové číslo */
+.vstup-pole-cislo {
+  width: 75px;
+  flex-shrink: 0;
+  text-align: center;
+  font-weight: 800;
+}
+
+
+/* --------------------------------------------------------------------------
+   2. TLAČÍTKO PRO VÝBĚR FOTKY (Custom File Upload)
+   -------------------------------------------------------------------------- */
+.vyber-fotky-obal {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.vyber-fotky-vstup-skryty {
+  display: none !important;
+}
+
+.vyber-fotky-tlacitko {
+  background-color: #222222;
+  color: #ffffff;
+  border: 1px solid #3a3a3a;
+  padding: 8px 18px;
+  border-radius: var(--zaobleni-male, 6px);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--prechod-rychly, all 0.2s ease);
+  font-family: inherit;
+}
+
+.vyber-fotky-tlacitko:hover {
+  background-color: #333333;
+  border-color: #555555;
+}
+
+.vyber-fotky-nazev-souboru {
+  color: var(--barva-textu-tlumena, #888888);
+  font-size: 0.88rem;
+  font-style: italic;
+}
+
+
+/* --------------------------------------------------------------------------
+   3. ROZLOŽENÍ FORMULÁŘOVÝCH ŘÁDKŮ
+   -------------------------------------------------------------------------- */
+.formular-skupina {
+  margin-bottom: 20px;
+}
+
+.formular-radek-flex {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.formular-popisek {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--barva-textu-tlumena, #aaaaaa);
+  font-weight: 600;
+  font-size: 0.92rem;
+}

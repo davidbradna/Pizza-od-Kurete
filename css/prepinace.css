@@ -1,0 +1,195 @@
+/* ==========================================================================
+   PŘEPÍNAČE A VOLBY (DESIGN SYSTÉM - PIZZA OD KUŘETE)
+   css/prepinace.css
+   Základní prvky přepínačů a jejich barevné varianty.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. ZÁKLADNÍ PŘEPÍNAČ KAPSLE (Společný tvar, velikost, zaoblení a animace)
+   -------------------------------------------------------------------------- */
+.prepinac-kapsle,
+.mini-kapsle-prepinac {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--barva-pozadi-karet, #161616);
+  border: 1px solid var(--barva-ramecku-vstupu, #333333);
+  border-radius: var(--zaobleni-kapsle, 30px);
+  padding: 4px;
+  gap: 4px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.prepinac-kapsle .prepinac-tlacitko,
+.mini-kapsle-prepinac .mini-kapsle-tlacitko {
+  background: transparent;
+  color: var(--barva-textu-tlumena, #888888);
+  border: none;
+  padding: 8px 18px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: var(--prechod-rychly, all 0.2s ease);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.prepinac-kapsle .prepinac-tlacitko:hover:not(.je-aktivni):not(.aktivni),
+.mini-kapsle-prepinac .mini-kapsle-tlacitko:hover:not(.je-aktivni):not(.aktivni) {
+  color: var(--barva-textu-bila, #ffffff);
+}
+
+/* --- BAREVNÉ VARIANTY PRO PŘEPÍNAČ KAPSLE --- */
+
+/* Bílá varianta (výchozí pro filtry a pohledy) */
+.prepinac-kapsle .prepinac-tlacitko.je-aktivni,
+.prepinac-kapsle .prepinac-tlacitko.aktivni,
+.prepinac-kapsle-bily .prepinac-tlacitko.je-aktivni,
+.prepinac-kapsle-bily .prepinac-tlacitko.aktivni,
+.mini-kapsle-prepinac .mini-kapsle-tlacitko.aktivni,
+.mini-kapsle-prepinac.prepinac-kapsle-bily .mini-kapsle-tlacitko.aktivni {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* Červená varianta */
+.prepinac-kapsle-cerveny .prepinac-tlacitko.je-aktivni,
+.prepinac-kapsle-cerveny .prepinac-tlacitko.aktivni,
+.mini-kapsle-prepinac.prepinac-kapsle-cerveny .mini-kapsle-tlacitko.aktivni {
+  background-color: var(--barva-cervena-hlavni, #e50914) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(229, 9, 20, 0.4);
+}
+
+/* Zelená varianta */
+.prepinac-kapsle-zeleny .prepinac-tlacitko.je-aktivni,
+.prepinac-kapsle-zeleny .prepinac-tlacitko.aktivni,
+.mini-kapsle-prepinac.prepinac-kapsle-zeleny .mini-kapsle-tlacitko.aktivni {
+  background-color: var(--barva-zelena-hlavni, #2ed573) !important;
+  color: #000000 !important;
+  box-shadow: 0 2px 8px rgba(46, 213, 115, 0.35);
+}
+
+/* Zlatá varianta */
+.prepinac-kapsle-zlaty .prepinac-tlacitko.je-aktivni,
+.prepinac-kapsle-zlaty .prepinac-tlacitko.aktivni,
+.mini-kapsle-prepinac.prepinac-kapsle-zlaty .mini-kapsle-tlacitko.aktivni {
+  background-color: var(--barva-zlata-hlavni, #f59e0b) !important;
+  color: #000000 !important;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.35);
+}
+
+/* Oranžová varianta */
+.prepinac-kapsle-oranzovy .prepinac-tlacitko.je-aktivni,
+.prepinac-kapsle-oranzovy .prepinac-tlacitko.aktivni,
+.mini-kapsle-prepinac.prepinac-kapsle-oranzovy .mini-kapsle-tlacitko.aktivni {
+  background-color: var(--barva-oranzova-hlavni, #e67e22) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(230, 126, 34, 0.35);
+}
+
+
+/* --------------------------------------------------------------------------
+   2. HORNÍ HLAVNÍ ZÁLOŽKY (PIZZY, INGREDIENCE, ZÁLOHY)
+   -------------------------------------------------------------------------- */
+.prepinac-zalozky-obal {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.prepinac-zalozka-tlacitko {
+  background-color: #1a1a1a;
+  color: #888888;
+  border: 1px solid #2a2a2a;
+  padding: 12px 24px;
+  border-radius: var(--zaobleni-stredni, 10px);
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: var(--prechod-rychly, all 0.2s ease);
+  letter-spacing: 0.5px;
+  font-family: inherit;
+}
+
+.prepinac-zalozka-tlacitko:hover {
+  color: #ffffff;
+  border-color: #444444;
+}
+
+/* Aktivní stav záložek (Červená výchozí) */
+.prepinac-zalozka-tlacitko.je-aktivni {
+  background-color: var(--barva-cervena-hlavni, #e50914);
+  color: #ffffff;
+  border-color: var(--barva-cervena-hlavni, #e50914);
+  box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+}
+
+
+/* --------------------------------------------------------------------------
+   3. ŠTÍTKOVÉ BUBLINY PRO VÝBĚR (Suroviny, Alergeny)
+   -------------------------------------------------------------------------- */
+.stitek-vyber-obal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.stitek-vyber-polozka {
+  background-color: #1a1a1a;
+  color: #cccccc;
+  border: 1px solid #333333;
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--prechod-rychly, all 0.2s ease);
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+}
+
+.stitek-vyber-polozka:hover {
+  background-color: #222222;
+  color: #ffffff;
+  border-color: #555555;
+}
+
+/* --- BAREVNÉ VARIANTY PRO VYBRANÉ ŠTÍTKY (.je-vybrano) --- */
+
+/* Oranžová / Zlatá varianta (pro ingredience) */
+.stitek-vyber-polozka.je-vybrano-zlate {
+  background-color: rgba(245, 158, 11, 0.15);
+  border-color: var(--barva-zlata-hlavni, #f59e0b);
+  color: var(--barva-zlata-hlavni, #f59e0b);
+}
+
+/* Červená varianta */
+.stitek-vyber-polozka.je-vybrano-cervene {
+  background-color: rgba(229, 9, 20, 0.15);
+  border-color: var(--barva-cervena-hlavni, #e50914);
+  color: #ff6b6b;
+}
+
+/* Zelená varianta */
+.stitek-vyber-polozka.je-vybrano-zelene {
+  background-color: rgba(46, 213, 115, 0.15);
+  border-color: var(--barva-zelena-hlavni, #2ed573);
+  color: var(--barva-zelena-hlavni, #2ed573);
+}
+
+/* Bílá / Šedá varianta (pro alergeny) */
+.stitek-vyber-polozka.je-vybrano-bile {
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: #000000;
+}
