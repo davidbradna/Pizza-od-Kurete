@@ -1,82 +1,71 @@
-# PŘEHLED VŠECH PRVKŮ A STYLŮ WEBU (DESIGN SYSTÉM)
+# DESIGN SYSTÉM: PŘEHLED PRVKŮ A BAREVNÝCH VARIANT
 *Pizza od Kuřete – verze 1.2.0*
 
-Tento dokument slouží jako srozumitelný přehled všech částí administrace a webu. Vše je pojmenováno v čisté češtině tak, aby bylo na první pohled jasné, co prvek dělá a kde se mění jeho barva nebo chování.
+Tento dokument slouží jako přehled všech základních stavebních prvků webu a jejich barevných variant. Všechny prvky mají jednotný tvar a velikost, a liší se pouze přidanou barevnou variantou.
 
 ---
 
-## 1. Struktura souborů ve složce `css/`
-
-| Soubor | Co obsahuje a k čemu slouží |
-| :--- | :--- |
-| **`css/barvy-a-vzhled.css`** | Seznam všech barev webu, písma a rámečků. Zde se mění barvy na 1 řádku. |
-| **`css/prepinace.css`** | Všechny typy přepínačů (záložky nahoře, stálé/týdne, dlaždice/seznam, vlastnosti). |
-| **`css/tlacitka.css`** | Všechna tlačítka (přidat pizzu, uložit, zrušit, bílá tužka, červený koš). |
-| **`css/vstupni-pole.css`** | Políčka pro psaní textu, čísel, vyhledávání a tlačítko pro výběr fotky. |
-| **`css/karty-a-seznamy.css`** | Vzhled dlaždic pizz, řádků v seznamu, tabulky ingrediencí a tabulky záloh. |
-| **`css/stitky-a-zpravy.css`** | Štítek verze v1.2.0, označení Pizza týdne, zelené a červené zprávy o uložení. |
-| **`css/administrace.css`** | Hlavní propojovací soubor, který všechny výše uvedené části skládá dohromady. |
+### Zlaté pravidlo systému (Základní prvek + Barevná varianta)
+Když chcete změnit barvu libovolného prvku, stačí k němu přiřadit příslušnou barevnou variantu (např. `prepinac-kapsle prepinac-kapsle-cerveny`). Změna barvy jednoho prvku nikdy neovlivní ostatní.
 
 ---
 
-## 2. Přepínače a volby (`css/prepinace.css`)
+## 1. Přepínače a volby (`css/prepinace.css`)
 
-| Název prvku v CSS | Kde se nachází a co dělá | Aktivní stav |
+| Základní prvek | Dostupné barevné varianty | Kde se na webu používá |
 | :--- | :--- | :--- |
-| **`.prepinac-hlavni-zalozky`** | Horní velké záložky: **PIZZY (16)** \| **INGREDIENCE (7)** \| **ZÁLOHY (1)** | `.je-aktivni` |
-| **`.prepinac-filtr-nabidky`** | Filtr pod formulářem: **Stálé pizzy** vs **Pizza týdne** | `.je-aktivni` |
-| **`.prepinac-pohledu-zobrazeni`** | Volba zobrazení vpravo: **Dlaždice** vs **Seznam** | `.je-aktivni` |
-| **`.prepinac-vlastnosti-pizzy`** | Volby ve formuláři: Masité/Bezmasé, Pálivá/Nepálivá, Sugo/Bílý | `.je-aktivni` |
-| **`.stitek-vyber-suroviny`** | Klikací bubliny pro výběr ingrediencí do pizzy | `.je-vybrano` |
-| **`.stitek-vyber-alergenu`** | Klikací očíslované bubliny pro alergeny (1 až 14) | `.je-vybrano` |
+| **`.prepinac-kapsle`** | `.prepinac-kapsle-bily`<br>`.prepinac-kapsle-cerveny`<br>`.prepinac-kapsle-zeleny`<br>`.prepinac-kapsle-zlaty`<br>`.prepinac-kapsle-oranzovy` | Přepínač **Stálé pizzy / Pizza týdne**, přepínač **Dlaždice / Seznam**, formulářové volby (Maso, Pálivost, Základ). |
+| **`.prepinac-zalozka-tlacitko`** | *aktivní stav: červená* | Horní velké záložky: **PIZZY**, **INGREDIENCE**, **ZÁLOHY & VERZOVÁNÍ**. |
+| **`.stitek-vyber-polozka`** | `.je-vybrano-zlate`<br>`.je-vybrano-bile`<br>`.je-vybrano-cervene`<br>`.je-vybrano-zelene` | Klikací bubliny ve formuláři pro výběr **ingrediencí** a **alergenů (1 až 14)**. |
 
 ---
 
-## 3. Tlačítka a ikony (`css/tlacitka.css`)
+## 2. Tlačítka a ikony (`css/tlacitka.css`)
 
-| Název prvku v CSS | Vzhled a funkce |
-| :--- | :--- |
-| **`.tlacitko-zeleny-pruh-pridat`** | Nízký zeleně podbarvený pruh **+ Přidat novou pizzu** |
-| **`.tlacitko-cervene-hlavni`** | Výrazné červené tlačítko pro uložení změn nebo přidání pizzy do menu |
-| **`.tlacitko-sede-vedlejsi`** | Tmavě šedé tlačítko pro zrušení úpravy nebo odkaz Zpět na web |
-| **`.tlacitko-ikona-tuzka-upravit`** | Bílé čtvercové tlačítko s černou tužkou (otevře editaci) |
-| **`.tlacitko-ikona-kos-smazat`** | Červené čtvercové tlačítko s bílým košem (smaže položku) |
-| **`.tlacitko-hvezda-pizza-tydne`** | Tlačítko ve formuláři se žlutou hvězdičkou pro označení Pizza týdne |
-| **`.tlacitko-oranzove-obnova`** | Oranžové tlačítko pro obnovení stavu ze zálohy |
-
----
-
-## 4. Textová a číselná políčka (`css/vstupni-pole.css`)
-
-| Název prvku v CSS | Použití |
-| :--- | :--- |
-| **`.pole-vyhledavani-pizz`** | Tmavé pole pro rychlé hledání pizzy podle názvu |
-| **`.pole-text-nazev`** | Širší políčko pro zadání názvu pizzy (např. MARGHERITA) |
-| **`.pole-cislo-cena`** | Užší políčko pro zadání ceny v Kč |
-| **`.pole-cislo-poradi`** | Úzké políčko pro pořadové číslo pizzy (1, 2, 3...) |
-| **`.vyber-fotky-tlacitko`** | Tlačítko "Vybrat fotku" pro nahrání obrázku z počítače |
-| **`.vyber-fotky-nazev-souboru`** | Šedý text vedle tlačítka s názvem vybraného souboru fotky |
-
----
-
-## 5. Zobrazení položek (`css/karty-a-seznamy.css`)
-
-| Název prvku v CSS | Vzhled a struktura |
-| :--- | :--- |
-| **`.karta-pizza-dlazdice`** | Samostatná dlaždice pizzy s velkou fotkou nahoře a údaji dole |
-| **`.radek-pizza-seznam`** | Kompaktní vodorovný řádek s formátem **1. MARGHERITA**, cenou a ikonami |
-| **`.tabulka-surovin-radek`** | Řádek v tabulce správy ingrediencí |
-| **`.tabulka-zaloh-radek`** | Řádek v historii bodů obnovy na disku |
-
----
-
-## 6. Rychlá změna barev (`css/barvy-a-vzhled.css`)
-
-| Název barvy (proměnná) | Kód barvy | Co tato barva obarvuje |
+| Základní prvek | Dostupné barevné varianty | Kde se na webu používá |
 | :--- | :--- | :--- |
-| **`--barva-cervena`** | `#e50914` | Hlavní červená tlačítka (Uložit, Přidat do menu) a červený koš |
-| **`--barva-zelena-uspech`** | `#2ed573` | Podbarvení pruhu "+ Přidat novou pizzu" a hlášky o úspěšné změně |
-| **`--barva-zlata-akcent`** | `#f59e0b` | Zlatá hvězdička Pizza týdne, orámování aktivních prvků, nadpisy |
-| **`--barva-oranzova-obnova`** | `#e67e22` | Tlačítka pro obnovu záloh ze záložky verzování |
-| **`--barva-pozadi-karet`** | `#161616` | Tmavé pozadí všech karet, dlaždic a vyhledávacího pole |
-| **`--barva-ramecku`** | `#2a2a2a` | Jemné oddělovací linky a rámečky boxů |
+| **`.tlacitko`** | `.tlacitko-cervene`<br>`.tlacitko-sede`<br>`.tlacitko-zelene`<br>`.tlacitko-oranzove` | Akční tlačítka: **Uložit změny** (červené), **Zrušit / Zpět na web** (šedé), **Vytvořit zálohu** (zelené), **Obnovit verzi** (oranžové). |
+| **`.tlacitko-pruh-pridat`** | `.tlacitko-pruh-zeleny`<br>`.tlacitko-pruh-cerveny`<br>`.tlacitko-pruh-zlaty` | Široký podbarvený pruh **+ Přidat novou pizzu** mezi nadpisem a filtrem. |
+| **`.tlacitko-ikona-ctverec`** | `.tlacitko-ikona-bila`<br>`.tlacitko-ikona-cervena`<br>`.tlacitko-ikona-zelena`<br>`.tlacitko-ikona-zlata` | Čtvercová tlačítka s ikonou: **Bílé s černou tužkou** (úprava), **Červené s bílým košem** (smazání). |
+
+---
+
+## 3. Vstupní textová a číselná pole (`css/vstupni-pole.css`)
+
+| Základní prvek | Účelové varianty | Vzhled a chování |
+| :--- | :--- | :--- |
+| **`.vstup-pole`** | `.vstup-pole-hledani`<br>`.vstup-pole-nazev`<br>`.vstup-pole-cena`<br>`.vstup-pole-cislo` | Jednotný tmavý vzhled (`#161616`), jemný rámeček (`#333333`), šedý placeholder, při kliknutí zlatý rámeček. |
+| **`.vyber-fotky-tlacitko`** | `.vyber-fotky-nazev-souboru` | Tlačítko "Vybrat fotku" pro výběr obrázku + šedý popisek s názvem souboru. |
+
+---
+
+## 4. Zobrazení položek a tabulky (`css/karty-a-seznamy.css`)
+
+| Základní prvek | Pohled / Styl | Popis |
+| :--- | :--- | :--- |
+| **`.karta-pizza-dlazdice`** | Dlaždice (Grid) | Karta pizzy s velkou fotkou nahoře, názvem, cenou a ikonami tužky a koše. |
+| **`.pohled-seznam`** | Řádkový seznam (List) | Kompaktní vodorovné řádky s formátem **1. MARGHERITA**, cenou vpravo a akčními ikonami (bez fotky a surovin). |
+| **`.tabulka-administrace`** | Tabulka s tmavým záhlavím | Univerzální přehledná tabulka pro **Ingredience** a historii **Záloh databáze**. |
+
+---
+
+## 5. Zprávy a informační štítky (`css/stitky-a-zpravy.css`)
+
+| Základní prvek | Barevné varianty | Použití |
+| :--- | :--- | :--- |
+| **`.oznameni-pruh`** | `.oznameni-zelene`<br>`.oznameni-cervene`<br>`.oznameni-oranzove` | Pruhové hlášky nahoře (úspěšné uložení pizzy / chybové hlášení). |
+| **`.odznak-verze`** | Tmavý se zlatým textem | Štítek **v1.2.0** v horní liště administrace. |
+| **`.odznak-pizza-tydne`** | Zlatý gradient | Štítek **PIZZA TÝDNE** v pravém horním rohu fotky na dlaždici. |
+
+---
+
+## 6. Globální paleta barev (`css/barvy-a-vzhled.css`)
+
+| Název proměnné | Kód barvy | Použití v design systému |
+| :--- | :--- | :--- |
+| **`--barva-cervena-hlavni`** | `#e50914` | Červená tlačítka, ikona koše, aktivní záložky, červené varianty přepínačů. |
+| **`--barva-zelena-hlavni`** | `#2ed573` | Pruh "+ Přidat novou pizzu", zelená oznámení, zelená tlačítka. |
+| **`--barva-zlata-hlavni`** | `#f59e0b` | Hlavní nadpisy, cena pizzy, štítek Pizza týdne, orámování při najetí myší. |
+| **`--barva-oranzova-hlavni`** | `#e67e22` | Tlačítka a varianty pro obnovu záloh databáze. |
+| **`--barva-pozadi-karet`** | `#161616` | Tmavé sjednocené pozadí pro všechny dlaždice, karty a vstupní pole. |
+| **`--barva-ramecku-vstupu`** | `#333333` | Jednotný decentní rámeček pro vyhledávání, vstupy a přepínače. |

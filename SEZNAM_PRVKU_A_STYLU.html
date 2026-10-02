@@ -2,32 +2,33 @@
 <html lang="cs">
 <head>
   <meta charset="UTF-8">
-  <title>Seznam prvků a stylů administrace - Pizza od Kuřete</title>
+  <title>Design Systém: Přehled prvků a barevných variant - Pizza od Kuřete</title>
   <style>
     @media print {
-      body { background: #ffffff !important; color: #000000 !important; font-size: 11pt; }
+      body { background: #ffffff !important; color: #000000 !important; font-size: 10pt; padding: 0 !important; margin: 15mm !important; }
       .bez-tisku { display: none !important; }
-      .karta-sekce { break-inside: avoid; border: 1px solid #cccccc !important; background: #fafafa !important; color: #000 !important; }
+      .karta-sekce { break-inside: avoid; border: 1px solid #cccccc !important; background: #fafafa !important; color: #000000 !important; margin-bottom: 15px !important; padding: 15px !important; }
       th { background-color: #eeeeee !important; color: #000000 !important; }
       td { border-bottom: 1px solid #ddd !important; }
-      code { background: #eee !important; color: #000 !important; border: 1px solid #ccc !important; }
+      code { background: #f0f0f0 !important; color: #000000 !important; border: 1px solid #cccccc !important; font-weight: bold !important; }
+      .stitek-varianta { border: 1px solid #999 !important; background: #eee !important; color: #000 !important; }
     }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #0f0f0f;
       color: #e0e0e0;
-      line-height: 1.6;
+      line-height: 1.5;
       margin: 0;
       padding: 30px;
     }
     .obal {
-      max-width: 960px;
+      max-width: 980px;
       margin: 0 auto;
     }
     .hlavicka {
       border-bottom: 2px solid #e50914;
       padding-bottom: 15px;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -37,49 +38,61 @@
     h1 {
       margin: 0;
       color: #ffffff;
-      font-size: 1.8rem;
+      font-size: 1.7rem;
     }
     .podnadpis {
       color: #888888;
       font-size: 0.95rem;
-      margin-top: 5px;
+      margin-top: 4px;
     }
     .tlacitko-tisk {
       background: #e50914;
       color: #ffffff;
       border: none;
-      padding: 10px 20px;
+      padding: 10px 22px;
       border-radius: 6px;
       font-weight: 700;
       cursor: pointer;
       font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+    .tlacitko-tisk:hover {
+      background: #b20710;
+    }
+    .pravidlo-box {
+      background: rgba(46, 213, 115, 0.08);
+      border: 1px solid rgba(46, 213, 115, 0.35);
+      border-radius: 10px;
+      padding: 14px 20px;
+      margin-bottom: 25px;
+      font-size: 0.95rem;
+      color: #e0e0e0;
     }
     .karta-sekce {
       background: #181818;
       border: 1px solid #282828;
       border-radius: 10px;
-      padding: 22px;
-      margin-bottom: 25px;
+      padding: 20px;
+      margin-bottom: 22px;
     }
     h2 {
       margin-top: 0;
       color: #f59e0b;
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       border-bottom: 1px solid #2a2a2a;
       padding-bottom: 8px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
-      font-size: 0.92rem;
+      font-size: 0.9rem;
     }
     th, td {
-      padding: 10px 14px;
+      padding: 9px 12px;
       text-align: left;
       border-bottom: 1px solid #262626;
-      vertical-align: top;
+      vertical-align: middle;
     }
     th {
       background-color: #202020;
@@ -90,11 +103,26 @@
       font-family: Consolas, 'Courier New', monospace;
       background: #0d0d0d;
       color: #2ed573;
-      padding: 3px 6px;
+      padding: 2px 6px;
       border-radius: 4px;
       font-size: 0.88rem;
       border: 1px solid #333333;
     }
+    .stitek-varianta {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-right: 4px;
+      margin-bottom: 3px;
+    }
+    .var-bila { background: #ffffff; color: #000000; }
+    .var-cervena { background: #e50914; color: #ffffff; }
+    .var-zelena { background: #2ed573; color: #000000; }
+    .var-zlata { background: #f59e0b; color: #000000; }
+    .var-oranzova { background: #e67e22; color: #ffffff; }
+    .var-seda { background: #333333; color: #ffffff; }
     .popis-barvy {
       display: inline-block;
       width: 14px;
@@ -111,257 +139,247 @@
 
     <div class="hlavicka">
       <div>
-        <h1>PŘEHLED PRVKŮ A STYLŮ WEBU</h1>
-        <div class="podnadpis">Srozumitelný přehled pro snadnou úpravu barev a vzhledu (v1.2.0)</div>
+        <h1>PŘEHLED PRVKŮ A BAREVNÝCH VARIANT</h1>
+        <div class="podnadpis">Design Systém webu a administrace (Pizza od Kuřete – v1.2.0)</div>
       </div>
       <div class="bez-tisku">
         <button class="tlacitko-tisk" onclick="window.print()">Vytisknout přehled (Ctrl + P)</button>
       </div>
     </div>
 
-    <!-- 1. STRUKTURA SOUBORŮ -->
+    <!-- ZLATÉ PRAVIDLO SYSTÉMU -->
+    <div class="pravidlo-box">
+      <strong style="color: #2ed573;">Jak systém funguje (Základní prvek + Barevná varianta):</strong><br>
+      Všechny prvky sdílejí stejný tvar, velikost, rámeček a zaoblení. Když chcete změnit barvu prvku, stačí k němu přiřadit příslušnou barevnou variantu (např. <code>prepinac-kapsle prepinac-kapsle-cerveny</code>). Změna barvy jednoho prvku nikdy neovlivní ostatní.
+    </div>
+
+    <!-- 1. PŘEPÍNAČE A VOLBY -->
     <div class="karta-sekce">
-      <h2>1. Kde co najdete (Struktura souborů v css/)</h2>
+      <h2>1. Přepínače a volby (css/prepinace.css)</h2>
       <table>
         <thead>
           <tr>
-            <th style="width: 32%;">Soubor</th>
-            <th>Co obsahuje a k čemu slouží</th>
+            <th style="width: 25%;">Základní prvek</th>
+            <th style="width: 35%;">Dostupné barevné varianty</th>
+            <th>Kde se na webu používá</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><code>css/barvy-a-vzhled.css</code></td>
-            <td>Seznam všech barev webu, velikosti písma, tloušťky rámečků. Tady měníte barvy na 1 řádku.</td>
+            <td><code>.prepinac-kapsle</code></td>
+            <td>
+              <span class="stitek-varianta var-bila">.prepinac-kapsle-bily</span>
+              <span class="stitek-varianta var-cervena">.prepinac-kapsle-cerveny</span>
+              <span class="stitek-varianta var-zelena">.prepinac-kapsle-zeleny</span>
+              <span class="stitek-varianta var-zlata">.prepinac-kapsle-zlaty</span>
+              <span class="stitek-varianta var-oranzova">.prepinac-kapsle-oranzovy</span>
+            </td>
+            <td>Přepínač <strong>Stálé pizzy / Pizza týdne</strong>, přepínač <strong>Dlaždice / Seznam</strong>, volby ve formuláři (Maso, Pálivost, Základ).</td>
           </tr>
           <tr>
-            <td><code>css/prepinace.css</code></td>
-            <td>Všechny typy přepínačů (záložky nahoře, stálé/týdne, dlaždice/seznam, vlastnosti).</td>
+            <td><code>.prepinac-zalozka-tlacitko</code></td>
+            <td>
+              <span class="stitek-varianta var-cervena">aktivní: červená</span>
+            </td>
+            <td>Horní velké záložky: <strong>PIZZY</strong>, <strong>INGREDIENCE</strong>, <strong>ZÁLOHY &amp; VERZOVÁNÍ</strong>.</td>
           </tr>
           <tr>
-            <td><code>css/tlacitka.css</code></td>
-            <td>Všechna tlačítka (přidat pizzu, uložit, zrušit, ikonka tužky, ikonka koše).</td>
-          </tr>
-          <tr>
-            <td><code>css/vstupni-pole.css</code></td>
-            <td>Políčka pro psaní textu, čísel, vyhledávání a tlačítko pro výběr fotky.</td>
-          </tr>
-          <tr>
-            <td><code>css/karty-a-seznamy.css</code></td>
-            <td>Vzhled dlaždic pizzy, řádků v seznamu, tabulky ingrediencí a tabulky záloh.</td>
-          </tr>
-          <tr>
-            <td><code>css/stitky-a-zpravy.css</code></td>
-            <td>Štítek verze v1.2.0, označení Pizza týdne, zelené a červené zprávy o uložení.</td>
-          </tr>
-          <tr>
-            <td><code>css/administrace.css</code></td>
-            <td>Hlavní spojovací soubor, který všechny výše uvedené části skládá dohromady.</td>
+            <td><code>.stitek-vyber-polozka</code></td>
+            <td>
+              <span class="stitek-varianta var-zlata">.je-vybrano-zlate</span>
+              <span class="stitek-varianta var-bila">.je-vybrano-bile</span>
+              <span class="stitek-varianta var-cervena">.je-vybrano-cervene</span>
+              <span class="stitek-varianta var-zelena">.je-vybrano-zelene</span>
+            </td>
+            <td>Klikací bubliny ve formuláři pro výběr <strong>ingrediencí</strong> a <strong>alergenů (1 až 14)</strong>.</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- 2. PŘEPÍNAČE -->
+    <!-- 2. TLAČÍTKA A IKONY -->
     <div class="karta-sekce">
-      <h2>2. Přepínače a volby (css/prepinace.css)</h2>
+      <h2>2. Tlačítka a ikony (css/tlacitka.css)</h2>
       <table>
         <thead>
           <tr>
-            <th style="width: 35%;">Název prvku v CSS</th>
-            <th>Kde se nachází a co dělá</th>
-            <th style="width: 20%;">Aktivní stav</th>
+            <th style="width: 25%;">Základní prvek</th>
+            <th style="width: 35%;">Dostupné barevné varianty</th>
+            <th>Kde se na webu používá</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><code>.prepinac-hlavni-zalozky</code></td>
-            <td>Horní velké záložky: <strong>PIZZY (16)</strong> | <strong>INGREDIENCE (7)</strong> | <strong>ZÁLOHY (1)</strong></td>
-            <td><code>.je-aktivni</code></td>
+            <td><code>.tlacitko</code></td>
+            <td>
+              <span class="stitek-varianta var-cervena">.tlacitko-cervene</span>
+              <span class="stitek-varianta var-seda">.tlacitko-sede</span>
+              <span class="stitek-varianta var-zelena">.tlacitko-zelene</span>
+              <span class="stitek-varianta var-oranzova">.tlacitko-oranzove</span>
+            </td>
+            <td>Klasická akční tlačítka: <strong>Uložit změny</strong> (červené), <strong>Zrušit / Zpět na web</strong> (šedé), <strong>Vytvořit zálohu</strong> (zelené), <strong>Obnovit verzi</strong> (oranžové).</td>
           </tr>
           <tr>
-            <td><code>.prepinac-filtr-nabidky</code></td>
-            <td>Filtr pod formulářem: <strong>Stálé pizzy</strong> vs <strong>Pizza týdne</strong></td>
-            <td><code>.je-aktivni</code></td>
+            <td><code>.tlacitko-pruh-pridat</code></td>
+            <td>
+              <span class="stitek-varianta var-zelena">.tlacitko-pruh-zeleny</span>
+              <span class="stitek-varianta var-cervena">.tlacitko-pruh-cerveny</span>
+              <span class="stitek-varianta var-zlata">.tlacitko-pruh-zlaty</span>
+            </td>
+            <td>Široký podbarvený pruh <strong>+ Přidat novou pizzu</strong> mezi nadpisem a filtrem.</td>
           </tr>
           <tr>
-            <td><code>.prepinac-pohledu-zobrazeni</code></td>
-            <td>Volba zobrazení vpravo: <strong>Dlaždice</strong> vs <strong>Seznam</strong></td>
-            <td><code>.je-aktivni</code></td>
-          </tr>
-          <tr>
-            <td><code>.prepinac-vlastnosti-pizzy</code></td>
-            <td>Volby ve formuláři: Masité/Bezmasé, Pálivá/Nepálivá, Sugo/Bílý</td>
-            <td><code>.je-aktivni</code></td>
-          </tr>
-          <tr>
-            <td><code>.stitek-vyber-suroviny</code></td>
-            <td>Klikací bubliny pro výběr ingrediencí do pizzy</td>
-            <td><code>.je-vybrano</code></td>
-          </tr>
-          <tr>
-            <td><code>.stitek-vyber-alergenu</code></td>
-            <td>Klikací očíslované bubliny pro alergeny (1 až 14)</td>
-            <td><code>.je-vybrano</code></td>
+            <td><code>.tlacitko-ikona-ctverec</code></td>
+            <td>
+              <span class="stitek-varianta var-bila">.tlacitko-ikona-bila</span>
+              <span class="stitek-varianta var-cervena">.tlacitko-ikona-cervena</span>
+              <span class="stitek-varianta var-zelena">.tlacitko-ikona-zelena</span>
+              <span class="stitek-varianta var-zlata">.tlacitko-ikona-zlata</span>
+            </td>
+            <td>Čtvercová tlačítka s ikonou: <strong>Bílé s černou tužkou</strong> (úprava), <strong>Červené s bílým košem</strong> (smazání).</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- 3. TLAČÍTKA -->
+    <!-- 3. VSTUPNÍ POLE A FORMULÁŘE -->
     <div class="karta-sekce">
-      <h2>3. Tlačítka a ikony (css/tlacitka.css)</h2>
+      <h2>3. Vstupní textová a číselná pole (css/vstupni-pole.css)</h2>
       <table>
         <thead>
           <tr>
-            <th style="width: 35%;">Název prvku v CSS</th>
-            <th>Vzhled a funkce</th>
+            <th style="width: 25%;">Základní prvek</th>
+            <th style="width: 35%;">Velikostní a účelové varianty</th>
+            <th>Vzhled a chování</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><code>.tlacitko-zeleny-pruh-pridat</code></td>
-            <td>Nízký zeleně podbarvený pruh <strong>+ Přidat novou pizzu</strong></td>
-          </tr>
-          <tr>
-            <td><code>.tlacitko-cervene-hlavni</code></td>
-            <td>Výrazné červené tlačítko pro uložení změn nebo přidání pizzy do menu</td>
-          </tr>
-          <tr>
-            <td><code>.tlacitko-sede-vedlejsi</code></td>
-            <td>Tmavě šedé tlačítko pro zrušení úpravy nebo odkaz Zpět na web</td>
-          </tr>
-          <tr>
-            <td><code>.tlacitko-ikona-tuzka-upravit</code></td>
-            <td>Bílé čtvercové tlačítko s černou tužkou (otevře editaci)</td>
-          </tr>
-          <tr>
-            <td><code>.tlacitko-ikona-kos-smazat</code></td>
-            <td>Červené čtvercové tlačítko s bílým košem (smaže položku)</td>
-          </tr>
-          <tr>
-            <td><code>.tlacitko-hvezda-pizza-tydne</code></td>
-            <td>Tlačítko ve formuláři se žlutou hvězdičkou pro označení Pizza týdne</td>
-          </tr>
-          <tr>
-            <td><code>.tlacitko-oranzove-obnova</code></td>
-            <td>Oranžové tlačítko pro obnovení stavu ze zálohy</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- 4. VSTUPNÍ POLE -->
-    <div class="karta-sekce">
-      <h2>4. Textová a číselná políčka (css/vstupni-pole.css)</h2>
-      <table>
-        <thead>
-          <tr>
-            <th style="width: 35%;">Název prvku v CSS</th>
-            <th>Použití</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>.pole-vyhledavani-pizz</code></td>
-            <td>Tmavé pole pro rychlé hledání pizzy podle názvu</td>
-          </tr>
-          <tr>
-            <td><code>.pole-text-nazev</code></td>
-            <td>Širší políčko pro zadání názvu pizzy (např. MARGHERITA)</td>
-          </tr>
-          <tr>
-            <td><code>.pole-cislo-cena</code></td>
-            <td>Užší políčko pro zadání ceny v Kč</td>
-          </tr>
-          <tr>
-            <td><code>.pole-cislo-poradi</code></td>
-            <td>Úzké políčko pro pořadové číslo pizzy (1, 2, 3...)</td>
+            <td><code>.vstup-pole</code></td>
+            <td>
+              <span class="stitek-varianta var-seda">.vstup-pole-hledani</span>
+              <span class="stitek-varianta var-seda">.vstup-pole-nazev</span>
+              <span class="stitek-varianta var-seda">.vstup-pole-cena</span>
+              <span class="stitek-varianta var-seda">.vstup-pole-cislo</span>
+            </td>
+            <td>Jednotný tmavý vzhled (<code>#161616</code>), jemný rámeček (<code>#333333</code>), šedý placeholder, při kliknutí zlatý rámeček.</td>
           </tr>
           <tr>
             <td><code>.vyber-fotky-tlacitko</code></td>
-            <td>Tlačítko "Vybrat fotku" pro nahrání obrázku z počítače</td>
-          </tr>
-          <tr>
             <td><code>.vyber-fotky-nazev-souboru</code></td>
-            <td>Šedý text vedle tlačítka s názvem vybraného souboru fotky</td>
+            <td>Tlačítko "Vybrat fotku" pro výběr obrázku + šedý popisek s názvem souboru.</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- 5. KARTY A SEZNAMY -->
+    <!-- 4. KARTY A SEZNAMY -->
     <div class="karta-sekce">
-      <h2>5. Zobrazení položek (css/karty-a-seznamy.css)</h2>
+      <h2>4. Zobrazení položek a tabulky (css/karty-a-seznamy.css)</h2>
       <table>
         <thead>
           <tr>
-            <th style="width: 35%;">Název prvku v CSS</th>
-            <th>Vzhled a struktura</th>
+            <th style="width: 25%;">Základní prvek</th>
+            <th style="width: 35%;">Pohled / Styl</th>
+            <th>Popis</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td><code>.karta-pizza-dlazdice</code></td>
-            <td>Samostatná dlaždice pizzy s velkou fotkou nahoře a údaji dole</td>
+            <td>Dlaždice (Grid)</td>
+            <td>Karta pizzy s velkou fotkou nahoře, názvem, cenou a ikonami tužky a koše.</td>
           </tr>
           <tr>
-            <td><code>.radek-pizza-seznam</code></td>
-            <td>Kompaktní vodorovný řádek s formátem <strong>1. MARGHERITA</strong>, cenou a ikonami</td>
+            <td><code>.pohled-seznam</code></td>
+            <td>Řádkový seznam (List)</td>
+            <td>Kompaktní vodorovné řádky s formátem <strong>1. MARGHERITA</strong>, cenou vpravo a akčními ikonami (bez fotky a surovin).</td>
           </tr>
           <tr>
-            <td><code>.tabulka-surovin-radek</code></td>
-            <td>Řádek v tabulce správy ingrediencí</td>
-          </tr>
-          <tr>
-            <td><code>.tabulka-zaloh-radek</code></td>
-            <td>Řádek v historii bodů obnovy na disku</td>
+            <td><code>.tabulka-administrace</code></td>
+            <td>Tabulka s tmavým záhlavím</td>
+            <td>Univerzální přehledná tabulka pro <strong>Ingredience</strong> a historii <strong>Záloh databáze</strong>.</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- 6. ZMĚNA BAREV -->
+    <!-- 5. OZNÁMENÍ A ŠTÍTKY -->
     <div class="karta-sekce">
-      <h2>6. Rychlá změna barev (css/barvy-a-vzhled.css)</h2>
+      <h2>5. Zprávy a informační štítky (css/stitky-a-zpravy.css)</h2>
       <table>
         <thead>
           <tr>
-            <th style="width: 32%;">Proměnná</th>
-            <th style="width: 20%;">Výchozí barva</th>
-            <th>Co tato barva obarvuje</th>
+            <th style="width: 25%;">Základní prvek</th>
+            <th style="width: 35%;">Barevné varianty</th>
+            <th>Použití</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><code>--barva-cervena</code></td>
+            <td><code>.oznameni-pruh</code></td>
+            <td>
+              <span class="stitek-varianta var-zelena">.oznameni-zelene</span>
+              <span class="stitek-varianta var-cervena">.oznameni-cervene</span>
+              <span class="stitek-varianta var-oranzova">.oznameni-oranzove</span>
+            </td>
+            <td>Pruhové hlášky nahoře (úspěšné uložení pizzy / chybové hlášení).</td>
+          </tr>
+          <tr>
+            <td><code>.odznak-verze</code></td>
+            <td><span class="stitek-varianta var-seda">Tmavý se zlatým textem</span></td>
+            <td>Štítek <strong>v1.2.0</strong> v horní liště administrace.</td>
+          </tr>
+          <tr>
+            <td><code>.odznak-pizza-tydne</code></td>
+            <td><span class="stitek-varianta var-zlata">Zlatý gradient</span></td>
+            <td>Štítek <strong>PIZZA TÝDNE</strong> v pravém horním rohu fotky na dlaždici.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 6. PŘEHLED BAREV -->
+    <div class="karta-sekce">
+      <h2>6. Globální paleta barev (css/barvy-a-vzhled.css)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 30%;">Název proměnné</th>
+            <th style="width: 20%;">Barevný kód</th>
+            <th>Použití v design systému</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>--barva-cervena-hlavni</code></td>
             <td><span class="popis-barvy" style="background:#e50914;"></span> #e50914</td>
-            <td>Hlavní červená tlačítka (Uložit, Přidat do menu) a červený koš</td>
+            <td>Červená tlačítka, ikona koše, aktivní záložky, červené varianty přepínačů.</td>
           </tr>
           <tr>
-            <td><code>--barva-zelena-uspech</code></td>
+            <td><code>--barva-zelena-hlavni</code></td>
             <td><span class="popis-barvy" style="background:#2ed573;"></span> #2ed573</td>
-            <td>Podbarvení pruhu "+ Přidat novou pizzu" a hlášky o úspěšné změně</td>
+            <td>Pruh "+ Přidat novou pizzu", zelená oznámení, zelená tlačítka.</td>
           </tr>
           <tr>
-            <td><code>--barva-zlata-akcent</code></td>
+            <td><code>--barva-zlata-hlavni</code></td>
             <td><span class="popis-barvy" style="background:#f59e0b;"></span> #f59e0b</td>
-            <td>Zlatá hvězdička Pizza týdne, orámování aktivních prvků, nadpisy</td>
+            <td>Hlavní nadpisy, cena pizzy, štítek Pizza týdne, orámování při najetí myší.</td>
           </tr>
           <tr>
-            <td><code>--barva-oranzova-obnova</code></td>
+            <td><code>--barva-oranzova-hlavni</code></td>
             <td><span class="popis-barvy" style="background:#e67e22;"></span> #e67e22</td>
-            <td>Tlačítka pro obnovu záloh ze záložky verzování</td>
+            <td>Tlačítka a varianty pro obnovu záloh databáze.</td>
           </tr>
           <tr>
             <td><code>--barva-pozadi-karet</code></td>
             <td><span class="popis-barvy" style="background:#161616; border:1px solid #444;"></span> #161616</td>
-            <td>Tmavé pozadí všech karet, dlaždic a vyhledávacího pole</td>
+            <td>Tmavé sjednocené pozadí pro všechny dlaždice, karty a vstupní pole.</td>
           </tr>
           <tr>
-            <td><code>--barva-ramecku</code></td>
-            <td><span class="popis-barvy" style="background:#2a2a2a; border:1px solid #555;"></span> #2a2a2a</td>
-            <td>Jemné oddělovací linky a rámečky boxů</td>
+            <td><code>--barva-ramecku-vstupu</code></td>
+            <td><span class="popis-barvy" style="background:#333333; border:1px solid #555;"></span> #333333</td>
+            <td>Jednotný decentní rámeček pro vyhledávání, vstupy a přepínače.</td>
           </tr>
         </tbody>
       </table>
