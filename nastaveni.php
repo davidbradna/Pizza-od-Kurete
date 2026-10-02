@@ -11,7 +11,9 @@ define('VERZE_SYSTEMU', 'v1.2.0');
 define('HESLO_ADMIN', 'kure123');
 
 // Cesty k datovým souborům
-define('CESTA_DATABAZE', __DIR__ . '/data/databaze.json');
+define('CESTA_DATABAZE_PIZZY', __DIR__ . '/data/pizzy.json');
+define('CESTA_DATABAZE_INGREDIENCE', __DIR__ . '/data/ingredience.json');
+define('CESTA_DATABAZE', __DIR__ . '/data/databaze.json'); // Původní sloučená (pro zpětnou kompatibilitu)
 define('CESTA_ZALOHY', __DIR__ . '/data/zalohy');
 
 // Nastavení poboček

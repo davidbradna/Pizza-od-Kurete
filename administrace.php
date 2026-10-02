@@ -1698,8 +1698,8 @@ $seznamEuAlergen = [
               <thead>
                 <tr>
                   <th style="padding: 14px 20px;">Čas a datum zálohy</th>
-                  <th style="padding: 14px 20px;">Počet pizz</th>
-                  <th style="padding: 14px 20px;">Počet surovin</th>
+                  <th style="padding: 14px 20px;">Typ zálohy</th>
+                  <th style="padding: 14px 20px;">Počet položek</th>
                   <th style="padding: 14px 20px;">Velikost</th>
                   <th style="padding: 14px 20px; text-align: right;">Akce</th>
                 </tr>
@@ -1713,11 +1713,18 @@ $seznamEuAlergen = [
                         <?php echo htmlspecialchars($zaloha['soubor']); ?>
                       </span>
                     </td>
-                    <td style="padding: 14px 20px; color: #f59e0b; font-weight: 700;">
-                      <?php echo $zaloha['pocet_pizz']; ?> pizz
+                    <td style="padding: 14px 20px;">
+                      <span class="stitek-verze-badge" style="background: rgba(255,255,255,0.08); font-size: 0.8rem;">
+                        <?php echo htmlspecialchars($zaloha['typ'] ?? 'Kompletní'); ?>
+                      </span>
                     </td>
-                    <td style="padding: 14px 20px; color: #2ed573;">
-                      <?php echo $zaloha['pocet_surovin']; ?> ingrediencí
+                    <td style="padding: 14px 20px;">
+                      <?php if ($zaloha['pocet_pizz'] > 0): ?>
+                        <span style="color: #f59e0b; font-weight: 700; margin-right: 8px;"><?php echo $zaloha['pocet_pizz']; ?> pizz</span>
+                      <?php endif; ?>
+                      <?php if ($zaloha['pocet_surovin'] > 0): ?>
+                        <span style="color: #2ed573;"><?php echo $zaloha['pocet_surovin']; ?> surovin</span>
+                      <?php endif; ?>
                     </td>
                     <td style="padding: 14px 20px; color: #888888; font-size: 0.9rem;">
                       <?php echo htmlspecialchars($zaloha['velikost']); ?>

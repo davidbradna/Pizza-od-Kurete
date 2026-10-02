@@ -1,0 +1,184 @@
+[
+    {
+        "id": 1,
+        "cislo": 1,
+        "nazev": "MARGHERITA",
+        "slozeni": "Rajcata San Marzano D.O.P., Mozzarella di Bufala, Italská Mouka Caputo 00, Čerstvá Bazalka a Špenát",
+        "ingredience": [
+            "sugomarzano",
+            "mozzarella",
+            "spinacbazalka",
+            "moukacaputo"
+        ],
+        "alergeny": "(1, 7)",
+        "alergeny_cisla": [
+            1,
+            7
+        ],
+        "cena": 165,
+        "masite": false,
+        "bezmase": true,
+        "paliva": false,
+        "nepaliva": true,
+        "sugo": true,
+        "bilyZaklad": false,
+        "naMiste": true,
+        "sSebou": true,
+        "pizzaTydne": false,
+        "nejprodavanejsi": true,
+        "doporucujeme": false,
+        "zlata": false,
+        "obrazek": "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?q=80&w=500&auto=format&fit=crop"
+    },
+    {
+        "id": 2,
+        "cislo": 2,
+        "nazev": "PROSCIUTTO E FUNGHI",
+        "slozeni": "Rajcata San Marzano D.O.P., Mozzarella di Bufala, Italská Mouka Caputo 00",
+        "ingredience": [
+            "sugomarzano",
+            "mozzarella",
+            "moukacaputo"
+        ],
+        "alergeny": "(1, 7)",
+        "alergeny_cisla": [
+            1,
+            7
+        ],
+        "cena": 175,
+        "masite": true,
+        "bezmase": false,
+        "paliva": false,
+        "nepaliva": true,
+        "sugo": true,
+        "bilyZaklad": false,
+        "naMiste": true,
+        "sSebou": true,
+        "pizzaTydne": true,
+        "nejprodavanejsi": true,
+        "doporucujeme": true,
+        "zlata": true,
+        "obrazek": "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?q=80&w=500&auto=format&fit=crop"
+    },
+    {
+        "id": 3,
+        "cislo": 3,
+        "nazev": "QUATTRO FORMAGGI",
+        "slozeni": "Mozzarella di Bufala, Italská Mouka Caputo 00",
+        "ingredience": [
+            "mozzarella",
+            "moukacaputo"
+        ],
+        "alergeny": "(1, 7)",
+        "alergeny_cisla": [
+            1,
+            7
+        ],
+        "cena": 185,
+        "masite": false,
+        "bezmase": true,
+        "paliva": false,
+        "nepaliva": true,
+        "sugo": false,
+        "bilyZaklad": true,
+        "naMiste": true,
+        "sSebou": true,
+        "pizzaTydne": false,
+        "nejprodavanejsi": false,
+        "doporucujeme": true,
+        "zlata": true,
+        "obrazek": "https://images.unsplash.com/photo-1573821663912-569905455b1c?q=80&w=500&auto=format&fit=crop"
+    },
+    {
+        "id": 4,
+        "cislo": 4,
+        "nazev": "DIAVOLA CHILI",
+        "slozeni": "Rajcata San Marzano D.O.P., Mozzarella di Bufala, Italská Mouka Caputo 00, Spaniol & Italské Chorizo",
+        "ingredience": [
+            "sugomarzano",
+            "mozzarella",
+            "chorizospanelske",
+            "moukacaputo"
+        ],
+        "alergeny": "(1, 7)",
+        "alergeny_cisla": [
+            1,
+            7
+        ],
+        "cena": 180,
+        "masite": true,
+        "bezmase": false,
+        "paliva": true,
+        "nepaliva": false,
+        "sugo": true,
+        "bilyZaklad": false,
+        "naMiste": true,
+        "sSebou": true,
+        "pizzaTydne": false,
+        "nejprodavanejsi": true,
+        "doporucujeme": false,
+        "zlata": false,
+        "obrazek": "https://images.unsplash.com/photo-1628840042765-356cda07504e?q=80&w=500&auto=format&fit=crop"
+    },
+    {
+        "id": 5,
+        "cislo": 5,
+        "nazev": "POLLO E SPINACI",
+        "slozeni": "Mozzarella di Bufala, Šťavnaté Kuřecí Maso, Italská Mouka Caputo 00, Čerstvá Bazalka a Špenát",
+        "ingredience": [
+            "mozzarella",
+            "kurecimaso",
+            "spinacbazalka",
+            "moukacaputo"
+        ],
+        "alergeny": "(1, 7)",
+        "alergeny_cisla": [
+            1,
+            7
+        ],
+        "cena": 190,
+        "masite": true,
+        "bezmase": false,
+        "paliva": false,
+        "nepaliva": true,
+        "sugo": false,
+        "bilyZaklad": true,
+        "naMiste": true,
+        "sSebou": true,
+        "pizzaTydne": true,
+        "nejprodavanejsi": false,
+        "doporucujeme": true,
+        "zlata": false,
+        "obrazek": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=500&auto=format&fit=crop"
+    },
+    {
+        "id": 6,
+        "cislo": 6,
+        "nazev": "HAWAI SPECIAL",
+        "slozeni": "Rajcata San Marzano D.O.P., Mozzarella di Bufala, Italská Mouka Caputo 00",
+        "ingredience": [
+            "sugomarzano",
+            "mozzarella",
+            "moukacaputo"
+        ],
+        "alergeny": "(1, 7)",
+        "alergeny_cisla": [
+            1,
+            7
+        ],
+        "cena": 175,
+        "masite": true,
+        "bezmase": false,
+        "paliva": false,
+        "nepaliva": true,
+        "sugo": true,
+        "bilyZaklad": false,
+        "naMiste": true,
+        "sSebou": true,
+        "pizzaTydne": false,
+        "nejprodavanejsi": false,
+        "doporucujeme": false,
+        "zlata": false,
+        "obrazek": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?q=80&w=500&auto=format&fit=crop"
+    }
+]
