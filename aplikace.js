@@ -172,6 +172,53 @@ function ziskatAlergenyCisla(pizza) {
   return [];
 }
 
+// Pomocna funkce pro vygenerovani hezke SVG ikony papricky
+function ziskatSvgPapricku(velikost = 19) {
+  return `<svg class="ikona-chilli-svg" viewBox="0 0 24 24" width="${velikost}" height="${velikost}" fill="none" style="vertical-align: -2px; display: inline-block; filter: drop-shadow(0 2px 4px rgba(220, 38, 38, 0.35)); flex-shrink: 0;" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.8 7.3C16.6 5.8 14.8 5 13 5.2c-2.4.3-4.5 1.7-5.9 3.6-2.5 3.3-3.4 7.7-2.3 11.7.3 1 .9 1.9 1.8 2.4.8.4 1.7.4 2.5 0 .8-.5 1.4-1.2 1.7-2.1.7-2.1 1.9-3.9 3.7-5.2 1.7-1.3 3.9-1.9 6-1.5.8.1 1.6-.2 2.1-.8.5-.6.6-1.5.1-2.1-.9-1.6-2.4-2.9-4.1-3.7z" fill="url(#gradChilliRed)"/>
+    <path d="M16.5 8C15.5 7 14 6.5 12.6 6.7c-2 .3-3.8 1.4-5 3-1.6 2.1-2.4 4.8-2.4 7.5.3-2.3 1.1-4.6 2.5-6.5 1.2-1.6 2.8-2.7 4.7-3 1.4-.2 2.7.1 3.7.8.2.1.5 0 .6-.2.1-.2 0-.4-.2-.5z" fill="#ff9999" opacity="0.6"/>
+    <path d="M15.5 3.2c.7-.7 1.7-1.1 2.7-1.1.4 0 .7.3.7.7s-.3.7-.7.7c-.6 0-1.2.2-1.7.7-.4.4-.6 1-.7 1.5-.1.4-.4.6-.8.6s-.7-.3-.7-.7c.1-.9.5-1.8 1.2-2.4z" fill="#22c55e"/>
+    <path d="M12.5 5.5c.8-.4 1.7-.5 2.6-.3.6.1 1.1.4 1.5.8.3.2.4.6.3.9-.1.3-.4.5-.8.5-.4-.2-.8-.4-1.2-.5-.6-.1-1.3 0-1.8.3-.3.2-.7.1-.9-.1-.2-.3-.1-.7.2-.9z" fill="#16a34a"/>
+    <defs>
+      <linearGradient id="gradChilliRed" x1="6" y1="6" x2="21" y2="21" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#ff4444"/>
+        <stop offset="50%" stop-color="#e50914"/>
+        <stop offset="100%" stop-color="#990000"/>
+      </linearGradient>
+    </defs>
+  </svg>`;
+}
+
+function vytvoritChilliIkony(uroven, velikost = 19) {
+  uroven = parseInt(uroven, 10);
+  if (uroven <= 0) return '';
+  const popisek = (uroven === 2) ? 'Extra pálivé' : 'Mírně pálivé';
+  let svgList = '';
+  for (let i = 0; i < uroven; i++) {
+    svgList += ziskatSvgPapricku(velikost);
+  }
+  return `<span class="ikona-palivosti-nazev" title="${popisek}" style="display: inline-flex; align-items: center; gap: 3px; margin-left: 6px; border: none; background: transparent; padding: 0; vertical-align: middle;">${svgList}</span>`;
+}
+
+// Pomocna funkce pro ziskani maximalni urovne palivosti pizzy podle surovin (0, 1 nebo 2)
+function ziskatPalivostPizzy(pizza) {
+  const surovinyDb = window.seznamSurovinZDatabaze || [];
+  if (!pizza || !pizza.ingredience || !Array.isArray(pizza.ingredience) || pizza.ingredience.length === 0) {
+    return 0;
+  }
+  let maxPalivost = 0;
+  pizza.ingredience.forEach(idSur => {
+    const sur = surovinyDb.find(s => s.id === idSur);
+    if (sur && sur.palivost) {
+      const p = parseInt(sur.palivost, 10);
+      if (p > maxPalivost) {
+        maxPalivost = p;
+      }
+    }
+  });
+  return maxPalivost;
+}
+
 // Funkce pro vykresleni pizz v mrizce
 function renderovatJidelniListek() {
   const mrizkaPrvek = document.getElementById('mrizka-pizz-kontejner');
@@ -179,7 +226,16 @@ function renderovatJidelniListek() {
 
   const aktualniPizzy = window.seznamPizzZDatabaze || seznamPizz;
 
-  const filtrovanePizzy = aktualniPizzy.filter(pizza => {
+  // Řazení: Aktivní Pizza týdne VŽDY na 1. pozici, ostatní podle čísla pizzy
+  const serazenePizzy = [...aktualniPizzy].sort((a, b) => {
+    const aAktivni = Boolean(a.aktivniPizzaTydne);
+    const bAktivni = Boolean(b.aktivniPizzaTydne);
+    if (aAktivni && !bAktivni) return -1;
+    if (!aAktivni && bAktivni) return 1;
+    return (parseInt(a.cislo, 10) || 0) - (parseInt(b.cislo, 10) || 0);
+  });
+
+  const filtrovanePizzy = serazenePizzy.filter(pizza => {
     // 1. Maso / bez masa
     const jeMasita = pizza.masite === true || (pizza.bezmase === false);
     const jeBezmasna = pizza.bezmase === true || (pizza.masite === false);
@@ -188,8 +244,9 @@ function renderovatJidelniListek() {
     if (stavPrepinacu.maso === 'bezmase' && !jeBezmasna) return false;
 
     // 2. Palivost
-    const jePaliva = pizza.paliva === true || (pizza.nepaliva === false);
-    const jeNepaliva = pizza.nepaliva === true || (pizza.paliva === false);
+    const urovenPalivosti = ziskatPalivostPizzy(pizza);
+    const jePaliva = pizza.paliva === true || (pizza.nepaliva === false) || (urovenPalivosti > 0);
+    const jeNepaliva = (pizza.nepaliva === true || (pizza.paliva === false)) && urovenPalivosti === 0;
 
     if (stavPrepinacu.palivost === 'paliva' && !jePaliva) return false;
     if (stavPrepinacu.palivost === 'nepaliva' && !jeNepaliva) return false;
@@ -232,20 +289,26 @@ function renderovatJidelniListek() {
       alergenyVypis = `Alergeny: ${pizza.alergeny}`;
     }
 
+    // Palivost ikona (1 nebo 2 kvalitní vektorové papričky bez rámečku)
+    const palivostUroven = ziskatPalivostPizzy(pizza);
+    const palivostHtml = vytvoritChilliIkony(palivostUroven, 19);
+    const jeAktivniTydne = Boolean(pizza.aktivniPizzaTydne);
+
     return `
-      <div class="karta-pizzy">
-        <div class="ciselny-odznak ${pizza.zlata ? 'odznak-zlata' : ''}">${pizza.cislo}</div>
+      <div class="karta-pizzy ${jeAktivniTydne ? 'karta-pizza-tydne' : ''}">
+        ${!jeAktivniTydne ? `<div class="ciselny-odznak">${pizza.cislo}</div>` : ''}
+        ${jeAktivniTydne ? `<span class="stitek-pizza-tydne-roh"><span class="hvezda-ikona-tydne">★</span> PIZZA TÝDNE</span>` : ''}
         <div class="obrazek-pizzy-obal" onclick="otvoritDetailPizzy(${pizza.id})" style="cursor: pointer;" title="Zobrazit detail pizzy">
           <img src="${pizza.obrazek}" alt="${pizza.nazev}" loading="lazy">
         </div>
-        <h3 class="nazev-pizzy" onclick="otvoritDetailPizzy(${pizza.id})" style="cursor: pointer;">${pizza.nazev}</h3>
+        <h3 class="nazev-pizzy" onclick="otvoritDetailPizzy(${pizza.id})" style="cursor: pointer;">${pizza.nazev}${palivostHtml}</h3>
         <p class="slozeni-pizzy">${pizza.slozeni}</p>
         
         ${alergenyVypis ? `<div class="alergeny-klikaci-stitek" onclick="otvoritAlergenyPizzy(${pizza.id}); event.stopPropagation();" title="Zobrazit alergeny pizzy">${alergenyVypis}</div>` : ''}
 
         <div class="patka-karty-pizzy">
           <span class="cena-pizzy">${pizza.cena},- Kč</span>
-          <button class="tlacitko-pridat-plus" onclick="pridatDoKosiku(${pizza.id})" title="Přidat do košíku">+</button>
+          <button class="tlacitko-pridat-plus" onclick="pridatDoKosiku(${pizza.id})" title="Přidat do nákupního seznamu">+</button>
         </div>
       </div>
     `;
@@ -312,15 +375,19 @@ function otvoritDetailPizzy(idPizzy) {
   if (pizza.ingredience && pizza.ingredience.length > 0) {
     const obsazeneSuroviny = surovinyDb.filter(s => pizza.ingredience.includes(s.id));
     if (obsazeneSuroviny.length > 0) {
-      ingredienceSeznamHtml = obsazeneSuroviny.map(s => `
+      ingredienceSeznamHtml = obsazeneSuroviny.map(s => {
+        const surP = parseInt(s.palivost || 0, 10);
+        const surPapricky = vytvoritChilliIkony(surP, 16);
+        return `
         <div style="background: #222; padding: 10px 14px; border-radius: 8px; border: 1px solid #333; display: flex; align-items: center; justify-content: space-between;">
           <div style="display: flex; align-items: center; gap: 10px;">
             <img src="${s.obrazek}" style="width: 35px; height: 35px; object-fit: cover; border-radius: 50%;" alt="">
-            <strong style="color: #fff; font-size: 0.95rem;">${s.nazev}</strong>
+            <strong style="color: #fff; font-size: 0.95rem;">${s.nazev}${surPapricky}</strong>
           </div>
           <span style="font-size: 0.8rem; color: #f59e0b; font-weight: bold;">${s.puvod || ''}</span>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
   }
 
@@ -338,10 +405,14 @@ function otvoritDetailPizzy(idPizzy) {
     alergenyHtml = `<span style="color: #aaa;">Bez specifikovaných alergenů</span>`;
   }
 
+  // Palivost ikona pro modal
+  const palivostUroven = ziskatPalivostPizzy(pizza);
+  const palivostModalHtml = vytvoritChilliIkony(palivostUroven, 22);
+
   kontejner.innerHTML = `
     <div style="text-align: center; margin-bottom: 20px;">
       <div style="font-size: 0.9rem; color: #f59e0b; font-weight: 800; letter-spacing: 1px; margin-bottom: 5px;">PIZZA Č. ${pizza.cislo}</div>
-      <h2 class="nadpis-sekce" style="font-size: 2rem; margin: 0;">${pizza.nazev}</h2>
+      <h2 class="nadpis-sekce" style="font-size: 2rem; margin: 0; display: inline-flex; align-items: center; justify-content: center;">${pizza.nazev}${palivostModalHtml}</h2>
       <p style="color: #aaa; font-size: 1.05rem; margin-top: 8px;">${pizza.slozeni}</p>
     </div>
 
@@ -549,15 +620,71 @@ let vybranaPobocka = localStorage.getItem('vybranaPobocka') || 'rychnov';
 document.addEventListener('DOMContentLoaded', () => {
   aktualizovatZobrazeniPobocky();
 
-  // Posluchac scrollovani pro jemne zkompaktneni hlavicky
-  window.addEventListener('scroll', () => {
-    const lista = document.querySelector('.horni-kontakty-lista');
-    if (window.scrollY > 80) {
-      lista?.classList.add('skrolovalo-se');
-    } else {
-      lista?.classList.remove('skrolovalo-se');
+  // Chytrá plovoucí horní lišta (skrýt při scroll down, zobrazit při scroll up z jakéhokoliv místa)
+  let posledniScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+  let ticking = false;
+  const minimalniPosunProReakci = 6;
+
+  function obslouzitScroll() {
+    const soucasnyScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+    const horniLista = document.querySelector('.horni-kontakty-lista');
+
+    if (!horniLista) {
+      ticking = false;
+      return;
     }
-  });
+
+    if (soucasnyScrollY > 80) {
+      horniLista.classList.add('skrolovalo-se');
+    } else {
+      horniLista.classList.remove('skrolovalo-se');
+    }
+
+    // Jsme-li úplně nahoře, lišta je vždy viditelná
+    if (soucasnyScrollY <= 20) {
+      horniLista.classList.remove('lista-skryta');
+      posledniScrollY = soucasnyScrollY;
+      ticking = false;
+      return;
+    }
+
+    const rozdil = soucasnyScrollY - posledniScrollY;
+
+    if (Math.abs(rozdil) >= minimalniPosunProReakci) {
+      if (rozdil > 0) {
+        // Scroll DOWN -> Skrýt lištu
+        horniLista.classList.add('lista-skryta');
+        
+        // Pokud je otevřené mobilní menu nebo telefonní okénko, zavřeme je
+        const menu = document.getElementById('navigace-odkazy-menu');
+        const btnMenu = document.getElementById('btn-mobil-menu');
+        if (menu && menu.classList.contains('mobil-otevreno')) {
+          menu.classList.remove('mobil-otevreno');
+          if (btnMenu) btnMenu.classList.remove('aktivni');
+        }
+
+        const box = document.getElementById('podokno-volani-box');
+        const btnVolani = document.getElementById('btn-otevrit-volani');
+        if (box && box.classList.contains('zobrazit')) {
+          box.classList.remove('zobrazit');
+          if (btnVolani) btnVolani.classList.remove('aktivni');
+        }
+      } else {
+        // Scroll UP -> Zobrazit lištu
+        horniLista.classList.remove('lista-skryta');
+      }
+      posledniScrollY = soucasnyScrollY;
+    }
+
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(obslouzitScroll);
+      ticking = true;
+    }
+  }, { passive: true });
 });
 
 function prepnoutPobocku(mesto) {
@@ -587,14 +714,17 @@ function aktualizovatZobrazeniPobocky() {
   // 2. Telefon pod switchem v hlavičce s čistě bílou SVG ikonou
   const horniKontaktPrvek = document.getElementById('horni-aktivni-kontakt');
   if (horniKontaktPrvek) {
-    const ikonaBilyMobil = `<svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff" style="margin-right: 6px; vertical-align: -2px;"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1.003 1.003 0 011.02-.24c1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>`;
+    const jePodstranka = horniKontaktPrvek.closest('.navigace-prava-cast') !== null;
+    const ikonaBilyMobil = `<svg width="16" height="16" viewBox="0 0 24 24" fill="#ffffff" style="margin-right: 6px; vertical-align: -2px;"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1.003 1.003 0 011.02-.24c1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>`;
+    const tridaOdkazu = jePodstranka ? 'navigace-telefon-stitek' : 'telefonni-odkaz';
+    
     if (vybranaPobocka === 'rychnov') {
       horniKontaktPrvek.innerHTML = `
-        <a href="tel:739149142" class="telefonni-odkaz">${ikonaBilyMobil}739 149 142</a>
+        <a href="tel:739149142" class="${tridaOdkazu}">${ikonaBilyMobil}<span>739 149 142</span></a>
       `;
     } else {
       horniKontaktPrvek.innerHTML = `
-        <a href="tel:774741818" class="telefonni-odkaz">${ikonaBilyMobil}774 741 818</a>
+        <a href="tel:774741818" class="${tridaOdkazu}">${ikonaBilyMobil}<span>774 741 818</span></a>
       `;
     }
   }
@@ -651,6 +781,410 @@ function aktualizovatZobrazeniPobocky() {
     }
   }
 }
+
+// 6. OBSLUHA VYSKAKOVACÍHO PODOKNA VOLÁNÍ V PODSTRÁNKOVÉ HLAVIČCE
+function prepnoutPodoknoVolani(event) {
+  if (event) {
+    event.stopPropagation();
+  }
+  const box = document.getElementById('podokno-volani-box');
+  const btn = document.getElementById('btn-otevrit-volani');
+  if (box) {
+    box.classList.toggle('zobrazit');
+    if (btn) btn.classList.toggle('aktivni', box.classList.contains('zobrazit'));
+  }
+  // Pokud otevřeme volání, zavřeme mobilní menu
+  const menu = document.getElementById('navigace-odkazy-menu');
+  const btnMenu = document.getElementById('btn-mobil-menu');
+  if (menu && menu.classList.contains('mobil-otevreno')) {
+    menu.classList.remove('mobil-otevreno');
+    if (btnMenu) btnMenu.classList.remove('aktivni');
+  }
+}
+window.prepnoutPodoknoVolani = prepnoutPodoknoVolani;
+
+// Obsluha podokna volání u velkého tlačítka v sekci Rozvoz
+function prepnoutPodoknoVolaniRozvoz(event) {
+  if (event) {
+    event.stopPropagation();
+  }
+  const box = document.getElementById('podokno-volani-rozvoz-box');
+  const btn = document.getElementById('btn-rozvoz-volani');
+  if (!box) return;
+
+  const jeOtevreno = box.classList.contains('zobrazit');
+  if (jeOtevreno) {
+    box.classList.remove('zobrazit');
+  } else {
+    box.classList.add('zobrazit');
+  }
+}
+window.prepnoutPodoknoVolaniRozvoz = prepnoutPodoknoVolaniRozvoz;
+
+// 7. OBSLUHA MOBILNÍHO HAMBURGER MENU
+function prepnoutMobilMenu(event) {
+  if (event) {
+    event.stopPropagation();
+  }
+  const menu = document.getElementById('navigace-odkazy-menu');
+  const btn = document.getElementById('btn-mobil-menu');
+  if (menu) {
+    menu.classList.toggle('mobil-otevreno');
+    if (btn) btn.classList.toggle('aktivni', menu.classList.contains('mobil-otevreno'));
+  }
+  // Pokud otevřeme mobilní menu, zavřeme podokno volání
+  const box = document.getElementById('podokno-volani-box');
+  const btnVolani = document.getElementById('btn-otevrit-volani');
+  if (box && box.classList.contains('zobrazit')) {
+    box.classList.remove('zobrazit');
+    if (btnVolani) btnVolani.classList.remove('aktivni');
+  }
+}
+window.prepnoutMobilMenu = prepnoutMobilMenu;
+
+// Kliknutí mimo podokno nebo menu je automaticky zavře
+document.addEventListener('click', (e) => {
+  const box = document.getElementById('podokno-volani-box');
+  const btnVolani = document.getElementById('btn-otevrit-volani');
+  if (box && box.classList.contains('zobrazit')) {
+    if (!box.contains(e.target) && e.target !== btnVolani && !btnVolani.contains(e.target)) {
+      box.classList.remove('zobrazit');
+      if (btnVolani) btnVolani.classList.remove('aktivni');
+    }
+  }
+
+  const boxRozvoz = document.getElementById('podokno-volani-rozvoz-box');
+  const btnRozvoz = document.getElementById('btn-rozvoz-volani');
+  if (boxRozvoz && boxRozvoz.classList.contains('zobrazit')) {
+    if (!boxRozvoz.contains(e.target) && e.target !== btnRozvoz && !btnRozvoz.contains(e.target)) {
+      boxRozvoz.classList.remove('zobrazit');
+    }
+  }
+
+  const menu = document.getElementById('navigace-odkazy-menu');
+  const btnMenu = document.getElementById('btn-mobil-menu');
+  if (menu && menu.classList.contains('mobil-otevreno')) {
+    if (!menu.contains(e.target) && e.target !== btnMenu && !btnMenu.contains(e.target)) {
+      menu.classList.remove('mobil-otevreno');
+      if (btnMenu) btnMenu.classList.remove('aktivni');
+    }
+  }
+});
+
+// Pomocná funkce pro odstranění diakritiky (háčků a čárek)
+function odstranitDiakritiku(text) {
+  if (!text) return '';
+  const mapa = {
+    'á': 'a', 'č': 'c', 'ď': 'd', 'é': 'e', 'ě': 'e', 'í': 'i', 'ň': 'n', 'ó': 'o',
+    'ř': 'r', 'š': 's', 'ť': 't', 'ú': 'u', 'ů': 'u', 'ý': 'y', 'ž': 'z',
+    'Á': 'a', 'Č': 'c', 'Ď': 'd', 'É': 'e', 'Ě': 'e', 'Í': 'i', 'Ň': 'n', 'Ó': 'o',
+    'Ř': 'r', 'Š': 's', 'Ť': 't', 'Ú': 'u', 'Ů': 'u', 'Ý': 'y', 'Ž': 'z'
+  };
+  let vysledek = String(text).replace(/[áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ]/g, function(match) {
+    return mapa[match] || match;
+  });
+  try {
+    vysledek = vysledek.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  } catch (e) {}
+  return vysledek.toLowerCase().trim();
+}
+window.odstranitDiakritiku = odstranitDiakritiku;
+
+// Funkce pro živé vyhledávání / filtrování obcí v seznamu
+function filtrovatObceVOkne(kontejnerId, dotaz) {
+  const kontejner = document.getElementById(kontejnerId);
+  if (!kontejner) return false;
+
+  const polozky = kontejner.querySelectorAll('.stitek-obec-polozka');
+  const hledanyText = odstranitDiakritiku(dotaz);
+
+  if (!hledanyText) {
+    kontejner.style.display = 'none';
+    polozky.forEach(function(el) {
+      el.classList.add('skryto');
+      el.classList.remove('shoda');
+    });
+    return false;
+  }
+
+  let nalezeno = false;
+  polozky.forEach(function(el) {
+    const dataObec = el.getAttribute('data-obec') || '';
+    const textObec = el.textContent || '';
+    const nazevObce1 = odstranitDiakritiku(dataObec);
+    const nazevObce2 = odstranitDiakritiku(textObec);
+    
+    if (nazevObce1.includes(hledanyText) || nazevObce2.includes(hledanyText)) {
+      el.classList.remove('skryto');
+      el.classList.add('shoda');
+      nalezeno = true;
+    } else {
+      el.classList.add('skryto');
+      el.classList.remove('shoda');
+    }
+  });
+
+  kontejner.style.display = nalezeno ? 'flex' : 'none';
+  return nalezeno;
+}
+window.filtrovatObceVOkne = filtrovatObceVOkne;
+
+// Funkce pro rozbalení/přepnutí mapy rozvozu přímo na hlavní stránce
+function prepnoutPobockuRozvozMapy(pobocka, neprefiltrovat) {
+  const prepinac = document.getElementById('prepinac-rozvoz-mapa');
+  const mapaRychnov = document.getElementById('rozvoz-mapa-svg-rychnov');
+  const mapaUsti = document.getElementById('rozvoz-mapa-svg-usti');
+  const vstupHledani = document.getElementById('vstup-hledat-obec-rozvoz');
+
+  if (prepinac) {
+    prepinac.setAttribute('data-aktivni', pobocka);
+    const tlacitka = prepinac.querySelectorAll('.kapsle-polozka');
+    tlacitka.forEach(function(btn) {
+      if ((pobocka === 'rychnov' && btn.textContent.includes('Rychnov')) ||
+          (pobocka === 'usti' && btn.textContent.includes('Ústí'))) {
+        btn.classList.add('aktivni');
+      } else {
+        btn.classList.remove('aktivni');
+      }
+    });
+  }
+
+  if (pobocka === 'rychnov') {
+    if (mapaRychnov) mapaRychnov.style.display = 'flex';
+    if (mapaUsti) mapaUsti.style.display = 'none';
+  } else {
+    if (mapaRychnov) mapaRychnov.style.display = 'none';
+    if (mapaUsti) mapaUsti.style.display = 'flex';
+  }
+
+  // Přefiltrovat podle zadaného textu
+  if (!neprefiltrovat && vstupHledani && vstupHledani.value) {
+    filtrovatAktivniRozvozObce(vstupHledani.value);
+  }
+}
+window.prepnoutPobockuRozvozMapy = prepnoutPobockuRozvozMapy;
+
+// Živé vyhledávání obcí v aktivní pobočce nebo v mobilním boxíku Cena dopravy
+function filtrovatAktivniRozvozObce(dotaz, jeZMobilu) {
+  const cistyDotaz = odstranitDiakritiku(dotaz);
+
+  if (jeZMobilu) {
+    filtrovatObceVOkne('vysledky-obci-mobil', cistyDotaz);
+    return;
+  }
+
+  // Na desktopu: zkontrolujeme shodu pro obě pobočky
+  const prepinac = document.getElementById('prepinac-rozvoz-mapa');
+  const aktivniPobocka = prepinac ? (prepinac.getAttribute('data-aktivni') || 'rychnov') : 'rychnov';
+
+  const nalezRychnov = filtrovatObceVOkne('vysledky-obci-rychnov', cistyDotaz);
+  const nalezUsti = filtrovatObceVOkne('vysledky-obci-usti', cistyDotaz);
+
+  // Pokud hledáme vesnici, která je v druhé pobočce (např. Hnátnice v Ústí, když je otevřen Rychnov),
+  // automaticky přepneme pobočku, aby ji uživatel hned viděl na mapě i ve výsledcích!
+  if (cistyDotaz && !nalezRychnov && nalezUsti && aktivniPobocka !== 'usti') {
+    prepnoutPobockuRozvozMapy('usti', true);
+    filtrovatObceVOkne('vysledky-obci-usti', cistyDotaz);
+    const rychnovKontejner = document.getElementById('vysledky-obci-rychnov');
+    if (rychnovKontejner) rychnovKontejner.style.display = 'none';
+  } else if (cistyDotaz && nalezRychnov && !nalezUsti && aktivniPobocka !== 'rychnov') {
+    prepnoutPobockuRozvozMapy('rychnov', true);
+    filtrovatObceVOkne('vysledky-obci-rychnov', cistyDotaz);
+    const ustiKontejner = document.getElementById('vysledky-obci-usti');
+    if (ustiKontejner) ustiKontejner.style.display = 'none';
+  } else {
+    // Skryjeme neaktivní kontejner
+    const neaktivniId = aktivniPobocka === 'rychnov' ? 'vysledky-obci-usti' : 'vysledky-obci-rychnov';
+    const neaktivniKontejner = document.getElementById(neaktivniId);
+    if (neaktivniKontejner) neaktivniKontejner.style.display = 'none';
+  }
+
+  // Zvýraznění v SVG mapě
+  const vsechnyMapoveTexty = document.querySelectorAll('.mapa-text-obec');
+  vsechnyMapoveTexty.forEach(function(el) {
+    const text = odstranitDiakritiku(el.textContent);
+    if (cistyDotaz && text.includes(cistyDotaz)) {
+      el.classList.add('shoda');
+    } else {
+      el.classList.remove('shoda');
+    }
+  });
+}
+window.filtrovatAktivniRozvozObce = filtrovatAktivniRozvozObce;
+
+// Rozbalení / sbalení celého velkého bloku mapy rozvozu
+function prepnoutRozbaleniRozvozoveMapy() {
+  const blok = document.getElementById('rozvoz-mapa-velky-blok');
+  const btn = document.getElementById('btn-toggle-rozvoz-mapa');
+  if (!blok) return;
+
+  const jeSkryto = blok.style.display === 'none' || !blok.style.display;
+  if (jeSkryto) {
+    blok.style.display = 'flex';
+    if (btn) btn.classList.add('otevreno');
+  } else {
+    blok.style.display = 'none';
+    if (btn) btn.classList.remove('otevreno');
+  }
+}
+window.prepnoutRozbaleniRozvozoveMapy = prepnoutRozbaleniRozvozoveMapy;
+
+// Tlačítko UKÁZAT NA MAPĚ v sekci Provozovny
+function ukazatNaMapeProvozovnu(pobocka) {
+  const blok = document.getElementById('rozvoz-mapa-velky-blok');
+  const btn = document.getElementById('btn-toggle-rozvoz-mapa');
+  if (blok) {
+    blok.style.display = 'flex';
+    if (btn) btn.classList.add('otevreno');
+  }
+  prepnoutPobockuRozvozMapy(pobocka);
+  const rozvozSekce = document.getElementById('rozvoz');
+  if (rozvozSekce) {
+    rozvozSekce.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+window.ukazatNaMapeProvozovnu = ukazatNaMapeProvozovnu;
+
+function prepnoutRozbalovaciMapu(pobocka, scrollKMapam) {
+  ukazatNaMapeProvozovnu(pobocka);
+}
+window.prepnoutRozbalovaciMapu = prepnoutRozbalovaciMapu;
+
+// Inicializace tooltipu na mapě rozvozu při najetí myší na PC
+function inicializovatMapuRozvozuTooltips() {
+  const tooltip = document.getElementById('rozvoz-mapa-tooltip');
+  const velkyBlok = document.getElementById('rozvoz-mapa-velky-blok');
+  if (!tooltip || !velkyBlok) return;
+
+  const tooltipNazev = tooltip.querySelector('.tooltip-obec-nazev');
+  const tooltipKm = tooltip.querySelector('.tooltip-obec-km');
+  const tooltipCena = tooltip.querySelector('.tooltip-obec-cena');
+
+  // Vytvoříme databázi obcí podle štítků v DOM
+  const dbObci = {};
+  document.querySelectorAll('.stitek-obec-polozka').forEach(function(el) {
+    const obec = el.getAttribute('data-obec') || '';
+    const kmEl = el.querySelector('.stitek-vzdalenost');
+    const cenaEl = el.querySelector('.cena-obce-stitek');
+    if (obec && kmEl && cenaEl) {
+      const klic = odstranitDiakritiku(obec);
+      dbObci[klic] = {
+        nazev: obec,
+        km: kmEl.textContent.trim(),
+        cena: cenaEl.textContent.trim()
+      };
+    }
+  });
+
+  // Aliasy pro zkrácené názvy na radarové mapě
+  const aliasy = {
+    'skuhrov n. b.': 'skuhrov nad belou',
+    'skuhrov n.b.': 'skuhrov nad belou',
+    'peklo n. z.': 'peklo nad zdobnici',
+    'peklo n.z.': 'peklo nad zdobnici',
+    'doudleby n. o.': 'doudleby nad orlici',
+    'doudleby n.o.': 'doudleby nad orlici',
+    'kostelec n. o.': 'kostelec nad orlici',
+    'kostelec n.o.': 'kostelec nad orlici',
+    'brandys n. o.': 'brandys nad orlici',
+    'brandys n.o.': 'brandys nad orlici',
+    'rychnov n.k.': { nazev: 'Rychnov n.K.', km: 'Město', cena: '+10 Kč' },
+    'rychnov n. k.': { nazev: 'Rychnov n.K.', km: 'Město', cena: '+10 Kč' },
+    'usti n.o.': { nazev: 'Ústí n.O.', km: 'Město', cena: '+10 Kč' },
+    'usti n. o.': { nazev: 'Ústí n.O.', km: 'Město', cena: '+10 Kč' }
+  };
+
+  function ziskatDataObce(text) {
+    const klic = odstranitDiakritiku(text);
+    if (dbObci[klic]) return dbObci[klic];
+    if (aliasy[klic]) {
+      if (typeof aliasy[klic] === 'object') return aliasy[klic];
+      if (dbObci[aliasy[klic]]) return dbObci[aliasy[klic]];
+    }
+    return null;
+  }
+
+  function updatePozice(e) {
+    const blokRect = velkyBlok.getBoundingClientRect();
+    const x = e.clientX - blokRect.left;
+    const y = e.clientY - blokRect.top;
+    tooltip.style.left = `${x}px`;
+    tooltip.style.top = `${y}px`;
+  }
+
+  function zobrazitTooltip(e, data, el1, el2) {
+    if (el1) el1.classList.add('hover-aktivni');
+    if (el2) el2.classList.add('hover-aktivni');
+
+    if (tooltipNazev) tooltipNazev.textContent = data.nazev;
+    if (tooltipKm) tooltipKm.textContent = data.km;
+    if (tooltipCena) tooltipCena.textContent = data.cena;
+
+    tooltip.classList.add('aktivni');
+    updatePozice(e);
+  }
+
+  function skrytTooltip(el1, el2) {
+    if (el1) el1.classList.remove('hover-aktivni');
+    if (el2) el2.classList.remove('hover-aktivni');
+    tooltip.classList.remove('aktivni');
+  }
+
+  // Zaregistrujeme události na obou mapách
+  const mapy = document.querySelectorAll('.rozvoz-mapa-svg-platno svg');
+  mapy.forEach(function(svg) {
+    // 1. Obce v okolí
+    const texty = svg.querySelectorAll('.mapa-text-obec');
+    texty.forEach(function(textEl) {
+      const textObsah = textEl.textContent.trim();
+      const data = ziskatDataObce(textObsah);
+      if (!data) return;
+
+      let prevCircle = textEl.previousElementSibling;
+      while (prevCircle && prevCircle.tagName.toLowerCase() !== 'circle') {
+        prevCircle = prevCircle.previousElementSibling;
+      }
+
+      textEl.addEventListener('mouseenter', function(e) { zobrazitTooltip(e, data, textEl, prevCircle); });
+      textEl.addEventListener('mousemove', updatePozice);
+      textEl.addEventListener('mouseleave', function() { skrytTooltip(textEl, prevCircle); });
+
+      if (prevCircle) {
+        prevCircle.addEventListener('mouseenter', function(e) { zobrazitTooltip(e, data, textEl, prevCircle); });
+        prevCircle.addEventListener('mousemove', updatePozice);
+        prevCircle.addEventListener('mouseleave', function() { skrytTooltip(textEl, prevCircle); });
+      }
+    });
+
+    // 2. Středová města (Rychnov n.K. / Ústí n.O.)
+    const mestoText = svg.querySelector('.mapa-popisek-mesto');
+    const mestoBod = svg.querySelector('.mapa-bod-stred');
+    if (mestoText) {
+      const dataMesto = ziskatDataObce(mestoText.textContent.trim());
+      if (dataMesto) {
+        mestoText.addEventListener('mouseenter', function(e) { zobrazitTooltip(e, dataMesto, mestoText, mestoBod); });
+        mestoText.addEventListener('mousemove', updatePozice);
+        mestoText.addEventListener('mouseleave', function() { skrytTooltip(mestoText, mestoBod); });
+
+        if (mestoBod) {
+          mestoBod.addEventListener('mouseenter', function(e) { zobrazitTooltip(e, dataMesto, mestoText, mestoBod); });
+          mestoBod.addEventListener('mousemove', updatePozice);
+          mestoBod.addEventListener('mouseleave', function() { skrytTooltip(mestoText, mestoBod); });
+        }
+      }
+    }
+  });
+}
+window.inicializovatMapuRozvozuTooltips = inicializovatMapuRozvozuTooltips;
+
+// Spuštění inicializace po načtení dokumentu
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', inicializovatMapuRozvozuTooltips);
+} else {
+  inicializovatMapuRozvozuTooltips();
+}
+
+
 
 
 

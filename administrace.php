@@ -10,8 +10,9 @@ require_once __DIR__ . '/databaze.php';
 
 // Tajne heslo pro prihlaseni do administrace z centralni konfigurace
 $tajneHeslo = defined('HESLO_ADMIN') ? HESLO_ADMIN : 'kure123';
-$zpravaOznameni = '';
-$zpravaChyba = '';
+$zpravaOznameni = $_SESSION['zpravaOznameni'] ?? '';
+$zpravaChyba = $_SESSION['zpravaChyba'] ?? '';
+unset($_SESSION['zpravaOznameni'], $_SESSION['zpravaChyba']);
 
 // Odhlaseni
 if (isset($_GET['akce']) && $_GET['akce'] === 'odhlasit') {
@@ -39,7 +40,8 @@ if ($jePrihlasen && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // Ulozeni / Uprava pizzy
   if (isset($_POST['ulozit_pizzu_stisknuto'])) {
-    $idPizzy = isset($_POST['id_pizzy']) && $_POST['id_pizzy'] !== '' ? intval($_POST['id_pizzy']) : (time());
+    $idPost = isset($_POST['id_pizzy']) && $_POST['id_pizzy'] !== '' ? intval($_POST['id_pizzy']) : null;
+    $idPizzy = ($idPost !== null) ? $idPost : (time());
     $cisloPizzy = intval($_POST['cislo_pizzy'] ?? 1);
     $nazevPizzy = trim($_POST['nazev_pizzy'] ?? '');
     // Vybrane ingredience
@@ -88,6 +90,23 @@ if ($jePrihlasen && $_SERVER['REQUEST_METHOD'] === 'POST') {
       }
     }
 
+    // Vyhledani indexu existujici pizzy v poli
+    $indexNalezen = -1;
+    if ($idPost !== null) {
+      foreach ($db['pizzy'] as $idx => $p) {
+        if (intval($p['id']) === $idPizzy) {
+          $indexNalezen = $idx;
+          break;
+        }
+      }
+    }
+
+    // Zachovani stavu aktivni pizzy tydne
+    $aktivniPizzaTydne = false;
+    if ($indexNalezen >= 0 && !empty($db['pizzy'][$indexNalezen]['aktivniPizzaTydne']) && $pizzaTydne) {
+      $aktivniPizzaTydne = true;
+    }
+
     $novaPizza = [
       'id'              => $idPizzy,
       'cislo'           => $cisloPizzy,
@@ -107,18 +126,11 @@ if ($jePrihlasen && $_SERVER['REQUEST_METHOD'] === 'POST') {
       'doporucujeme'    => $doporucujeme,
       'nejprodavanejsi'  => $nejprodavanejsi,
       'pizzaTydne'      => $pizzaTydne,
+      'aktivniPizzaTydne' => $aktivniPizzaTydne,
       'obrazek'         => $cestaKObrazku
     ];
 
     // Najdeme zda upravujeme nebo pridavame
-    $indexNalezen = -1;
-    foreach ($db['pizzy'] as $idx => $p) {
-      if ($p['id'] === $idPizzy) {
-        $indexNalezen = $idx;
-        break;
-      }
-    }
-
     if ($indexNalezen >= 0) {
       $db['pizzy'][$indexNalezen] = $novaPizza;
       $zpravaOznameni = "Pizza {$nazevPizzy} byla úspěšně upravena!";
@@ -127,7 +139,75 @@ if ($jePrihlasen && $_SERVER['REQUEST_METHOD'] === 'POST') {
       $zpravaOznameni = "Nová pizza {$nazevPizzy} byla přidána do menu!";
     }
 
-    uloziDatabazi($db);
+    uloziDatabazi($db, true);
+    $_SESSION['zpravaOznameni'] = $zpravaOznameni;
+    $presmerovatFiltr = $pizzaTydne ? 'tydne' : 'stale';
+    header('Location: administrace.php?zalozka=pizzy&filtr_tydne=' . $presmerovatFiltr);
+    exit;
+  }
+
+  // Nastaveni aktivni pizzy tydne (vzajemne vylouceni - pouze jedna muze byt aktivni)
+  if (isset($_POST['aktivovat_pizzu_tydne_stisknuto'])) {
+    $idAktivovat = intval($_POST['id_pizzy_aktivovat_tydne']);
+    $nazevAktivovane = '';
+
+    foreach ($db['pizzy'] as &$pz) {
+      if ($pz['id'] === $idAktivovat) {
+        $pz['pizzaTydne'] = true;
+        $pz['aktivniPizzaTydne'] = true;
+        $nazevAktivovane = $pz['nazev'];
+      } else {
+        $pz['aktivniPizzaTydne'] = false;
+      }
+    }
+    unset($pz);
+
+    uloziDatabazi($db, true);
+
+    if (!empty($_POST['ajax'])) {
+      header('Content-Type: application/json; charset=utf-8');
+      echo json_encode(['success' => true, 'idAktivovat' => $idAktivovat]);
+      exit;
+    }
+
+    $_SESSION['zpravaOznameni'] = "Pizza „{$nazevAktivovane}“ byla nastavena jako aktivní Pizza týdne!";
+    header('Location: administrace.php?zalozka=pizzy&filtr_tydne=tydne');
+    exit;
+  }
+
+  // Rychle prepinani vlastnosti pizzy (DOPORUCUJEME, NEJPRODAVANEJSI)
+  if (isset($_POST['prepnout_vlastnost_pizzy_stisknuto'])) {
+    $idPrepnout = intval($_POST['id_pizzy_prepnout']);
+    $vlastnost = trim($_POST['vlastnost'] ?? '');
+    $novaHodnota = false;
+    $nazevPizzy = '';
+
+    foreach ($db['pizzy'] as &$pz) {
+      if (intval($pz['id']) === $idPrepnout) {
+        $nazevPizzy = $pz['nazev'];
+        if ($vlastnost === 'nejprodavanejsi') {
+          $pz['nejprodavanejsi'] = empty($pz['nejprodavanejsi']);
+          $novaHodnota = $pz['nejprodavanejsi'];
+        } elseif ($vlastnost === 'doporucujeme') {
+          $pz['doporucujeme'] = empty($pz['doporucujeme']);
+          $novaHodnota = $pz['doporucujeme'];
+        }
+        break;
+      }
+    }
+    unset($pz);
+
+    uloziDatabazi($db, true);
+
+    if (!empty($_POST['ajax'])) {
+      header('Content-Type: application/json; charset=utf-8');
+      echo json_encode(['success' => true, 'novaHodnota' => $novaHodnota, 'id' => $idPrepnout, 'vlastnost' => $vlastnost]);
+      exit;
+    }
+    
+    $navratFiltr = isset($_POST['filtr_tydne_navrat']) && in_array($_POST['filtr_tydne_navrat'], ['stale', 'tydne']) ? $_POST['filtr_tydne_navrat'] : (isset($_GET['filtr_tydne']) ? $_GET['filtr_tydne'] : 'stale');
+    header('Location: administrace.php?zalozka=pizzy&filtr_tydne=' . $navratFiltr);
+    exit;
   }
 
   // Mazani pizzy
@@ -136,17 +216,21 @@ if ($jePrihlasen && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $db['pizzy'] = array_values(array_filter($db['pizzy'], function($p) use ($idSmazat) {
       return $p['id'] !== $idSmazat;
     }));
-    uloziDatabazi($db);
-    $zpravaOznameni = "Pizza byla úspěšně smazána z menu.";
+    uloziDatabazi($db, true);
+    $_SESSION['zpravaOznameni'] = "Pizza byla úspěšně smazána z menu.";
+    header('Location: administrace.php?zalozka=pizzy');
+    exit;
   }
 
   // Ulozeni / Uprava ingredience
   if (isset($_POST['ulozit_surovinu_stisknuto'])) {
-    $idSuroviny = trim($_POST['id_suroviny'] ?? ('surovina_' . time()));
+    $idPost = trim($_POST['id_suroviny'] ?? '');
+    $idSuroviny = ($idPost !== '') ? $idPost : ('surovina_' . time() . '_' . rand(100, 999));
     $nazevSuroviny = trim($_POST['nazev_suroviny'] ?? '');
     $kategorieSuroviny = trim($_POST['kategorie_suroviny'] ?? 'syry');
     $puvodSuroviny = trim($_POST['puvod_suroviny'] ?? '🇮🇹 Itálie');
     $popisSuroviny = trim($_POST['popis_suroviny'] ?? '');
+    $palivostSuroviny = intval($_POST['palivost_suroviny'] ?? 0);
     $alergenyCislaSuroviny = array_map('intval', $_POST['alergeny_cisla_suroviny'] ?? []);
 
     $cestaKObrazku = $_POST['stavajici_obrazek_suroviny'] ?? 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?q=80&w=600&auto=format&fit=crop';
@@ -171,15 +255,18 @@ if ($jePrihlasen && $_SERVER['REQUEST_METHOD'] === 'POST') {
       'kategorie'      => $kategorieSuroviny,
       'puvod'          => $puvodSuroviny,
       'popis'          => $popisSuroviny,
+      'palivost'       => $palivostSuroviny,
       'alergeny_cisla' => $alergenyCislaSuroviny,
       'obrazek'        => $cestaKObrazku
     ];
 
     $indexNalezen = -1;
-    foreach ($db['suroviny'] as $idx => $s) {
-      if ($s['id'] === $idSuroviny) {
-        $indexNalezen = $idx;
-        break;
+    if ($idPost !== '') {
+      foreach ($db['suroviny'] as $idx => $s) {
+        if ($s['id'] === $idPost) {
+          $indexNalezen = $idx;
+          break;
+        }
       }
     }
 
@@ -194,7 +281,10 @@ if ($jePrihlasen && $_SERVER['REQUEST_METHOD'] === 'POST') {
     // Automaticka aktualizace slozeni vsech pizz pri zmene suroviny
     aktualizovatSlozeniVsechPizz($db);
 
-    uloziDatabazi($db);
+    uloziDatabazi($db, true);
+    $_SESSION['zpravaOznameni'] = $zpravaOznameni;
+    header('Location: administrace.php?zalozka=ingredience');
+    exit;
   }
 
   // Mazani suroviny
@@ -219,27 +309,45 @@ if ($jePrihlasen && $_SERVER['REQUEST_METHOD'] === 'POST') {
     // Automaticka aktualizace slozeni vsech pizz
     aktualizovatSlozeniVsechPizz($db);
 
-    uloziDatabazi($db);
-    $zpravaOznameni = "Ingredience byla smazána.";
+    uloziDatabazi($db, true);
+    $_SESSION['zpravaOznameni'] = "Ingredience byla smazána.";
+    header('Location: administrace.php?zalozka=ingredience');
+    exit;
   }
 
-  // Vytvoreni rucni zalohy
+  // Vytvoreni rucni zalohy (po stisku tlačítka)
   if (isset($_POST['vytvorit_zalohu_stisknuto'])) {
-    if (uloziDatabazi($db, true)) {
-      $zpravaOznameni = 'Bezpečnostní záloha databáze byla úspěšně vytvořena!';
+    if (vytvoritRucniZalohu()) {
+      $_SESSION['zpravaOznameni'] = 'Bezpečnostní záloha databáze byla úspěšně vytvořena!';
     } else {
-      $zpravaChyba = 'Chyba při vytváření zálohy.';
+      $_SESSION['zpravaChyba'] = 'Chyba při vytváření zálohy.';
     }
+    header('Location: administrace.php?zalozka=zalohy');
+    exit;
+  }
+
+  // Smazani zaloh starsich nez 1 mesic
+  if (isset($_POST['smazat_stare_zalohy_stisknuto'])) {
+    $pocetSmazanych = smazatZalohyStarsiNezMesic();
+    if ($pocetSmazanych > 0) {
+      $_SESSION['zpravaOznameni'] = "Bylo úspěšně smazáno {$pocetSmazanych} starých záloh (starších než 1 měsíc).";
+    } else {
+      $_SESSION['zpravaOznameni'] = "Nebyly nalezeny žádné zálohy starší než 1 měsíc ke smazání.";
+    }
+    header('Location: administrace.php?zalozka=zalohy');
+    exit;
   }
 
   // Obnoveni ze zalohy
   if (isset($_POST['obnovit_zalohu_stisknuto'])) {
     $souborKZaloze = trim($_POST['nazev_zalohy'] ?? '');
     if (!empty($souborKZaloze) && obnovitZalohu($souborKZaloze)) {
-      $zpravaOznameni = "Databáze byla úspěšně obnovena ze zálohy: {$souborKZaloze}!";
+      $_SESSION['zpravaOznameni'] = "Databáze byla úspěšně obnovena ze zálohy: {$souborKZaloze}!";
     } else {
-      $zpravaChyba = 'Nepodařilo se obnovit vybranou zálohu.';
+      $_SESSION['zpravaChyba'] = 'Nepodařilo se obnovit vybranou zálohu.';
     }
+    header('Location: administrace.php?zalozka=zalohy');
+    exit;
   }
 
   // Export databaze do JSON souboru (ke stazeni do PC)
@@ -259,14 +367,16 @@ if ($jePrihlasen && $_SERVER['REQUEST_METHOD'] === 'POST') {
       $obsah = file_get_contents($soubor['tmp_name']);
       $parsovanaData = json_decode($obsah, true);
       if (is_array($parsovanaData) && isset($parsovanaData['pizzy'])) {
-        uloziDatabazi($parsovanaData, true);
-        $zpravaOznameni = 'Databáze byla úspěšně obnovena z nahraného JSON souboru!';
+        uloziDatabazi($parsovanaData, false);
+        $_SESSION['zpravaOznameni'] = 'Databáze byla úspěšně obnovena z nahraného JSON souboru!';
       } else {
-        $zpravaChyba = 'Nahraný soubor nemá platnou strukturu databáze pizz a ingrediencí.';
+        $_SESSION['zpravaChyba'] = 'Nahraný soubor nemá platnou strukturu databáze pizz a ingrediencí.';
       }
     } else {
-      $zpravaChyba = 'Chyba při nahrávání souboru do administrace.';
+      $_SESSION['zpravaChyba'] = 'Chyba při nahrávání souboru do administrace.';
     }
+    header('Location: administrace.php');
+    exit;
   }
 }
 
@@ -283,6 +393,15 @@ $pizzyStaleSeznam = array_values(array_filter($pizzySeznam, function($p) {
 $pizzyTydneSeznam = array_values(array_filter($pizzySeznam, function($p) {
   return !empty($p['pizzaTydne']);
 }));
+
+// Automaticky dalsi cislo pizzy (max cislo + 1)
+$maxCisloPizzy = 0;
+foreach ($pizzySeznam as $p) {
+  if (isset($p['cislo']) && intval($p['cislo']) > $maxCisloPizzy) {
+    $maxCisloPizzy = intval($p['cislo']);
+  }
+}
+$dalsiCisloPizzy = $maxCisloPizzy + 1;
 
 // Priprava upravovane pizzy
 $upravovanaPizza = null;
@@ -308,6 +427,24 @@ if ($jePrihlasen && isset($_GET['upravit_surovinu'])) {
   }
 }
 
+// Aktivni zalozka (vychozi jsou pizzy nebo podle parametru zalozka)
+$aktivniZalozka = 'pizzy';
+if (isset($_GET['zalozka']) && in_array($_GET['zalozka'], ['pizzy', 'ingredience', 'zalohy'])) {
+  $aktivniZalozka = $_GET['zalozka'];
+} elseif ($upravovanaSurovina) {
+  $aktivniZalozka = 'ingredience';
+} elseif ($upravovanaPizza) {
+  $aktivniZalozka = 'pizzy';
+}
+
+// Aktivni filtr v tabu pizzy (Stale pizzy vs Pizza tydne)
+$aktivniFiltrTydne = 'stale';
+if (isset($_GET['filtr_tydne']) && in_array($_GET['filtr_tydne'], ['stale', 'tydne'])) {
+  $aktivniFiltrTydne = $_GET['filtr_tydne'];
+} elseif (isset($_GET['upravit_pizzu_tydne']) || ($upravovanaPizza && !empty($upravovanaPizza['pizzaTydne']))) {
+  $aktivniFiltrTydne = 'tydne';
+}
+
 // Seznam EU alergenu
 $seznamEuAlergen = [
   1  => 'Lepek (obiloviny)',
@@ -325,6 +462,34 @@ $seznamEuAlergen = [
   13 => 'Vlčí bob (lupina)',
   14 => 'Měkkýši',
 ];
+
+// Pomocna funkce pro vykresleni kvalitni vektorove SVG papricky
+function vykreslitSvgPapricku($velikost = 18) {
+  return '<svg class="ikona-chilli-svg" viewBox="0 0 24 24" width="' . $velikost . '" height="' . $velikost . '" fill="none" style="vertical-align: -2px; display: inline-block; filter: drop-shadow(0 2px 4px rgba(220, 38, 38, 0.35)); flex-shrink: 0;" xmlns="http://www.w3.org/2000/svg">'
+    . '<path d="M17.8 7.3C16.6 5.8 14.8 5 13 5.2c-2.4.3-4.5 1.7-5.9 3.6-2.5 3.3-3.4 7.7-2.3 11.7.3 1 .9 1.9 1.8 2.4.8.4 1.7.4 2.5 0 .8-.5 1.4-1.2 1.7-2.1.7-2.1 1.9-3.9 3.7-5.2 1.7-1.3 3.9-1.9 6-1.5.8.1 1.6-.2 2.1-.8.5-.6.6-1.5.1-2.1-.9-1.6-2.4-2.9-4.1-3.7z" fill="url(#gradChilliRed)"/>'
+    . '<path d="M16.5 8C15.5 7 14 6.5 12.6 6.7c-2 .3-3.8 1.4-5 3-1.6 2.1-2.4 4.8-2.4 7.5.3-2.3 1.1-4.6 2.5-6.5 1.2-1.6 2.8-2.7 4.7-3 1.4-.2 2.7.1 3.7.8.2.1.5 0 .6-.2.1-.2 0-.4-.2-.5z" fill="#ff9999" opacity="0.6"/>'
+    . '<path d="M15.5 3.2c.7-.7 1.7-1.1 2.7-1.1.4 0 .7.3.7.7s-.3.7-.7.7c-.6 0-1.2.2-1.7.7-.4.4-.6 1-.7 1.5-.1.4-.4.6-.8.6s-.7-.3-.7-.7c.1-.9.5-1.8 1.2-2.4z" fill="#22c55e"/>'
+    . '<path d="M12.5 5.5c.8-.4 1.7-.5 2.6-.3.6.1 1.1.4 1.5.8.3.2.4.6.3.9-.1.3-.4.5-.8.5-.4-.2-.8-.4-1.2-.5-.6-.1-1.3 0-1.8.3-.3.2-.7.1-.9-.1-.2-.3-.1-.7.2-.9z" fill="#16a34a"/>'
+    . '<defs>'
+    . '<linearGradient id="gradChilliRed" x1="6" y1="6" x2="21" y2="21" gradientUnits="userSpaceOnUse">'
+    . '<stop offset="0%" stop-color="#ff4444"/>'
+    . '<stop offset="50%" stop-color="#e50914"/>'
+    . '<stop offset="100%" stop-color="#990000"/>'
+    . '</linearGradient>'
+    . '</defs>'
+    . '</svg>';
+}
+
+function vykreslitIkonyPalivosti($uroven, $velikost = 18) {
+  $uroven = intval($uroven);
+  if ($uroven <= 0) return '';
+  $popisek = ($uroven === 2) ? 'Extra pálivé' : 'Mírně pálivé';
+  $ikony = '';
+  for ($i = 0; $i < $uroven; $i++) {
+    $ikony .= vykreslitSvgPapricku($velikost);
+  }
+  return '<span class="obal-ikony-palivosti" title="' . $popisek . '" style="display: inline-flex; align-items: center; gap: 3px; margin-left: 6px; vertical-align: middle; border: none; background: transparent; padding: 0;">' . $ikony . '</span>';
+}
 ?>
 <!DOCTYPE html>
 <html lang="cs">
@@ -341,39 +506,73 @@ $seznamEuAlergen = [
     body { background-color: #0d0d0d; color: #ffffff; padding-bottom: 80px; }
     .admin-kontejner { max-width: 1240px; margin: 30px auto; padding: 0 20px; }
 
-    /* ZÁLOŽKOVÁ NAVIGACE */
+    /* Plovoucí chování horní lišty v administraci (skrýt při scroll down, zobrazit při scroll up) */
+    .horni-kontakty-lista {
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 1000 !important;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      will-change: transform;
+    }
+    .horni-kontakty-lista.admin-lista-skryta {
+      transform: translateY(-100%) !important;
+    }
+
+    /* ZÁLOŽKOVÁ NAVIGACE (NÁPIS S TUČNÝM PODŠKRTNUTÍM) */
     .admin-zalozky-obal {
       display: flex;
-      gap: 14px;
+      gap: 36px;
       margin-bottom: 30px;
-      border-bottom: 2px solid #222222;
-      padding-bottom: 14px;
+      border-bottom: 2px solid #2a2a2a;
+      padding-bottom: 0;
     }
     .admin-zalozka-tlacitko {
-      padding: 14px 28px;
-      background: #161616;
-      border: 1px solid #2a2a2a;
-      border-radius: 12px;
-      color: #aaa;
-      font-size: 1.1rem;
-      font-weight: 800;
+      padding: 10px 4px 14px 4px;
+      background: transparent;
+      border: none;
+      border-bottom: 4px solid transparent;
+      margin-bottom: -2px;
+      border-radius: 0;
+      color: #888888;
+      font-size: 1.15rem;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
+      transition: color 0.2s ease, border-color 0.2s ease;
+      display: inline-flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       font-family: var(--font-hlavni);
+      box-shadow: none;
     }
     .admin-zalozka-tlacitko:hover {
-      background: #222222;
+      background: transparent;
       color: #ffffff;
-      transform: translateY(-2px);
+      transform: none;
     }
     .admin-zalozka-tlacitko.aktivni {
-      background: linear-gradient(135deg, #991b1b, #7f1d1d);
-      border-color: #ef4444;
+      background: transparent;
+      border-color: #e50914;
       color: #ffffff;
-      box-shadow: 0 6px 20px rgba(229, 9, 20, 0.35);
+      font-weight: 800;
+      box-shadow: none;
+    }
+
+    .horni-zalozka-btn {
+      font-family: inherit;
+      border: 1px solid #333333;
+      transition: all 0.2s ease;
+    }
+    .horni-zalozka-btn:hover {
+      background: #222222 !important;
+      color: #ffffff !important;
+      border-color: #555555 !important;
+    }
+    .horni-zalozka-btn.aktivni {
+      background: linear-gradient(135deg, #991b1b, #7f1d1d) !important;
+      border-color: #ef4444 !important;
+      color: #ffffff !important;
+      font-weight: 700;
+      box-shadow: 0 0 14px rgba(239, 68, 68, 0.4);
     }
 
     /* OBSAH ZÁLOŽEK */
@@ -512,6 +711,15 @@ $seznamEuAlergen = [
       box-shadow: 0 6px 20px rgba(22, 163, 74, 0.15);
     }
 
+    /* BÍLÝ PRŮHLEDNÝ BOX PRO SEZNAM PIZZ A OVLÁDACÍ PRVKY */
+    .admin-box-seznam-bily {
+      background-color: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 14px;
+      padding: 22px;
+      margin-top: 20px;
+    }
+
     /* SKUPINY FORMULÁŘE A VĚTŠÍ MEZERAVOST (BOD 7) */
     .formular-skupina {
       margin-bottom: 26px;
@@ -593,19 +801,21 @@ $seznamEuAlergen = [
       display: inline-flex;
       align-items: center;
       gap: 4px;
+      flex-shrink: 0;
     }
     .mini-kapsle-tlacitko {
       background: transparent;
       border: none;
       color: #ffffff;
       font-size: 0.9rem;
-      font-weight: 700;
-      padding: 8px 20px;
+      font-weight: 700 !important;
+      padding: 8px 18px;
       border-radius: 30px;
       cursor: pointer;
       font-family: var(--font-hlavni);
-      transition: background-color 0.2s ease, color 0.2s ease;
+      transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
       white-space: nowrap;
+      text-align: center;
     }
     .mini-kapsle-tlacitko:hover {
       color: #ffffff;
@@ -614,7 +824,7 @@ $seznamEuAlergen = [
     .mini-kapsle-tlacitko.aktivni {
       background-color: #ffffff !important;
       color: #000000 !important;
-      font-weight: 800 !important;
+      font-weight: 700 !important;
       border-radius: 30px !important;
       box-shadow: 0 2px 10px rgba(255, 255, 255, 0.25) !important;
     }
@@ -775,10 +985,8 @@ $seznamEuAlergen = [
       font-weight: 500;
     }
 
-    /* ČÍSELNÝ ODZNAK PIZZE */
+    /* ČÍSELNÝ ODZNAK PIZZE (ZÁKLAD A VARIANTY) */
     .ciselny-odznak {
-      background-color: #e50914;
-      color: #ffffff !important;
       font-weight: 900;
       font-size: 1rem;
       width: 32px;
@@ -789,6 +997,14 @@ $seznamEuAlergen = [
       border-radius: 6px;
       flex-shrink: 0;
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+    }
+    .ciselny-odznak-cerveny {
+      background-color: #e50914;
+      color: #ffffff !important;
+    }
+    .ciselny-odznak-bily {
+      background-color: #ffffff;
+      color: #000000 !important;
     }
     .pizza-dlazdice-foto-obal .ciselny-odznak {
       position: absolute;
@@ -840,117 +1056,124 @@ $seznamEuAlergen = [
       }
     }
 
-    /* REŽIM SEZNAM NA DESKTOPU: ČÍSLO VLEVO, NÁZEV, INGREDIENCE A CENA POD SEBOU ZAROVNANÉ (BOD 6) */
+    /* REŽIM SEZNAM NA DESKTOPU: 4 SLOUPCE (ČÍSLO | NÁZEV + SLOŽENÍ | CENA | AKCE) */
     .pizzy-mrizka-kontejner.pohled-seznam {
       display: flex !important;
       flex-direction: column;
-      gap: 14px;
+      gap: 8px;
     }
     .pizzy-mrizka-kontejner.pohled-seznam .pizza-dlazdice {
-      background: #161616;
-      border: 1px solid #2a2a2a;
-      border-radius: 12px;
-      padding: 18px 24px;
+      background: #141414;
+      border: 1px solid #242424;
+      border-radius: 10px;
+      padding: 10px 18px;
       box-shadow: none;
-      display: flex;
-      flex-direction: row;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 20px;
-      transition: border-color 0.2s ease;
+      display: grid;
+      grid-template-columns: 36px 1fr 90px auto;
+      align-items: center;
+      gap: 16px;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+    .pizzy-mrizka-kontejner .pizza-dlazdice.skryto,
+    .pizza-dlazdice.skryto {
+      display: none !important;
     }
     .pizzy-mrizka-kontejner.pohled-seznam .pizza-dlazdice:hover {
-      border-color: #f59e0b;
+      background-color: #1f1f1f;
+      border-color: #383838;
       transform: none;
+    }
+    .pizzy-mrizka-kontejner.pohled-seznam .pizza-seznam-cislo-odznak {
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+    }
+    .pizzy-mrizka-kontejner.pohled-seznam .pizza-seznam-cislo-odznak .ciselny-odznak {
+      position: static !important;
+      width: 32px;
+      height: 32px;
+      font-size: 0.95rem;
+      box-shadow: none;
     }
     .pizzy-mrizka-kontejner.pohled-seznam .pizza-dlazdice-foto-obal {
       display: none !important;
     }
     .pizzy-mrizka-kontejner.pohled-seznam .pizza-dlazdice-obsah {
-      padding: 0;
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 4px !important;
-      flex: 1;
-      position: relative;
-      padding-right: 110px;
-    }
-    .pizzy-mrizka-kontejner.pohled-seznam .ciselny-odznak-seznam-obal {
-      display: none !important;
-    }
-    .pizzy-mrizka-kontejner.pohled-seznam .seznam-cislo-prefiks {
-      display: inline !important;
-      font-weight: 800;
-      color: #ffffff;
+      display: contents !important;
     }
     .pizzy-mrizka-kontejner.pohled-seznam .seznam-textovy-blok {
-      display: flex;
+      display: flex !important;
       flex-direction: column;
-      gap: 4px;
-      flex: 1;
+      gap: 2px;
       min-width: 0;
     }
     .pizzy-mrizka-kontejner.pohled-seznam .pizza-dlazdice-zahlavi {
-      margin-bottom: 4px;
+      margin: 0;
+    }
+    .pizzy-mrizka-kontejner.pohled-seznam .pizza-dlazdice-nazev {
+      display: block;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 0;
+      line-height: 1.25;
+    }
+    .pizzy-mrizka-kontejner.pohled-seznam .seznam-cislo-prefiks {
+      display: none !important;
     }
     .pizzy-mrizka-kontejner.pohled-seznam .pizza-dlazdice-slozeni {
-      display: none !important;
+      display: block !important;
+      font-size: 0.82rem;
+      color: #888888;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .pizzy-mrizka-kontejner.pohled-seznam .pizza-dlazdice-alergeny {
       display: none !important;
     }
     .pizzy-mrizka-kontejner.pohled-seznam .pizza-dlazdice-pata {
+      display: contents !important;
       border-top: none;
       padding-top: 0;
-      margin-top: 2px;
-      display: block;
+      margin-top: 0;
     }
     .pizzy-mrizka-kontejner.pohled-seznam .pizza-dlazdice-cena {
       display: block !important;
-      font-size: 1.25rem;
-      font-weight: 900;
+      font-size: 1.15rem;
+      font-weight: 800;
       color: #f59e0b !important;
-      text-align: left;
+      text-align: right;
+      white-space: nowrap;
     }
     .pizzy-mrizka-kontejner.pohled-seznam .pizza-dlazdice-akce {
-      position: absolute;
-      top: 0;
-      right: 0;
-      display: flex;
+      display: flex !important;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      justify-content: flex-end;
     }
 
-    /* RESPONZIVITA SEZNAMU PRO MOBILY: 3. ŘÁDEK CENA VLEVO A TLAČÍTKA ZAROVNANÁ VPRAVO */
+    /* REŽIM DLAŽDICE: SKRÝT ŘÁDKOVÝ ODZNAK */
+    .pizzy-mrizka-kontejner.pohled-dlazdice .pizza-seznam-cislo-odznak {
+      display: none !important;
+    }
+
+    /* RESPONZIVITA SEZNAMU PRO MOBILY */
     @media (max-width: 680px) {
       .pizzy-mrizka-kontejner.pohled-seznam .pizza-dlazdice {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 16px;
-      }
-      .pizzy-mrizka-kontejner.pohled-seznam .pizza-dlazdice-obsah {
-        width: 100%;
-        position: static;
-        padding-right: 0;
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 4px !important;
+        grid-template-columns: 32px 1fr;
+        gap: 10px;
+        padding: 10px 12px;
       }
       .pizzy-mrizka-kontejner.pohled-seznam .pizza-dlazdice-pata {
-        width: 100%;
+        grid-column: 1 / -1;
         display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        margin-top: 8px;
-        padding-top: 10px;
-        border-top: 1px solid #282828;
-      }
-      .pizzy-mrizka-kontejner.pohled-seznam .pizza-dlazdice-cena {
-        margin-bottom: 0;
-      }
-      .pizzy-mrizka-kontejner.pohled-seznam .pizza-dlazdice-akce {
-        position: static;
-        margin-left: auto;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 8px;
+        border-top: 1px solid #222222;
+        margin-top: 4px;
       }
     }
 
@@ -961,13 +1184,12 @@ $seznamEuAlergen = [
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
     }
     .pizza-dlazdice:hover {
       border-color: #f59e0b;
       box-shadow: 0 12px 32px rgba(245, 158, 11, 0.2);
-      transform: translateY(-5px);
     }
     .pizza-dlazdice-foto-obal {
       position: relative;
@@ -987,8 +1209,8 @@ $seznamEuAlergen = [
     }
     .stitek-pizza-tydne-karta {
       position: absolute;
-      top: 14px;
-      right: 14px;
+      bottom: 12px;
+      left: 12px;
       background: linear-gradient(135deg, #d97706, #b45309);
       color: #ffffff !important;
       font-size: 0.78rem;
@@ -1000,6 +1222,7 @@ $seznamEuAlergen = [
       align-items: center;
       gap: 5px;
       letter-spacing: 0.03em;
+      z-index: 2;
     }
     .pizza-dlazdice-obsah {
       padding: 20px;
@@ -1057,14 +1280,265 @@ $seznamEuAlergen = [
       gap: 10px;
     }
 
+    /* SUROVINY / INGREDIENCE - DLAŽDICE A SEZNAM */
+    .suroviny-mrizka-kontejner {
+      margin-top: 18px;
+      transition: all 0.25s ease;
+    }
+    .suroviny-mrizka-kontejner,
+    .suroviny-mrizka-kontejner.pohled-dlazdice {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 1100px) {
+      .suroviny-mrizka-kontejner,
+      .suroviny-mrizka-kontejner.pohled-dlazdice {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (max-width: 640px) {
+      .suroviny-mrizka-kontejner,
+      .suroviny-mrizka-kontejner.pohled-dlazdice {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* DLAŽDICE SUROVINY */
+    .surovina-karta-polozka {
+      background: #161616;
+      border: 1px solid #2a2a2a;
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+    .surovina-karta-polozka:hover {
+      border-color: #f59e0b;
+      box-shadow: 0 12px 32px rgba(245, 158, 11, 0.2);
+      transform: translateY(-5px);
+    }
+    .surovina-foto-obal {
+      position: relative;
+      width: 100%;
+      height: 160px;
+      background: #0d0d0d;
+      overflow: hidden;
+    }
+    .surovina-fotka {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .surovina-karta-polozka:hover .surovina-fotka {
+      transform: scale(1.07);
+    }
+    .surovina-obsah-blok {
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .surovina-textovy-blok {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .surovina-zahlavi {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .surovina-nazev {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.25;
+    }
+    .surovina-puvod-stitek-karta {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #ffffff !important;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      z-index: 2;
+      letter-spacing: 0.02em;
+    }
+    .surovina-puvod-stitek-seznam {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #aaaaaa;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 8px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+    .suroviny-mrizka-kontejner.pohled-dlazdice .surovina-puvod-stitek-seznam {
+      display: none !important;
+    }
+    .suroviny-mrizka-kontejner.pohled-seznam .surovina-puvod-stitek-karta {
+      display: none !important;
+    }
+    .surovina-popis {
+      font-size: 0.88rem;
+      color: #bbbbbb;
+      line-height: 1.4;
+      margin-bottom: 14px;
+      flex: 1;
+    }
+    .surovina-pata {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 14px;
+      border-top: 1px solid #282828;
+      margin-top: auto;
+    }
+    .surovina-kategorie-stitek {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #f59e0b !important;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .surovina-akce {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* SEZNAMOVÝ POHLED SUROVIN */
+    .suroviny-mrizka-kontejner.pohled-seznam {
+      display: flex !important;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .suroviny-mrizka-kontejner.pohled-seznam .surovina-karta-polozka {
+      background: #141414;
+      border: 1px solid #242424;
+      border-radius: 10px;
+      padding: 10px 18px;
+      box-shadow: none;
+      display: grid;
+      grid-template-columns: 44px 1fr auto auto;
+      align-items: center;
+      gap: 20px;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+    .suroviny-mrizka-kontejner.pohled-seznam .surovina-karta-polozka:hover {
+      background-color: #1f1f1f;
+      border-color: #383838;
+      transform: none;
+    }
+    .suroviny-mrizka-kontejner.pohled-seznam .surovina-foto-obal {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0;
+      line-height: 0;
+    }
+    .suroviny-mrizka-kontejner.pohled-seznam .surovina-obsah-blok {
+      display: contents !important;
+    }
+    .suroviny-mrizka-kontejner.pohled-seznam .surovina-textovy-blok {
+      display: flex !important;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+    .suroviny-mrizka-kontejner.pohled-seznam .surovina-zahlavi {
+      margin: 0;
+      justify-content: flex-start;
+      gap: 8px;
+    }
+    .suroviny-mrizka-kontejner.pohled-seznam .surovina-nazev {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.25;
+    }
+    .suroviny-mrizka-kontejner.pohled-seznam .surovina-popis {
+      font-size: 0.82rem;
+      color: #888888;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 0;
+    }
+    .suroviny-mrizka-kontejner.pohled-seznam .surovina-pata {
+      display: contents !important;
+      border-top: none;
+      padding-top: 0;
+      margin-top: 0;
+    }
+    .suroviny-mrizka-kontejner.pohled-seznam .surovina-kategorie-stitek {
+      display: block !important;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #f59e0b !important;
+      text-align: right;
+      white-space: nowrap;
+    }
+    .suroviny-mrizka-kontejner.pohled-seznam .surovina-akce {
+      display: flex !important;
+      align-items: center;
+      gap: 8px;
+      justify-content: flex-end;
+      flex-shrink: 0;
+      min-width: 88px;
+    }
+    .suroviny-mrizka-kontejner .surovina-karta-polozka.skryto,
+    .surovina-karta-polozka.skryto {
+      display: none !important;
+    }
+    @media (max-width: 680px) {
+      .suroviny-mrizka-kontejner.pohled-seznam .surovina-karta-polozka {
+        grid-template-columns: 40px 1fr;
+        gap: 10px;
+        padding: 10px 12px;
+      }
+      .suroviny-mrizka-kontejner.pohled-seznam .surovina-pata {
+        grid-column: 1 / -1;
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 8px;
+        border-top: 1px solid #222222;
+        margin-top: 4px;
+      }
+    }
+
     /* RÁMEČKOVÁ TLAČÍTKA PRO IKONY (UPRAVIT A SMAZAT) */
     .tlacitko-ikona-ramcek {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 42px;
-      height: 42px;
-      border-radius: 10px;
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      flex-shrink: 0;
+      border-radius: 9px;
       cursor: pointer;
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       text-decoration: none;
@@ -1098,6 +1572,120 @@ $seznamEuAlergen = [
       color: #ffffff;
       box-shadow: 0 6px 16px rgba(220, 38, 38, 0.5);
       transform: translateY(-2px);
+    }
+
+    /* IKONA AKTIVNÍ PIZZA TÝDNE (ČTVERCOVÉ TLAČÍTKO) */
+    .tlacitko-ikona-aktivni {
+      background: #181818;
+      border: 1px solid #333333;
+      color: #777777;
+    }
+    .tlacitko-ikona-aktivni:hover {
+      background: #242424;
+      border-color: #f59e0b;
+      color: #f59e0b;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3);
+    }
+    .tlacitko-ikona-aktivni.aktivni {
+      background: #f59e0b;
+      border-color: #f59e0b;
+      color: #000000;
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.45);
+    }
+    .tlacitko-ikona-aktivni.aktivni:hover {
+      background: #d97706;
+      border-color: #d97706;
+      color: #000000;
+      transform: translateY(-2px);
+    }
+
+    /* RYCHLÉ ODZNAKY NA FOTCE V DLAŽDICÍCH (VPRAVO NAHOŘE) */
+    .pizza-foto-rychle-odznaky {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 5;
+    }
+    .tlacitko-ikona-foto {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      border-radius: 7px;
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+    }
+
+    /* PLAMÍNEK (NEJPRODÁVANĚJŠÍ) */
+    .tlacitko-ikona-plamen {
+      background: rgba(22, 22, 22, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #777777;
+    }
+    .tlacitko-ikona-plamen:hover {
+      background: #222222;
+      border-color: #ef4444;
+      color: #ef4444;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
+    .tlacitko-ikona-plamen.aktivni {
+      background: #ef4444;
+      border-color: #ef4444;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(239, 68, 68, 0.5);
+    }
+    .tlacitko-ikona-plamen.aktivni:hover {
+      background: #dc2626;
+      border-color: #dc2626;
+      transform: translateY(-2px);
+    }
+
+    /* SRDÍČKO (DOPORUČUJEME) */
+    .tlacitko-ikona-srdce {
+      background: rgba(22, 22, 22, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #777777;
+    }
+    .tlacitko-ikona-srdce:hover {
+      background: #222222;
+      border-color: #f43f5e;
+      color: #f43f5e;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.4);
+    }
+    .tlacitko-ikona-srdce.aktivni {
+      background: #f43f5e;
+      border-color: #f43f5e;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(244, 63, 94, 0.5);
+    }
+    .tlacitko-ikona-srdce.aktivni:hover {
+      background: #e11d48;
+      border-color: #e11d48;
+      transform: translateY(-2px);
+    }
+
+    /* PŘEPÍNÁNÍ POHLEDŮ PRO RYCHLÉ AKCE */
+    .pizzy-mrizka-kontejner.pohled-seznam .pizza-foto-rychle-odznaky {
+      display: none !important;
+    }
+    .pizzy-mrizka-kontejner.pohled-dlazdice .pizza-seznam-rychle-akce {
+      display: none !important;
+    }
+    .pizza-seznam-rychle-akce {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .tlacitko-ikona-ramcek svg {
@@ -1157,9 +1745,12 @@ $seznamEuAlergen = [
       <div style="display: flex; align-items: center; gap: 15px;">
         <span style="font-weight: 800; color: #ffffff;">ADMINISTRACE PIZZERIE</span>
       </div>
-      <div style="display: flex; align-items: center; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
         <a href="index.php" class="tlacitko tlacitko-cervene" style="padding: 6px 16px; font-size: 0.85rem;">&lsaquo; Zpět na web</a>
         <?php if ($jePrihlasen): ?>
+          <button type="button" class="tlacitko tlacitko-sede horni-zalozka-btn <?php echo ($aktivniZalozka === 'zalohy') ? 'aktivni' : ''; ?>" onclick="prepnoutZalozku('zalohy')" style="padding: 6px 16px; font-size: 0.85rem; cursor: pointer;">
+            Zálohy a verzování (<?php echo count($seznamZaloh); ?>)
+          </button>
           <a href="administrace.php?akce=odhlasit" class="tlacitko tlacitko-sede" style="padding: 6px 16px; font-size: 0.85rem;">Odhlásit se</a>
         <?php endif; ?>
       </div>
@@ -1200,21 +1791,18 @@ $seznamEuAlergen = [
 
       <!-- 1. TABY NAHOŘE -->
       <div class="admin-zalozky-obal">
-        <button type="button" class="admin-zalozka-tlacitko <?php echo !$upravovanaSurovina ? 'aktivni' : ''; ?>" onclick="prepnoutZalozku('pizzy')">
+        <button type="button" class="admin-zalozka-tlacitko <?php echo ($aktivniZalozka === 'pizzy') ? 'aktivni' : ''; ?>" onclick="prepnoutZalozku('pizzy')">
           PIZZY (<?php echo count($pizzySeznam); ?>)
         </button>
-        <button type="button" class="admin-zalozka-tlacitko <?php echo $upravovanaSurovina ? 'aktivni' : ''; ?>" onclick="prepnoutZalozku('ingredience')">
+        <button type="button" class="admin-zalozka-tlacitko <?php echo ($aktivniZalozka === 'ingredience') ? 'aktivni' : ''; ?>" onclick="prepnoutZalozku('ingredience')">
           INGREDIENCE (<?php echo count($surovinySeznam); ?>)
-        </button>
-        <button type="button" class="admin-zalozka-tlacitko" onclick="prepnoutZalozku('zalohy')">
-          ZÁLOHY & VERZOVÁNÍ (<?php echo count($seznamZaloh); ?>)
         </button>
       </div>
 
       <!-- ====================================================================
            ZÁLOŽKA 1: PIZZY
            ==================================================================== -->
-      <div id="sekce-zalozka-pizzy" class="admin-zalozka-obsah <?php echo !$upravovanaSurovina ? 'aktivni' : ''; ?>">
+      <div id="sekce-zalozka-pizzy" class="admin-zalozka-obsah <?php echo ($aktivniZalozka === 'pizzy') ? 'aktivni' : ''; ?>">
         
         <!-- NADPIS -->
         <h2 class="sekce-nadpis-hlavni">SEZNAM PIZZ V MENU (<?php echo count($pizzySeznam); ?>)</h2>
@@ -1240,7 +1828,7 @@ $seznamEuAlergen = [
                 
                 <!-- ČÍSLO PIZZY -->
                 <div class="vstup-obal-cislo">
-                  <input type="number" name="cislo_pizzy" required placeholder="Číslo" value="<?php echo $upravovanaPizza['cislo'] ?? (count($pizzySeznam)+1); ?>" class="vstup-uzky-cislo">
+                  <input type="number" name="cislo_pizzy" required placeholder="Číslo" value="<?php echo $upravovanaPizza ? $upravovanaPizza['cislo'] : $dalsiCisloPizzy; ?>" class="vstup-uzky-cislo">
                 </div>
 
                 <!-- NÁZEV PIZZY -->
@@ -1272,7 +1860,7 @@ $seznamEuAlergen = [
                   <?php else: ?>
                     <?php foreach ($surovinySeznam as $sur): ?>
                       <?php $zaskrtnuto = isset($upravovanaPizza['ingredience']) && in_array($sur['id'], $upravovanaPizza['ingredience']); ?>
-                      <input type="checkbox" class="alergen-checkbox" id="ingr_pizza_<?php echo htmlspecialchars($sur['id']); ?>" name="ingredience_seznam[]" value="<?php echo htmlspecialchars($sur['id']); ?>" <?php echo $zaskrtnuto ? 'checked' : ''; ?>>
+                      <input type="checkbox" class="alergen-checkbox ingr-volba-checkbox" id="ingr_pizza_<?php echo htmlspecialchars($sur['id']); ?>" name="ingredience_seznam[]" value="<?php echo htmlspecialchars($sur['id']); ?>" data-kategorie="<?php echo htmlspecialchars($sur['kategorie'] ?? ''); ?>" data-alergeny="<?php echo htmlspecialchars(json_encode($sur['alergeny_cisla'] ?? [])); ?>" data-palivost="<?php echo intval($sur['palivost'] ?? 0); ?>" data-nazev="<?php echo htmlspecialchars($sur['nazev'] ?? ''); ?>" data-popis="<?php echo htmlspecialchars($sur['popis'] ?? ''); ?>" <?php echo $zaskrtnuto ? 'checked' : ''; ?> onchange="aktualizovatVlastnostiPizzyPodleIngredienci()">
                       <label class="alergen-stitek tlacitko-ingredience-stitek" for="ingr_pizza_<?php echo htmlspecialchars($sur['id']); ?>">
                         <span><?php echo htmlspecialchars($sur['nazev']); ?></span>
                       </label>
@@ -1385,66 +1973,156 @@ $seznamEuAlergen = [
 
         </div>
 
-        <!-- OVLÁDACÍ LIŠTA: STÁLÉ PIZZY/PIZZA TÝDNE + HLEDÁNÍ VLEVO, DLAŽDICE/SEZNAM VPRAVO -->
-        <div class="admin-ovladaci-lista-pizzy">
-          
-          <div class="admin-ovladaci-leva-cast">
-            <!-- Switch: Stálé pizzy / Pizza týdne (Vzájemné vyloučení) -->
-            <div class="mini-kapsle-prepinac" id="sw-filtr-pizz-tydne">
-              <button type="button" class="mini-kapsle-tlacitko aktivni" data-filtr="stale" onclick="prepnoutFiltrTydne('stale')">Stálé pizzy (<?php echo count($pizzyStaleSeznam); ?>)</button>
-              <button type="button" class="mini-kapsle-tlacitko" data-filtr="tydne" onclick="prepnoutFiltrTydne('tydne')">Pizza týdne (<?php echo count($pizzyTydneSeznam); ?>)</button>
-            </div>
+        <!-- BÍLÝ PRŮHLEDNÝ BOX PRO SEZNAM PIZZ A OVLÁDACÍ PRVKY -->
+        <div class="admin-box-seznam-bily">
 
-            <!-- Vyhledávání podle názvu pizzy -->
-            <div class="admin-vyhledavani-obal">
-              <input type="text" id="vstup-hledat-pizzu" class="admin-vyhledavani-vstup" placeholder="Hledat pizzu podle názvu..." onkeyup="naZmenuHledani()">
-            </div>
-          </div>
-
-          <!-- Switch: Dlaždice / Seznam (zarovnaný doprava) -->
-          <div class="mini-kapsle-prepinac" id="sw-pohled-pizz">
-            <button type="button" class="mini-kapsle-tlacitko aktivni" data-pohled="dlazdice" onclick="prepnoutPohledPizz('dlazdice')">Dlaždice</button>
-            <button type="button" class="mini-kapsle-tlacitko" data-pohled="seznam" onclick="prepnoutPohledPizz('seznam')">Seznam</button>
-          </div>
-
-        </div>
-
-        <!-- DLAŽDICE / SEZNAM PIZZ -->
-        <div class="pizzy-mrizka-kontejner pohled-dlazdice" id="tabulka-pizzy-telo">
-          <?php foreach ($pizzySeznam as $p): ?>
-            <div class="pizza-dlazdice" data-tydne="<?php echo !empty($p['pizzaTydne']) ? '1' : '0'; ?>">
-              <div class="pizza-dlazdice-foto-obal">
-                <div class="ciselny-odznak"><?php echo $p['cislo']; ?></div>
-                <img src="<?php echo htmlspecialchars($p['obrazek']); ?>" alt="<?php echo htmlspecialchars($p['nazev']); ?>" class="pizza-dlazdice-fotka">
-                <?php if (!empty($p['pizzaTydne'])): ?>
-                  <span class="stitek-pizza-tydne-karta">PIZZA TÝDNE</span>
-                <?php endif; ?>
+          <!-- OVLÁDACÍ LIŠTA: STÁLÉ PIZZY/PIZZA TÝDNE + HLEDÁNÍ VLEVO, DLAŽDICE/SEZNAM VPRAVO -->
+          <div class="admin-ovladaci-lista-pizzy">
+            
+            <div class="admin-ovladaci-leva-cast">
+              <!-- Switch: Stálé pizzy / Pizza týdne (Vzájemné vyloučení) -->
+              <div class="mini-kapsle-prepinac" id="sw-filtr-pizz-tydne">
+                <button type="button" class="mini-kapsle-tlacitko <?php echo ($aktivniFiltrTydne === 'stale') ? 'aktivni' : ''; ?>" data-filtr="stale" onclick="prepnoutFiltrTydne('stale')">Stálé pizzy (<?php echo count($pizzyStaleSeznam); ?>)</button>
+                <button type="button" class="mini-kapsle-tlacitko <?php echo ($aktivniFiltrTydne === 'tydne') ? 'aktivni' : ''; ?>" data-filtr="tydne" onclick="prepnoutFiltrTydne('tydne')">Pizza týdne (<?php echo count($pizzyTydneSeznam); ?>)</button>
               </div>
-              <div class="pizza-dlazdice-obsah">
+
+              <!-- Vyhledávání podle názvu pizzy -->
+              <div class="admin-vyhledavani-obal">
+                <input type="text" id="vstup-hledat-pizzu" class="admin-vyhledavani-vstup" placeholder="Hledat pizzu podle názvu..." onkeyup="naZmenuHledani()">
+              </div>
+            </div>
+
+            <!-- Switch: Dlaždice / Seznam (zarovnaný doprava) -->
+            <div class="mini-kapsle-prepinac" id="sw-pohled-pizz">
+              <button type="button" class="mini-kapsle-tlacitko aktivni" data-pohled="dlazdice" onclick="prepnoutPohledPizz('dlazdice')">Dlaždice</button>
+              <button type="button" class="mini-kapsle-tlacitko" data-pohled="seznam" onclick="prepnoutPohledPizz('seznam')">Seznam</button>
+            </div>
+
+          </div>
+
+          <!-- DLAŽDICE / SEZNAM PIZZ -->
+          <div class="pizzy-mrizka-kontejner pohled-dlazdice" id="tabulka-pizzy-telo">
+            <?php foreach ($pizzySeznam as $p): ?>
+              <?php
+                // Vypocet palivosti pizzy podle obsazenych ingredienci
+                $palivostPizzy = 0;
+                if (!empty($p['ingredience']) && is_array($p['ingredience'])) {
+                  foreach ($p['ingredience'] as $ingId) {
+                    foreach ($surovinySeznam as $sItem) {
+                      if ($sItem['id'] === $ingId && !empty($sItem['palivost'])) {
+                        $palivostPizzy = max($palivostPizzy, (int)$sItem['palivost']);
+                      }
+                    }
+                  }
+                }
+              ?>
+              <div class="pizza-dlazdice" data-tydne="<?php echo !empty($p['pizzaTydne']) ? '1' : '0'; ?>">
                 
-                <!-- TEXTOVÝ BLOK SEZNAMU (NÁZEV, INGREDIENCE, CENA A TLAČÍTKA) -->
-                <div class="seznam-textovy-blok">
-                  <div class="pizza-dlazdice-zahlavi">
-                    <div class="bunka-nazev" style="display: flex; align-items: center; gap: 10px;">
-                      <strong class="pizza-dlazdice-nazev"><span class="seznam-cislo-prefiks"><?php echo $p['cislo']; ?>.&nbsp;</span><?php echo htmlspecialchars($p['nazev']); ?></strong>
-                      <?php if (!empty($p['pizzaTydne'])): ?>
-                        <span class="stitek-pizza-tydne" title="Pizza týdne">PIZZA TÝDNE</span>
-                      <?php endif; ?>
-                    </div>
+                <!-- 1. SLOUPEC PRO SEZNAM: ČÍSELNÝ ODZNAK (V DLAŽDICÍCH SKRYT) -->
+                <div class="pizza-seznam-cislo-odznak">
+                  <div class="ciselny-odznak ciselny-odznak-bily"><?php echo $p['cislo']; ?></div>
+                </div>
+
+                <!-- FOTO PRO DLAŽDICE (V SEZNAMU SKRYTO) -->
+                <div class="pizza-dlazdice-foto-obal">
+                  <div class="ciselny-odznak ciselny-odznak-bily"><?php echo $p['cislo']; ?></div>
+
+                  <!-- RYCHLÉ ODZNAKY NA FOTCE (DLAŽDICE: VPRAVO NAHOŘE) -->
+                  <div class="pizza-foto-rychle-odznaky">
+                    <form method="POST" action="administrace.php" style="margin: 0;">
+                      <input type="hidden" name="id_pizzy_prepnout" value="<?php echo $p['id']; ?>">
+                      <input type="hidden" name="vlastnost" value="nejprodavanejsi">
+                      <input type="hidden" name="filtr_tydne_navrat" value="<?php echo htmlspecialchars($aktivniFiltrTydne); ?>">
+                      <button type="submit" name="prepnout_vlastnost_pizzy_stisknuto" data-id="<?php echo $p['id']; ?>" data-vlastnost="nejprodavanejsi" onclick="rychlePrepnoutVlastnost(event, this, <?php echo $p['id']; ?>, 'nejprodavanejsi')" class="tlacitko-ikona-foto tlacitko-ikona-plamen <?php echo !empty($p['nejprodavanejsi']) ? 'aktivni' : ''; ?>" title="<?php echo !empty($p['nejprodavanejsi']) ? 'Nejprodávanější: Aktivní (kliknutím vypnout)' : 'Nejprodávanější: Vypnuto (kliknutím zapnout)'; ?>">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="<?php echo !empty($p['nejprodavanejsi']) ? 'currentColor' : 'none'; ?>" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
+                        </svg>
+                      </button>
+                    </form>
+
+                    <form method="POST" action="administrace.php" style="margin: 0;">
+                      <input type="hidden" name="id_pizzy_prepnout" value="<?php echo $p['id']; ?>">
+                      <input type="hidden" name="vlastnost" value="doporucujeme">
+                      <input type="hidden" name="filtr_tydne_navrat" value="<?php echo htmlspecialchars($aktivniFiltrTydne); ?>">
+                      <button type="submit" name="prepnout_vlastnost_pizzy_stisknuto" data-id="<?php echo $p['id']; ?>" data-vlastnost="doporucujeme" onclick="rychlePrepnoutVlastnost(event, this, <?php echo $p['id']; ?>, 'doporucujeme')" class="tlacitko-ikona-foto tlacitko-ikona-srdce <?php echo !empty($p['doporucujeme']) ? 'aktivni' : ''; ?>" title="<?php echo !empty($p['doporucujeme']) ? 'Doporučujeme: Aktivní (kliknutím vypnout)' : 'Doporučujeme: Vypnuto (kliknutím zapnout)'; ?>">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="<?php echo !empty($p['doporucujeme']) ? 'currentColor' : 'none'; ?>" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                      </button>
+                    </form>
                   </div>
-                  <div class="pizza-dlazdice-slozeni">
-                    <small><?php echo htmlspecialchars($p['slozeni']); ?></small>
-                  </div>
-                  <?php if (!empty($p['alergeny_cisla'])): ?>
-                    <div class="pizza-dlazdice-alergeny">
-                      <small>Alergeny: <?php echo implode(', ', $p['alergeny_cisla']); ?></small>
-                    </div>
+
+                  <img src="<?php echo htmlspecialchars($p['obrazek']); ?>" alt="<?php echo htmlspecialchars($p['nazev']); ?>" class="pizza-dlazdice-fotka">
+                  <?php if (!empty($p['pizzaTydne'])): ?>
+                    <?php if (!empty($p['aktivniPizzaTydne'])): ?>
+                      <span class="stitek-pizza-tydne-karta" style="background: #f59e0b; color: #000000; font-weight: 800;">★ AKTIVNÍ PIZZA TÝDNE</span>
+                    <?php else: ?>
+                      <span class="stitek-pizza-tydne-karta">PIZZA TÝDNE</span>
+                    <?php endif; ?>
                   <?php endif; ?>
+                </div>
+
+                <div class="pizza-dlazdice-obsah">
+                  
+                  <!-- 2. SLOUPEC: NÁZEV + SLOŽENÍ -->
+                  <div class="seznam-textovy-blok">
+                    <div class="pizza-dlazdice-zahlavi">
+                      <div class="bunka-nazev">
+                        <strong class="pizza-dlazdice-nazev">
+                          <?php echo htmlspecialchars($p['nazev']); ?>
+                          <?php echo vykreslitIkonyPalivosti($palivostPizzy, 18); ?>
+                        </strong>
+                      </div>
+                    </div>
+                    <div class="pizza-dlazdice-slozeni">
+                      <small><?php echo htmlspecialchars($p['slozeni']); ?><?php if (!empty($p['alergeny_cisla'])): ?> &bull; <span style="color: #666666;">(<?php echo implode(', ', $p['alergeny_cisla']); ?>)</span><?php endif; ?></small>
+                    </div>
+                  </div>
+
                   <div class="pizza-dlazdice-pata">
+                    <!-- 3. SLOUPEC: CENA -->
                     <span class="pizza-dlazdice-cena"><?php echo $p['cena']; ?>&nbsp;Kč</span>
 
-                    <!-- TLAČÍTKA AKCÍ NA STEJNÉM ŘÁDKU JAKO CENA (ZAROVNANÁ VPRAVO) -->
+                    <!-- 4. SLOUPEC: TLAČÍTKA AKCÍ -->
                     <div class="pizza-dlazdice-akce">
+                      
+                      <!-- Rychlé akce (SEZNAM: vlevo od Upravit a Smazat) -->
+                      <div class="pizza-seznam-rychle-akce">
+                        <form method="POST" action="administrace.php" style="margin: 0;">
+                          <input type="hidden" name="id_pizzy_prepnout" value="<?php echo $p['id']; ?>">
+                          <input type="hidden" name="vlastnost" value="nejprodavanejsi">
+                          <input type="hidden" name="filtr_tydne_navrat" value="<?php echo htmlspecialchars($aktivniFiltrTydne); ?>">
+                          <button type="submit" name="prepnout_vlastnost_pizzy_stisknuto" data-id="<?php echo $p['id']; ?>" data-vlastnost="nejprodavanejsi" onclick="rychlePrepnoutVlastnost(event, this, <?php echo $p['id']; ?>, 'nejprodavanejsi')" class="tlacitko-ikona-ramcek tlacitko-ikona-plamen <?php echo !empty($p['nejprodavanejsi']) ? 'aktivni' : ''; ?>" title="<?php echo !empty($p['nejprodavanejsi']) ? 'Nejprodávanější: Aktivní (kliknutím vypnout)' : 'Nejprodávanější: Vypnuto (kliknutím zapnout)'; ?>">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="<?php echo !empty($p['nejprodavanejsi']) ? 'currentColor' : 'none'; ?>" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
+                            </svg>
+                          </button>
+                        </form>
+
+                        <form method="POST" action="administrace.php" style="margin: 0;">
+                          <input type="hidden" name="id_pizzy_prepnout" value="<?php echo $p['id']; ?>">
+                          <input type="hidden" name="vlastnost" value="doporucujeme">
+                          <input type="hidden" name="filtr_tydne_navrat" value="<?php echo htmlspecialchars($aktivniFiltrTydne); ?>">
+                          <button type="submit" name="prepnout_vlastnost_pizzy_stisknuto" data-id="<?php echo $p['id']; ?>" data-vlastnost="doporucujeme" onclick="rychlePrepnoutVlastnost(event, this, <?php echo $p['id']; ?>, 'doporucujeme')" class="tlacitko-ikona-ramcek tlacitko-ikona-srdce <?php echo !empty($p['doporucujeme']) ? 'aktivni' : ''; ?>" title="<?php echo !empty($p['doporucujeme']) ? 'Doporučujeme: Aktivní (kliknutím vypnout)' : 'Doporučujeme: Vypnuto (kliknutím zapnout)'; ?>">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="<?php echo !empty($p['doporucujeme']) ? 'currentColor' : 'none'; ?>" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                            </svg>
+                          </button>
+                        </form>
+                      </div>
+
+                      <?php if (!empty($p['pizzaTydne'])): ?>
+                        <?php $jeAktivniTydne = !empty($p['aktivniPizzaTydne']); ?>
+                        <form method="POST" action="administrace.php" style="margin: 0;">
+                          <input type="hidden" name="id_pizzy_aktivovat_tydne" value="<?php echo $p['id']; ?>">
+                          <button type="submit" name="aktivovat_pizzu_tydne_stisknuto" data-id="<?php echo $p['id']; ?>" onclick="rychleAktivovatPizzuTydne(event, this, <?php echo $p['id']; ?>)" class="tlacitko-ikona-ramcek tlacitko-ikona-aktivni <?php echo $jeAktivniTydne ? 'aktivni' : ''; ?>" title="<?php echo $jeAktivniTydne ? 'Tato pizza je právě aktivní Pizza týdne' : 'Kliknutím aktivovat jako Pizzu týdne'; ?>">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="<?php echo $jeAktivniTydne ? 'currentColor' : 'none'; ?>" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                          </button>
+                        </form>
+                      <?php endif; ?>
+
                       <a href="administrace.php?upravit_pizzu=<?php echo $p['id']; ?>" class="tlacitko-ikona-ramcek tlacitko-ikona-upravit" title="Upravit pizzu <?php echo htmlspecialchars($p['nazev']); ?>">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                           <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -1467,8 +2145,9 @@ $seznamEuAlergen = [
                 </div>
 
               </div>
-            </div>
-          <?php endforeach; ?>
+            <?php endforeach; ?>
+          </div>
+
         </div>
 
       </div>
@@ -1476,171 +2155,259 @@ $seznamEuAlergen = [
       <!-- ====================================================================
            ZÁLOŽKA 2: INGREDIENCE
            ==================================================================== -->
-      <div id="sekce-zalozka-ingredience" class="admin-zalozka-obsah <?php echo $upravovanaSurovina ? 'aktivni' : ''; ?>">
+      <div id="sekce-zalozka-ingredience" class="admin-zalozka-obsah <?php echo ($aktivniZalozka === 'ingredience') ? 'aktivni' : ''; ?>">
         
+        <!-- NADPIS -->
         <h2 class="sekce-nadpis-hlavni">SEZNAM INGREDIENCÍ A SUROVIN (<?php echo count($surovinySeznam); ?>)</h2>
 
-        <!-- FILTRAČNÍ ŘÁDEK PRO SUROVINY BEZ BOXU -->
-        <div class="admin-filtr-radek-cisty">
-          <div class="mini-kapsle-prepinac" id="sw-filtr-surovin">
-            <button type="button" class="mini-kapsle-tlacitko aktivni" data-filtr="vse" onclick="filtrovatTabulkuSurovin('vse')">Všechny (<?php echo count($surovinySeznam); ?>)</button>
-            <button type="button" class="mini-kapsle-tlacitko" data-filtr="syry" onclick="filtrovatTabulkuSurovin('syry')">Sýry</button>
-            <button type="button" class="mini-kapsle-tlacitko" data-filtr="maso" onclick="filtrovatTabulkuSurovin('maso')">Maso & Uzeniny</button>
-            <button type="button" class="mini-kapsle-tlacitko" data-filtr="zelenina" onclick="filtrovatTabulkuSurovin('zelenina')">Zelenina & Bylinky</button>
+        <!-- SAMOSTATNÝ BOX PRO PŘIDÁNÍ / ÚPRAVU SUROVINY -->
+        <div class="admin-samostatny-box-formular">
+          
+          <!-- TEXTOVÉ TLAČÍTKO "+ PŘIDAT NOVOU INGREDIENCI" -->
+          <button type="button" class="tlacitko-text-pridat" onclick="zobrazitFormularSurovinu()">
+            <span class="ikona-plus-bila">+</span>
+            <span style="color: #ffffff !important; font-weight: 800;"><?php echo $upravovanaSurovina ? 'Upravit surovinu: ' . htmlspecialchars($upravovanaSurovina['nazev']) : 'Přidat novou ingredienci'; ?></span>
+          </button>
+
+          <!-- FORMULÁŘ PRO PŘIDÁNÍ / ÚPRAVU SUROVINY -->
+          <div id="obal-formular-surovina" class="admin-formular-box-inline" style="<?php echo $upravovanaSurovina ? 'display:block; margin-top: 18px;' : 'display:none; margin-top: 18px;'; ?>">
+            <form method="POST" action="administrace.php" enctype="multipart/form-data">
+              <input type="hidden" name="id_suroviny" value="<?php echo $upravovanaSurovina['id'] ?? ''; ?>">
+              <input type="hidden" name="stavajici_obrazek_suroviny" value="<?php echo $upravovanaSurovina['obrazek'] ?? ''; ?>">
+
+              <!-- 1. ŘÁDEK: NÁZEV INGREDIENCE, KATEGORIE, PŮVOD -->
+              <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; margin-bottom: 20px;" class="surovina-formular-radek">
+                <div class="formular-skupina" style="margin-bottom: 0;">
+                  <label style="display:block; margin-bottom: 6px; color: #aaaaaa; font-weight: 600; font-size: 0.92rem;">Název ingredience:</label>
+                  <input type="text" name="nazev_suroviny" required placeholder="Např. Mozzarella di Bufala" value="<?php echo htmlspecialchars($upravovanaSurovina['nazev'] ?? ''); ?>">
+                </div>
+                <div class="formular-skupina" style="margin-bottom: 0;">
+                  <label style="display:block; margin-bottom: 6px; color: #aaaaaa; font-weight: 600; font-size: 0.92rem;">Kategorie:</label>
+                  <select name="kategorie_suroviny">
+                    <option value="syry" <?php echo ($upravovanaSurovina['kategorie'] ?? '') === 'syry' ? 'selected' : ''; ?>>Sýry</option>
+                    <option value="maso" <?php echo ($upravovanaSurovina['kategorie'] ?? '') === 'maso' ? 'selected' : ''; ?>>Maso & Uzeniny</option>
+                    <option value="zelenina" <?php echo ($upravovanaSurovina['kategorie'] ?? '') === 'zelenina' ? 'selected' : ''; ?>>Zelenina & Bylinky</option>
+                    <option value="omacky" <?php echo ($upravovanaSurovina['kategorie'] ?? '') === 'omacky' ? 'selected' : ''; ?>>Omáčky & Těsto</option>
+                    <option value="specialni" <?php echo ($upravovanaSurovina['kategorie'] ?? '') === 'specialni' ? 'selected' : ''; ?>>Speciální</option>
+                  </select>
+                </div>
+                <div class="formular-skupina" style="margin-bottom: 0;">
+                  <label style="display:block; margin-bottom: 6px; color: #aaaaaa; font-weight: 600; font-size: 0.92rem;">Původ ingredience:</label>
+                  <input type="text" name="puvod_suroviny" placeholder="Např. Itálie" value="<?php echo htmlspecialchars($upravovanaSurovina['puvod'] ?? 'Itálie'); ?>">
+                </div>
+              </div>
+
+              <!-- POPIS -->
+              <div class="formular-skupina">
+                <label style="display:block; margin-bottom: 6px; color: #aaaaaa; font-weight: 600; font-size: 0.92rem;">Popis ingredience:</label>
+                <textarea name="popis_suroviny" rows="2" placeholder="Tradiční čerstvý sýr z buvolího mléka..."><?php echo htmlspecialchars($upravovanaSurovina['popis'] ?? ''); ?></textarea>
+              </div>
+
+              <!-- PÁLIVOST SUROVINY (3 MOŽNOSTI) -->
+              <?php
+                $aktualniPalivostSuroviny = intval($upravovanaSurovina['palivost'] ?? 0);
+              ?>
+              <div class="formular-skupina">
+                <label style="display:block; margin-bottom: 6px; color: #aaaaaa; font-weight: 600; font-size: 0.92rem;">Pálivost ingredience:</label>
+                <div class="mini-kapsle-prepinac" id="sw-surovina-palivost">
+                  <button type="button" class="mini-kapsle-tlacitko <?php echo ($aktualniPalivostSuroviny === 0) ? 'aktivni' : ''; ?>" data-val="0" onclick="nastavitPalivostSuroviny(0)">Nepálivé</button>
+                  <button type="button" class="mini-kapsle-tlacitko <?php echo ($aktualniPalivostSuroviny === 1) ? 'aktivni' : ''; ?>" data-val="1" onclick="nastavitPalivostSuroviny(1)" style="display: inline-flex; align-items: center; gap: 4px;"><?php echo vykreslitSvgPapricku(16); ?> Mírně pálivé</button>
+                  <button type="button" class="mini-kapsle-tlacitko <?php echo ($aktualniPalivostSuroviny === 2) ? 'aktivni' : ''; ?>" data-val="2" onclick="nastavitPalivostSuroviny(2)" style="display: inline-flex; align-items: center; gap: 4px;"><?php echo vykreslitSvgPapricku(16) . vykreslitSvgPapricku(16); ?> Extra pálivé</button>
+                </div>
+                <input type="hidden" id="vstup_palivost_suroviny" name="palivost_suroviny" value="<?php echo $aktualniPalivostSuroviny; ?>">
+              </div>
+
+              <!-- EU ALERGENY PRO SUROVINU -->
+              <?php
+                $zaskrtnuteAlergenyS = $upravovanaSurovina['alergeny_cisla'] ?? [];
+              ?>
+              <div class="formular-skupina">
+                <label style="display:block; margin-bottom: 6px; color: #aaaaaa; font-weight: 600; font-size: 0.92rem;">Alergeny EU (kliknutím vyberte alergen):</label>
+                <div class="skupina-alergen">
+                  <?php foreach ($seznamEuAlergen as $cislo => $nazevAlergenu): ?>
+                    <?php $jeZaskrtnuto = in_array($cislo, $zaskrtnuteAlergenyS); ?>
+                    <input type="checkbox" class="alergen-checkbox" id="alergen_sur_<?php echo $cislo; ?>" name="alergeny_cisla_suroviny[]" value="<?php echo $cislo; ?>" <?php echo $jeZaskrtnuto ? 'checked' : ''; ?>>
+                    <label class="alergen-stitek" for="alergen_sur_<?php echo $cislo; ?>">
+                      <span class="alergen-cislo"><?php echo $cislo; ?></span>
+                      <span><?php echo $nazevAlergenu; ?></span>
+                    </label>
+                  <?php endforeach; ?>
+                </div>
+              </div>
+
+              <!-- NAHRÁVÁNÍ FOTKY -->
+              <div class="formular-skupina" style="margin-top: 15px;">
+                <div class="custom-file-upload-wrapper">
+                  <input type="file" id="fotka_suroviny_vstup" name="fotka_suroviny_soubor" accept="image/*" class="custom-file-input-hidden" onchange="aktualizovatNazevSouboru(this, 'napis-nazev-souboru-surovina')">
+                  <button type="button" class="tlacitko-custom-upload" onclick="document.getElementById('fotka_suroviny_vstup').click()">
+                    Vybrat fotku
+                  </button>
+                  <span id="napis-nazev-souboru-surovina" class="napis-soubor-stav">
+                    <?php echo !empty($upravovanaSurovina['obrazek']) ? htmlspecialchars(basename($upravovanaSurovina['obrazek'])) : 'Soubor nevybrán'; ?>
+                  </span>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 15px; margin-top: 25px;">
+                <button type="submit" name="ulozit_surovinu_stisknuto" class="tlacitko tlacitko-cervene">
+                  <?php echo $upravovanaSurovina ? 'Uložit změny suroviny' : 'Přidat ingredienci'; ?>
+                </button>
+                <?php if ($upravovanaSurovina): ?>
+                  <a href="administrace.php" class="tlacitko tlacitko-sede">Zrušit úpravu</a>
+                <?php endif; ?>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- BÍLÝ PRŮHLEDNÝ BOX PRO SEZNAM INGREDIENCÍ A OVLÁDACÍ PRVKY -->
+        <div class="admin-box-seznam-bily">
+
+          <!-- OVLÁDACÍ LIŠTA: FILTRY KATEGORIÍ + HLEDÁNÍ VLEVO, PŘEPÍNAČ DLAŽDICE/SEZNAM VPRAVO -->
+          <div class="admin-ovladaci-lista-pizzy">
+            
+            <div class="admin-ovladaci-leva-cast">
+              <!-- Switch: Kategorie surovin -->
+              <div class="mini-kapsle-prepinac" id="sw-filtr-surovin">
+                <button type="button" class="mini-kapsle-tlacitko aktivni" data-filtr="vse" onclick="filtrovatTabulkuSurovin('vse')">Všechny (<?php echo count($surovinySeznam); ?>)</button>
+                <button type="button" class="mini-kapsle-tlacitko" data-filtr="syry" onclick="filtrovatTabulkuSurovin('syry')">Sýry</button>
+                <button type="button" class="mini-kapsle-tlacitko" data-filtr="maso" onclick="filtrovatTabulkuSurovin('maso')">Maso & Uzeniny</button>
+                <button type="button" class="mini-kapsle-tlacitko" data-filtr="zelenina" onclick="filtrovatTabulkuSurovin('zelenina')">Zelenina & Bylinky</button>
+                <button type="button" class="mini-kapsle-tlacitko" data-filtr="omacky" onclick="filtrovatTabulkuSurovin('omacky')">Omáčky</button>
+                <button type="button" class="mini-kapsle-tlacitko" data-filtr="specialni" onclick="filtrovatTabulkuSurovin('specialni')">Speciální</button>
+              </div>
+
+              <!-- Vyhledávání podle názvu suroviny -->
+              <div class="admin-vyhledavani-obal">
+                <input type="text" id="vstup-hledat-surovinu" class="admin-vyhledavani-vstup" placeholder="Hledat ingredienci..." onkeyup="filtrovatTabulkuSurovinText()">
+              </div>
+            </div>
+
+            <!-- Switch: Dlaždice / Seznam (zarovnaný doprava) -->
+            <div class="mini-kapsle-prepinac" id="sw-pohled-surovin">
+              <button type="button" class="mini-kapsle-tlacitko aktivni" data-pohled="dlazdice" onclick="prepnoutPohledSurovin('dlazdice')">Dlaždice</button>
+              <button type="button" class="mini-kapsle-tlacitko" data-pohled="seznam" onclick="prepnoutPohledSurovin('seznam')">Seznam</button>
+            </div>
+
           </div>
 
-          <input type="text" id="vstup-hledat-surovinu" class="admin-vyhledavani-vstup" placeholder="Hledat ingredienci..." onkeyup="filtrovatTabulkuSurovinText()">
-        </div>
-
-        <!-- TEXTOVÉ TLAČÍTKO "+ PŘIDAT NOVOU INGREDIENCI" (BÍLÁ IKONA I TEXT) -->
-        <button type="button" class="tlacitko-text-pridat" onclick="zobrazitFormularSurovinu()">
-          <span class="ikona-plus-bila">+</span>
-          <span style="color: #ffffff !important; font-weight: 800;"><?php echo $upravovanaSurovina ? 'Upravit surovinu: ' . htmlspecialchars($upravovanaSurovina['nazev']) : 'Přidat novou ingredienci'; ?></span>
-        </button>
-
-        <!-- FORMULÁŘ PRO PRIDANI / UPRAVU INGREDIENCE -->
-        <div id="obal-formular-surovina" class="admin-formular-box-inline" style="<?php echo $upravovanaSurovina ? 'display:block;' : 'display:none;'; ?>">
-
-          <form method="POST" action="administrace.php" enctype="multipart/form-data">
-            <input type="hidden" name="id_suroviny" value="<?php echo $upravovanaSurovina['id'] ?? ''; ?>">
-            <input type="hidden" name="stavajici_obrazek_suroviny" value="<?php echo $upravovanaSurovina['obrazek'] ?? ''; ?>">
-
-            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
-              <div class="formular-skupina">
-                <label>Název ingredience:</label>
-                <input type="text" name="nazev_suroviny" required placeholder="Např. Mozzarella di Bufala" value="<?php echo htmlspecialchars($upravovanaSurovina['nazev'] ?? ''); ?>">
-              </div>
-              <div class="formular-skupina">
-                <label>Kategorie:</label>
-                <select name="kategorie_suroviny">
-                  <option value="syry" <?php echo ($upravovanaSurovina['kategorie'] ?? '') === 'syry' ? 'selected' : ''; ?>>Sýry</option>
-                  <option value="maso" <?php echo ($upravovanaSurovina['kategorie'] ?? '') === 'maso' ? 'selected' : ''; ?>>Maso & Uzeniny</option>
-                  <option value="zelenina" <?php echo ($upravovanaSurovina['kategorie'] ?? '') === 'zelenina' ? 'selected' : ''; ?>>Zelenina & Bylinky</option>
-                  <option value="omacky" <?php echo ($upravovanaSurovina['kategorie'] ?? '') === 'omacky' ? 'selected' : ''; ?>>Omáčky & Těsto</option>
-                  <option value="specialni" <?php echo ($upravovanaSurovina['kategorie'] ?? '') === 'specialni' ? 'selected' : ''; ?>>Speciální</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="formular-skupina">
-              <label>Původ ingredience (vlajka / země):</label>
-              <input type="text" name="puvod_suroviny" placeholder="Neapol, Itálie" value="<?php echo htmlspecialchars($upravovanaSurovina['puvod'] ?? 'Itálie'); ?>">
-            </div>
-
-            <div class="formular-skupina">
-              <label>Popis ingredience:</label>
-              <textarea name="popis_suroviny" rows="2" placeholder="Tradiční čerstvý sýr z buvolího mléka..."><?php echo htmlspecialchars($upravovanaSurovina['popis'] ?? ''); ?></textarea>
-            </div>
-
-            <div class="formular-skupina" style="margin-top: 15px;">
-              <div class="custom-file-upload-wrapper">
-                <input type="file" id="fotka_suroviny_vstup" name="fotka_suroviny_soubor" accept="image/*" class="custom-file-input-hidden" onchange="aktualizovatNazevSouboru(this, 'napis-nazev-souboru-surovina')">
-                <button type="button" class="tlacitko-custom-upload" onclick="document.getElementById('fotka_suroviny_vstup').click()">
-                  Vybrat fotku
-                </button>
-                <span id="napis-nazev-souboru-surovina" class="napis-soubor-stav">
-                  <?php echo !empty($upravovanaSurovina['obrazek']) ? htmlspecialchars(basename($upravovanaSurovina['obrazek'])) : 'Soubor nevybrán'; ?>
-                </span>
-              </div>
-            </div>
-
-            <!-- EU ALERGENY PRO SUROVINU -->
-            <?php
-              $zaskrtnuteAlergenyS = $upravovanaSurovina['alergeny_cisla'] ?? [];
-            ?>
-            <div class="formular-skupina">
-              <label>Alergeny EU (zaškrtni číslo):</label>
-              <div class="skupina-alergen">
-                <?php foreach ($seznamEuAlergen as $cislo => $nazevAlergenu): ?>
-                  <?php $jeZaskrtnuto = in_array($cislo, $zaskrtnuteAlergenyS); ?>
-                  <input type="checkbox" class="alergen-checkbox" id="alergen_sur_<?php echo $cislo; ?>" name="alergeny_cisla_suroviny[]" value="<?php echo $cislo; ?>" <?php echo $jeZaskrtnuto ? 'checked' : ''; ?>>
-                  <label class="alergen-stitek" for="alergen_sur_<?php echo $cislo; ?>">
-                    <span class="alergen-cislo"><?php echo $cislo; ?></span>
-                    <span><?php echo $nazevAlergenu; ?></span>
-                  </label>
-                <?php endforeach; ?>
-              </div>
-            </div>
-
-            <div style="display: flex; gap: 15px; margin-top: 25px;">
-              <button type="submit" name="ulozit_surovinu_stisknuto" class="tlacitko tlacitko-cervene">
-                <?php echo $upravovanaSurovina ? 'Uložit změny suroviny' : 'Přidat ingredienci'; ?>
-              </button>
-              <?php if ($upravovanaSurovina): ?>
-                <a href="administrace.php" class="tlacitko tlacitko-sede">Zrušit</a>
-              <?php endif; ?>
-            </div>
-          </form>
-
-        </div>
-
-        <!-- TABULKA INGREDIENCI -->
-        <table class="tabulka-admin">
-          <thead>
-            <tr>
-              <th>Fotka</th>
-              <th>Název suroviny</th>
-              <th>Kategorie</th>
-              <th>Původ</th>
-              <th>Alergeny EU</th>
-              <th>Akce</th>
-            </tr>
-          </thead>
-          <tbody id="tabulka-suroviny-telo">
+          <!-- DLAŽDICE / SEZNAM SUROVIN -->
+          <div class="suroviny-mrizka-kontejner pohled-dlazdice" id="tabulka-suroviny-telo">
             <?php foreach ($surovinySeznam as $s): ?>
-              <tr data-kategorie="<?php echo htmlspecialchars($s['kategorie']); ?>">
-                <td><img src="<?php echo htmlspecialchars($s['obrazek']); ?>" class="nahled-fotky" alt=""></td>
-                <td>
-                  <strong><?php echo htmlspecialchars($s['nazev']); ?></strong><br>
-                  <small style="color: #aaa;"><?php echo htmlspecialchars($s['popis']); ?></small>
-                </td>
-                <td><span style="text-transform: uppercase; color: #f59e0b;"><?php echo htmlspecialchars($s['kategorie']); ?></span></td>
-                <td><?php echo htmlspecialchars($s['puvod']); ?></td>
-                <td><small><?php echo !empty($s['alergeny_cisla']) ? implode(', ', $s['alergeny_cisla']) : '–'; ?></small></td>
-                <td>
-                  <div style="display: flex; gap: 8px; align-items: center;">
-                    <a href="administrace.php?upravit_surovinu=<?php echo $s['id']; ?>" class="tlacitko-ikona-ramcek tlacitko-ikona-upravit" title="Upravit ingredienci <?php echo htmlspecialchars($s['nazev']); ?>">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                      </svg>
-                    </a>
-                    <form method="POST" action="administrace.php" onsubmit="return confirm('Opravdu chcete smazat ingredienci <?php echo htmlspecialchars($s['nazev']); ?>?');" style="margin: 0;">
-                      <input type="hidden" name="id_suroviny_smazat" value="<?php echo $s['id']; ?>">
-                      <button type="submit" name="smazat_surovinu_stisknuto" class="tlacitko-ikona-ramcek tlacitko-ikona-smazat" title="Smazat ingredienci <?php echo htmlspecialchars($s['nazev']); ?>">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <polyline points="3 6 5 6 21 6"></polyline>
-                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                          <line x1="10" y1="11" x2="10" y2="17"></line>
-                          <line x1="14" y1="11" x2="14" y2="17"></line>
-                        </svg>
-                      </button>
-                    </form>
+              <?php
+                $katNazev = match($s['kategorie'] ?? '') {
+                  'syry' => 'Sýry',
+                  'maso' => 'Maso & Uzeniny',
+                  'zelenina' => 'Zelenina & Bylinky',
+                  'omacky' => 'Omáčky & Těsto',
+                  'specialni' => 'Speciální',
+                  default => ucfirst($s['kategorie'] ?? '')
+                };
+
+                // Bezpečnostní kontrola: na kterých pizzách je tato surovina použita
+                $pizzySeSurovinou = [];
+                foreach ($pizzySeznam as $pz) {
+                  if (isset($pz['ingredience']) && is_array($pz['ingredience']) && in_array($s['id'], $pz['ingredience'])) {
+                    $pizzySeSurovinou[] = $pz['nazev'];
+                  }
+                }
+                $pocetPizzSeSurovinou = count($pizzySeSurovinou);
+                if ($pocetPizzSeSurovinou > 0) {
+                  $jmenaPizz = implode(', ', array_slice($pizzySeSurovinou, 0, 4));
+                  if ($pocetPizzSeSurovinou > 4) {
+                    $jmenaPizz .= ' a další ' . ($pocetPizzSeSurovinou - 4);
+                  }
+                  $varovaniSmazani = "Pozor! Tato ingredience je použita na {$pocetPizzSeSurovinou} pizzách ({$jmenaPizz}).\\n\\nOpravdu ji chcete smazat a automaticky odebrat ze složení těchto pizz?";
+                } else {
+                  $varovaniSmazani = "Opravdu chcete smazat ingredienci {$s['nazev']}?";
+                }
+              ?>
+              <div class="surovina-karta-polozka" data-kategorie="<?php echo htmlspecialchars($s['kategorie'] ?? ''); ?>">
+                
+                <!-- 1. SLOUPEC / FOTO OBRÁZKU -->
+                <div class="surovina-foto-obal">
+                  <?php if (!empty($s['puvod'])): ?>
+                    <span class="surovina-puvod-stitek-karta"><?php echo htmlspecialchars($s['puvod']); ?></span>
+                  <?php endif; ?>
+                  <img src="<?php echo htmlspecialchars($s['obrazek']); ?>" alt="" class="surovina-fotka">
+                </div>
+
+                <div class="surovina-obsah-blok">
+                  
+                  <!-- 2. SLOUPEC: NÁZEV + POPIS + PŮVOD -->
+                  <div class="surovina-textovy-blok">
+                    <div class="surovina-zahlavi">
+                      <strong class="surovina-nazev">
+                        <?php echo htmlspecialchars($s['nazev']); ?>
+                        <?php echo vykreslitIkonyPalivosti($s['palivost'] ?? 0, 18); ?>
+                      </strong>
+                      <?php if (!empty($s['puvod'])): ?>
+                        <span class="surovina-puvod-stitek-seznam"><?php echo htmlspecialchars($s['puvod']); ?></span>
+                      <?php endif; ?>
+                    </div>
+                    <?php if (!empty($s['popis'])): ?>
+                      <div class="surovina-popis">
+                        <small><?php echo htmlspecialchars($s['popis']); ?><?php if (!empty($s['alergeny_cisla'])): ?> &bull; <span style="color: #666666;">(<?php echo implode(', ', $s['alergeny_cisla']); ?>)</span><?php endif; ?></small>
+                      </div>
+                    <?php elseif (!empty($s['alergeny_cisla'])): ?>
+                      <div class="surovina-popis">
+                        <small style="color: #666666;">Alergeny: (<?php echo implode(', ', $s['alergeny_cisla']); ?>)</small>
+                      </div>
+                    <?php endif; ?>
                   </div>
-                </td>
-              </tr>
+
+                  <div class="surovina-pata">
+                    <!-- 3. SLOUPEC: KATEGORIE -->
+                    <span class="surovina-kategorie-stitek"><?php echo htmlspecialchars($katNazev); ?></span>
+
+                    <!-- 4. SLOUPEC: TLAČÍTKA AKCÍ -->
+                    <div class="surovina-akce">
+                      <a href="administrace.php?upravit_surovinu=<?php echo $s['id']; ?>" class="tlacitko-ikona-ramcek tlacitko-ikona-upravit" title="Upravit ingredienci <?php echo htmlspecialchars($s['nazev']); ?>">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                      </a>
+                      <form method="POST" action="administrace.php" onsubmit="return confirm('<?php echo addslashes($varovaniSmazani); ?>');" style="margin: 0;">
+                        <input type="hidden" name="id_suroviny_smazat" value="<?php echo $s['id']; ?>">
+                        <button type="submit" name="smazat_surovinu_stisknuto" class="tlacitko-ikona-ramcek tlacitko-ikona-smazat" title="Smazat ingredienci <?php echo htmlspecialchars($s['nazev']); ?>">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                          </svg>
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
             <?php endforeach; ?>
-          </tbody>
-        </table>
+          </div>
+
+        </div>
 
       </div>
 
       <!-- ====================================================================
            ZÁLOŽKA 3: ZÁLOHY A VERZOVÁNÍ DATABÁZE
            ==================================================================== -->
-      <div id="sekce-zalozka-zalohy" class="admin-zalozka-obsah">
+      <div id="sekce-zalozka-zalohy" class="admin-zalozka-obsah <?php echo ($aktivniZalozka === 'zalohy') ? 'aktivni' : ''; ?>">
         <h2 class="sekce-nadpis-hlavni">ZÁLOHY A VERZOVÁNÍ DATABÁZE (<?php echo count($seznamZaloh); ?>)</h2>
 
-        <!-- INFO BANNER O AUTOMATICKÉM VERZOVÁNÍ -->
-        <div style="background: rgba(46, 213, 115, 0.08); border: 1px solid rgba(46, 213, 115, 0.3); border-radius: 12px; padding: 18px 24px; margin-bottom: 26px; color: #e0e0e0; font-size: 0.95rem; line-height: 1.5;">
-          <strong style="color: #2ed573; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 1.05rem;">
-            Bezpečnostní automatické verzování aktivní
+        <!-- INFO BANNER O ZÁLOHOVÁNÍ -->
+        <div style="background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; padding: 18px 24px; margin-bottom: 26px; color: #e0e0e0; font-size: 0.95rem; line-height: 1.5;">
+          <strong style="color: #ffffff; display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 1.05rem;">
+            Správa záloh a verzování
           </strong>
-          Kdykoliv v administraci přidáte, upravíte nebo smažete pizzu či ingredienci, systém automaticky vytvoří časovou kopii do složky záloh. Pokud dojde k nechtěnému přepsání, můžete se jediným kliknutím vrátit k libovolné starší verzi.
+          Zálohy se vytváří <strong>automaticky při každém přidání, úpravě nebo smazání</strong> pizzy či ingredience, a také je můžete vytvořit kdykoliv ručně. K libovolné záloze se můžete jediným kliknutím vrátit.
         </div>
 
-        <!-- RYCHLÉ AKCE (3 KARTY) -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px;">
+        <!-- RYCHLÉ AKCE (4 KARTY) -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 30px;">
           
           <!-- KARTA 1: VYTVOŘIT ZÁLOHU TEĎ -->
           <div style="background: #161616; border: 1px solid #2a2a2a; border-radius: 14px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between;">
@@ -1655,7 +2422,21 @@ $seznamEuAlergen = [
             </form>
           </div>
 
-          <!-- KARTA 2: EXPORT DATABÁZE (STÁHNOUT DO PC) -->
+          <!-- KARTA 2: SMAZAT ZÁLOHY STARŠÍ NEŽ 1 MĚSÍC -->
+          <div style="background: #161616; border: 1px solid #2a2a2a; border-radius: 14px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <h3 style="margin-top: 0; margin-bottom: 8px; font-size: 1.1rem; color: #ffffff;">Vyčistit staré zálohy</h3>
+              <p style="color: #888888; font-size: 0.88rem; margin: 0 0 16px 0;">Smaže z disku všechny záložní body starší než 1 měsíc (starší 30 dnů).</p>
+            </div>
+            <form method="POST" action="administrace.php" style="margin: 0;" onsubmit="return confirm('Opravdu chcete smazat všechny zálohy starší než 1 měsíc?');">
+              <button type="submit" name="smazat_stare_zalohy_stisknuto" class="tlacitko tlacitko-sede" style="width: 100%; justify-content: center; font-weight: 700; color: #f87171; border-color: rgba(248, 113, 113, 0.3);">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                Smazat starší 1 měsíc
+              </button>
+            </form>
+          </div>
+
+          <!-- KARTA 3: EXPORT DATABÁZE (STÁHNOUT DO PC) -->
           <div style="background: #161616; border: 1px solid #2a2a2a; border-radius: 14px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between;">
             <div>
               <h3 style="margin-top: 0; margin-bottom: 8px; font-size: 1.1rem; color: #ffffff;">Stáhnout zálohu (Export)</h3>
@@ -1668,7 +2449,7 @@ $seznamEuAlergen = [
             </form>
           </div>
 
-          <!-- KARTA 3: IMPORT DATABÁZE (NAHRÁT Z PC) -->
+          <!-- KARTA 4: IMPORT DATABÁZE (NAHRÁT Z PC) -->
           <div style="background: #161616; border: 1px solid #2a2a2a; border-radius: 14px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between;">
             <div>
               <h3 style="margin-top: 0; margin-bottom: 8px; font-size: 1.1rem; color: #ffffff;">Nahrát zálohu (Import)</h3>
@@ -1687,7 +2468,15 @@ $seznamEuAlergen = [
         </div>
 
         <!-- SEZNAM HISTORIE ZÁLOH -->
-        <h3 style="font-size: 1.25rem; color: #ffffff; margin-bottom: 16px;">Historie bodů obnovy na disku</h3>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <h3 style="font-size: 1.25rem; color: #ffffff; margin: 0;">Historie bodů obnovy na disku</h3>
+          <form method="POST" action="administrace.php" style="margin: 0;" onsubmit="return confirm('Opravdu chcete smazat všechny zálohy starší než 1 měsíc?');">
+            <button type="submit" name="smazat_stare_zalohy_stisknuto" class="tlacitko tlacitko-sede" style="padding: 6px 14px; font-size: 0.82rem; color: #f87171; border-color: rgba(248, 113, 113, 0.3); font-weight: 600;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px; vertical-align: -1px;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              Smazat starší 1 měsíc
+            </button>
+          </form>
+        </div>
         <?php if (empty($seznamZaloh)): ?>
           <div style="background: #161616; border: 1px solid #2a2a2a; border-radius: 12px; padding: 30px; text-align: center; color: #888888;">
             Zatím neexistují žádné uložené zálohy. Klikněte výše na <strong>Vytvořit zálohu teď</strong>, nebo se první vytvoří automaticky při příští úpravě.

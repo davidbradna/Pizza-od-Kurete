@@ -32,19 +32,16 @@
 
 .medailonek-pizzy:hover,
 .karta-pizzy:hover {
-  transform: translateY(-5px);
   border-color: var(--barva-zlata-hlavni, #f59e0b);
   box-shadow: 0 12px 32px rgba(245, 158, 11, 0.2);
 }
 
-/* Číselný odznak v rohu medailonku */
+/* Číselný odznak v rohu medailonku (Základ) */
 .medailonek-pizzy-cislo,
 .ciselny-odznak {
   position: absolute;
   top: 18px;
   left: 18px;
-  background-color: var(--barva-cervena-hlavni, #e50914);
-  color: #ffffff;
   font-weight: 900;
   font-size: 1.05rem;
   width: 34px;
@@ -55,6 +52,21 @@
   border-radius: var(--zaobleni-male, 6px);
   z-index: 2;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Barevné varianty číselného odznaku */
+.medailonek-pizzy-cislo,
+.ciselny-odznak,
+.ciselny-odznak-cerveny,
+.medailonek-pizzy-cislo-cerveny {
+  background-color: var(--barva-cervena-hlavni, #e50914);
+  color: #ffffff;
+}
+
+.ciselny-odznak-bily,
+.medailonek-pizzy-cislo-bily {
+  background-color: #ffffff;
+  color: #000000 !important;
 }
 
 /* Obal fotky pizzy (kruhový pohled s padajícím stínem) */
@@ -106,12 +118,12 @@
   flex-grow: 1;
 }
 
-/* Klikací štítek alergenů */
+/* Klikací štítek alergenů (decentní šedá barva) */
 .medailonek-pizzy-alergeny,
 .alergeny-klikaci-stitek {
   font-size: 0.82rem;
-  color: #f87171;
-  font-weight: 700;
+  color: #888888;
+  font-weight: 600;
   margin-bottom: 14px;
   cursor: pointer;
   display: inline-block;
@@ -167,15 +179,52 @@
 
 /* --- BAREVNÉ VARIANTY MEDAILONKU PIZZY --- */
 
-/* Zlatá varianta (Pizza týdne / Doporučujeme) */
-.medailonek-pizzy-zlaty,
-.karta-pizzy.karta-zlata {
-  border-color: rgba(245, 158, 11, 0.4);
+/* Zvýraznění aktivní Pizzy týdne v jídelním lístku (Sytý hluboký zlatý gradient, zlatý rámeček, ambientní záře a skryté číslo vlevo nahoře) */
+.karta-pizzy.karta-pizza-tydne {
+  border: 2px solid #f59e0b !important;
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.28) 0%, rgba(245, 158, 11, 0.12) 45%, rgba(32, 24, 14, 0.95) 75%, #161616 100%) !important;
+  box-shadow: 0 10px 32px rgba(245, 158, 11, 0.28) !important;
 }
-.medailonek-pizzy-zlaty .medailonek-pizzy-cislo,
-.karta-pizzy .odznak-zlata {
-  background-color: var(--barva-zlata-hlavni, #f59e0b);
-  color: #000000;
+
+.karta-pizzy.karta-pizza-tydne:hover {
+  border-color: #fbbf24 !important;
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.35) 0%, rgba(245, 158, 11, 0.16) 50%, rgba(38, 28, 16, 0.98) 80%, #161616 100%) !important;
+  box-shadow: 0 16px 42px rgba(245, 158, 11, 0.42) !important;
+}
+
+/* Skrytí číselného odznaku u Pizzy týdne */
+.karta-pizzy.karta-pizza-tydne .ciselny-odznak,
+.medailonek-pizzy.karta-pizza-tydne .ciselny-odznak,
+.karta-pizzy.karta-pizza-tydne .medailonek-pizzy-cislo {
+  display: none !important;
+}
+
+.stitek-pizza-tydne-roh {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: rgba(18, 18, 18, 0.92);
+  border: 1px solid #f59e0b;
+  color: #ffffff !important;
+  font-weight: 800;
+  font-size: 0.78rem;
+  padding: 5px 12px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 10px rgba(245, 158, 11, 0.25);
+}
+
+.stitek-pizza-tydne-roh .hvezda-ikona-tydne {
+  color: #f59e0b;
+  font-size: 1.15rem;
+  line-height: 1;
+  display: inline-block;
+  filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.7));
 }
 
 
@@ -205,7 +254,6 @@
 .pizza-dlazdice:hover {
   border-color: var(--barva-zlata-hlavni, #f59e0b);
   box-shadow: var(--stin-karty-hover, 0 12px 32px rgba(245, 158, 11, 0.2));
-  transform: translateY(-4px);
 }
 
 /* Fotka pokrývající horní obdélník */
@@ -289,6 +337,10 @@
   box-shadow: none;
 }
 
+.skryto {
+  display: none !important;
+}
+
 .pohled-seznam .admin-pizza-dlazdice:hover,
 .pohled-seznam .pizza-dlazdice:hover {
   border-color: #444444;
@@ -324,6 +376,41 @@
   padding-top: 0;
   margin-top: 0;
   gap: 24px;
+}
+
+/* --- DLAŽDICE A SEZNAM SUROVIN V ADMINISTRACI --- */
+.suroviny-mrizka-kontejner.pohled-dlazdice {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.surovina-karta-polozka {
+  background-color: var(--barva-pozadi-karet, #161616);
+  border: 1px solid var(--barva-ramecku-tmava, #2a2a2a);
+  border-radius: var(--zaobleni-karty, 16px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: var(--prechod-stredni, all 0.3s ease);
+  box-shadow: var(--stin-karty, 0 8px 24px rgba(0, 0, 0, 0.35));
+}
+
+.surovina-karta-polozka:hover {
+  border-color: var(--barva-zlata-hlavni, #f59e0b);
+  box-shadow: var(--stin-karty-hover, 0 12px 32px rgba(245, 158, 11, 0.2));
+  transform: translateY(-4px);
+}
+
+.suroviny-mrizka-kontejner.pohled-seznam .surovina-karta-polozka {
+  display: grid;
+  grid-template-columns: 44px 1fr auto auto;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 18px;
+  border-radius: var(--zaobleni-velke, 10px);
+  transform: none !important;
+  box-shadow: none;
 }
 
 

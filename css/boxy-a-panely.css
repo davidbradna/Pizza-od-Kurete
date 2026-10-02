@@ -42,11 +42,21 @@
   border: 1px solid rgba(229, 9, 20, 0.35);
 }
 
-/* Bílá varianta */
+/* Bílá varianta formuláře */
 .box-formular-bily {
   background-color: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.35);
   color: #ffffff;
+}
+
+/* Bílá průhledná varianta pro obalení seznamu a ovládacích prvků */
+.box-seznam-bily,
+.admin-box-seznam-bily {
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--zaobleni-velke, 14px);
+  padding: 22px;
+  margin-top: 24px;
 }
 
 

@@ -28,6 +28,153 @@
   gap: 15px;
 }
 
+/* --- UNIVERZÁLNÍ PLNOHODNOTNÁ NAVIGAČNÍ LIŠTA PRO PODSTRÁNKY --- */
+.navigace-podstranka-obsah {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.navigace-brand-obal {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: opacity 0.2s ease;
+}
+
+.navigace-brand-obal:hover {
+  opacity: 0.9;
+}
+
+.navigace-brand-logo {
+  height: 38px;
+  width: auto;
+  display: block;
+}
+
+.navigace-brand-nazev {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  line-height: 1.1;
+  display: flex;
+  flex-direction: column;
+}
+
+.navigace-brand-nazev small {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--barva-zlata-hlavni, #f59e0b);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.navigace-stred-obal {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.navigace-odkazy-menu {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navigace-odkaz-polozka {
+  color: var(--barva-textu-seda, #cccccc);
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.navigace-odkaz-polozka:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.navigace-odkaz-polozka.aktivni {
+  color: var(--barva-zlata-hlavni, #f59e0b);
+  background: rgba(245, 158, 11, 0.12);
+}
+
+.navigace-prava-cast {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+}
+
+.navigace-telefon-stitek {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.95rem;
+  text-decoration: none;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  transition: all 0.2s ease;
+}
+
+.navigace-telefon-stitek:hover {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: var(--barva-zlata-hlavni, #f59e0b);
+  color: var(--barva-zlata-hlavni, #f59e0b);
+}
+
+@media (max-width: 900px) {
+  .navigace-podstranka-obsah {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .navigace-stred-obal {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-top: 10px;
+    gap: 12px;
+  }
+  .navigace-brand-nazev small {
+    display: none;
+  }
+}
+
+@media (max-width: 550px) {
+  .navigace-odkazy-menu {
+    gap: 8px;
+  }
+  .navigace-odkaz-polozka {
+    font-size: 0.85rem;
+    padding: 5px 8px;
+  }
+  .navigace-telefon-stitek span {
+    display: none;
+  }
+}
+
 
 /* --------------------------------------------------------------------------
    2. PŘEPÍNAČ POBOČEK (Rychnov n. K. / Ústí n. O.)

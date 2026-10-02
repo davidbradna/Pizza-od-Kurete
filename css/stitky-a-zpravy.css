@@ -93,17 +93,33 @@
   z-index: 2;
 }
 
-/* Číslo pizzy v rohu fotky */
-.odznak-pizza-cislo-foto {
+/* Číslo pizzy v rohu fotky (Základ) */
+.odznak-pizza-cislo-foto,
+.ciselny-odznak {
   position: absolute;
   top: 12px;
   left: 12px;
-  background-color: var(--barva-cervena-hlavni, #e50914);
-  color: #ffffff;
   font-weight: 900;
   font-size: 0.85rem;
   padding: 4px 10px;
   border-radius: 6px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Barevné varianty číselného odznaku */
+.odznak-pizza-cislo-foto,
+.odznak-pizza-cislo-foto-cerveny,
+.ciselny-odznak-cerveny {
+  background-color: var(--barva-cervena-hlavni, #e50914);
+  color: #ffffff;
+}
+
+.odznak-pizza-cislo-foto-bily,
+.ciselny-odznak-bily {
+  background-color: #ffffff;
+  color: #000000 !important;
 }

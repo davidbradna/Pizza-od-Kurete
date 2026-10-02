@@ -30,24 +30,67 @@ $pizzy = ziskatPizzy();
 </head>
 <body>
 
-  <!-- HORNI LISTA S KAPSULOVYM PREPINACEM A TELEFONEM POD NIM -->
+  <!-- 1. UNIVERZÁLNÍ PLNOHODNOTNÁ NAVIGAČNÍ LIŠTA PRO PODSTRÁNKY -->
   <header class="horni-kontakty-lista">
-    <div class="kontejner kontakty-obsah-stredovy">
+    <div class="navigace-podstranka-obsah">
       
-      <div style="display: flex; align-items: center; gap: 15px;">
-        <a href="index.php" class="tlacitko tlacitko-cervene" style="padding: 6px 16px; font-size: 0.85rem;">&lsaquo; Zpět na Jídelní lístek</a>
-        
-        <!-- KAPSULOVY PREPINAC -->
-        <div class="kapsle-prepinac-pobocky" data-aktivni="rychnov">
-          <div class="kapsle-slajdr-bily"></div>
-          <button class="kapsle-polozka" data-pobocka-kod="rychnov" onclick="prepnoutPobocku('rychnov')">Rychnov n.K.</button>
-          <button class="kapsle-polozka" data-pobocka-kod="usti" onclick="prepnoutPobocku('usti')">Ústí n.O.</button>
-        </div>
-      </div>
+      <!-- BRAND & LOGO (VLEVO: KUŘE + GRAFICKÝ NÁPIS PIZZA OD KUŘETE) -->
+      <a href="index.php" class="navigace-brand-obal" title="Zpět na hlavní stránku Pizza od Kuřete">
+        <img src="media/logo/logo-pizza.png" alt="Kuře Pizza od Kuřete" class="navigace-brand-logo" style="height: 50px; width: auto; max-width: 55px; object-fit: contain; display: block;">
+        <img src="media/logo/napis-pizza-od-kurete.png" alt="PIZZA OD KUŘETE" class="navigace-brand-napis-img" style="height: 40px; width: auto; display: block; object-fit: contain;">
+      </a>
 
-      <!-- TELEFON POD SWITCHEM -->
-      <div class="telefon-pod-switchem" id="horni-aktivni-kontakt">
-        <a href="tel:739149142" class="telefonni-odkaz"><svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff" style="margin-right: 6px; vertical-align: -2px;"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1.003 1.003 0 011.02-.24c1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>739 149 142</a>
+      <!-- PRAVÁ ČÁST: MENU POLOŽKY (ZAROVNANÉ DOPRAVA) + IKONA TELEFONU + HAMBURGER -->
+      <div class="navigace-prava-skupina">
+        
+        <!-- HLAVNÍ NAVIGAČNÍ MENU (NA MOBILU SE SKRÝVÁ DO HAMBURGERU) -->
+        <ul class="navigace-odkazy-menu" id="navigace-odkazy-menu">
+          <li><a href="index.php#jidelni-listek" class="navigace-odkaz-polozka">Jídelní lístek</a></li>
+          <li><a href="ingredience.php" class="navigace-odkaz-polozka aktivni">Ingredience</a></li>
+          <li><a href="index.php#provozovny" class="navigace-odkaz-polozka">Pizzerie</a></li>
+          <li><a href="index.php#rozvoz" class="navigace-odkaz-polozka">Rozvoz</a></li>
+        </ul>
+
+        <!-- AKČNÍ PRVKY: TELEFON S DROPDOWNEM + HAMBURGER -->
+        <div class="navigace-akce-obal">
+          
+          <!-- IKONA SLUCHÁTKA -->
+          <button type="button" class="tlacitko-telefon-ikona" id="btn-otevrit-volani" onclick="prepnoutPodoknoVolani(event)" title="Zobrazit telefonní čísla na pobočky">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1.003 1.003 0 011.02-.24c1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+            </svg>
+          </button>
+
+          <!-- HAMBURGER TLAČÍTKO PRO MOBILY -->
+          <button type="button" class="tlacitko-hamburger" id="btn-mobil-menu" onclick="prepnoutMobilMenu(event)" aria-label="Otevřít menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+
+          <!-- VYSKAKOVACÍ PODOKNO S VÝBĚREM TELEFONU -->
+          <div class="podokno-volani-pobocky" id="podokno-volani-box">
+            <div class="podokno-volani-zahlavi">Zavolejte nám:</div>
+            <a href="tel:739149142" class="podokno-polozka-volani">
+              <div>
+                <span class="podokno-polozka-nazev">Rychnov nad Kněžnou</span>
+                <span class="podokno-polozka-cislo">739 149 142</span>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color: #f59e0b;"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1.003 1.003 0 011.02-.24c1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+            </a>
+            <a href="tel:774741818" class="podokno-polozka-volani">
+              <div>
+                <span class="podokno-polozka-nazev">Ústí nad Orlicí</span>
+                <span class="podokno-polozka-cislo">774 741 818</span>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color: #f59e0b;"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1.003 1.003 0 011.02-.24c1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+            </a>
+          </div>
+
+        </div>
+
       </div>
 
     </div>

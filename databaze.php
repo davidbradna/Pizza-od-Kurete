@@ -26,27 +26,52 @@ function ziskatAdresarZaloh() {
 
 function nactiPizzy() {
   global $cestaPizzy, $cestaKDatabazi;
+  $pizzy = [];
   if (file_exists($cestaPizzy)) {
     $obsah = file_get_contents($cestaPizzy);
     $data = json_decode($obsah, true);
-    if (is_array($data)) return $data;
-  }
-
-  // Fallback z původní sloučené databáze
-  if (file_exists($cestaKDatabazi)) {
+    if (is_array($data)) $pizzy = $data;
+  } elseif (file_exists($cestaKDatabazi)) {
+    // Fallback z původní sloučené databáze
     $staraDb = json_decode(file_get_contents($cestaKDatabazi), true);
     if (isset($staraDb['pizzy']) && is_array($staraDb['pizzy'])) {
-      uloziPizzy($staraDb['pizzy'], false);
-      return $staraDb['pizzy'];
+      $pizzy = $staraDb['pizzy'];
+      uloziPizzy($pizzy, false);
     }
   }
 
-  return [];
+  // Zajištění unikátních ID v případě historických duplicit
+  if (!empty($pizzy)) {
+    $pouzitaId = [];
+    $zmena = false;
+    $maxId = 0;
+    foreach ($pizzy as $p) {
+      if (isset($p['id']) && is_numeric($p['id'])) {
+        $maxId = max($maxId, (int)$p['id']);
+      }
+    }
+    foreach ($pizzy as &$p) {
+      $id = $p['id'] ?? 0;
+      if (in_array($id, $pouzitaId, true) || empty($id)) {
+        $maxId++;
+        $p['id'] = $maxId;
+        $zmena = true;
+      } else {
+        $pouzitaId[] = $id;
+      }
+    }
+    unset($p);
+    if ($zmena) {
+      uloziPizzy($pizzy, false);
+    }
+  }
+
+  return $pizzy;
 }
 function nactiDatabaziPizz() { return nactiPizzy(); }
 function ziskatPizzy() { return nactiPizzy(); }
 
-function uloziPizzy($pizzy, $vytvoritZalohu = true) {
+function uloziPizzy($pizzy, $vytvoritZalohu = false) {
   global $cestaPizzy;
   $adresarData = dirname($cestaPizzy);
   if (!is_dir($adresarData)) {
@@ -94,7 +119,7 @@ function nactiIngredience() {
 function nactiDatabaziIngredienci() { return nactiIngredience(); }
 function ziskatSuroviny() { return nactiIngredience(); }
 
-function uloziIngredience($ingredience, $vytvoritZalohu = true) {
+function uloziIngredience($ingredience, $vytvoritZalohu = false) {
   global $cestaIngredience;
   $adresarData = dirname($cestaIngredience);
   if (!is_dir($adresarData)) {
@@ -127,7 +152,7 @@ function nactiDatabazi() {
   ];
 }
 
-function uloziDatabazi($data, $vytvoritZalohu = true) {
+function uloziDatabazi($data, $vytvoritZalohu = false) {
   global $cestaKDatabazi;
   $uspechPizzy = true;
   $uspechIngr = true;
@@ -146,8 +171,49 @@ function uloziDatabazi($data, $vytvoritZalohu = true) {
   return ($uspechPizzy && $uspechIngr);
 }
 
+// Ruční vytvoření zálohy (volá se po stisku tlačítka "Vytvořit zálohu")
+function vytvoritRucniZalohu() {
+  $adresar = ziskatAdresarZaloh();
+  if (!is_dir($adresar)) {
+    @mkdir($adresar, 0777, true);
+  }
+  $db = nactiDatabazi();
+  $casRazitko = date('Y-m-d_H-i-s');
+  $obsahJSON = json_encode($db, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+  $cestaKZaloze = $adresar . '/databaze_' . $casRazitko . '.json';
+  $vysledek = @file_put_contents($cestaKZaloze, $obsahJSON) !== false;
+  cistitStareZalohy($adresar, '*.json', 200);
+  return $vysledek;
+}
+
+// Smazání záloh starších než 1 měsíc (30 dní)
+function smazatZalohyStarsiNezMesic() {
+  $adresar = ziskatAdresarZaloh();
+  if (!is_dir($adresar)) {
+    return 0;
+  }
+  $soubory = glob($adresar . '/*.json');
+  if (!$soubory) {
+    return 0;
+  }
+  
+  $casHranice = time() - (30 * 86400); // 30 dní (1 měsíc)
+  $smazanoPocet = 0;
+
+  foreach ($soubory as $soubor) {
+    $casSouboru = filemtime($soubor);
+    if ($casSouboru < $casHranice) {
+      if (@unlink($soubor)) {
+        $smazanoPocet++;
+      }
+    }
+  }
+
+  return $smazanoPocet;
+}
+
 // Pomocná funkce pro promazání starých záloh
-function cistitStareZalohy($adresar, $maska = '*.json', $limit = 50) {
+function cistitStareZalohy($adresar, $maska = '*.json', $limit = 200) {
   $zalohy = glob($adresar . '/' . $maska);
   if ($zalohy && count($zalohy) > $limit) {
     sort($zalohy);
