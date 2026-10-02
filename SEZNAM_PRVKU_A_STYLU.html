@@ -5,9 +5,9 @@
   <title>Design Systém: Přehled prvků a barevných variant - Pizza od Kuřete</title>
   <style>
     @media print {
-      body { background: #ffffff !important; color: #000000 !important; font-size: 10pt; padding: 0 !important; margin: 15mm !important; }
+      body { background: #ffffff !important; color: #000000 !important; font-size: 10pt; padding: 0 !important; margin: 12mm !important; }
       .bez-tisku { display: none !important; }
-      .karta-sekce { break-inside: avoid; border: 1px solid #cccccc !important; background: #fafafa !important; color: #000000 !important; margin-bottom: 15px !important; padding: 15px !important; }
+      .karta-sekce { break-inside: avoid; border: 1px solid #cccccc !important; background: #fafafa !important; color: #000000 !important; margin-bottom: 14px !important; padding: 14px !important; }
       th { background-color: #eeeeee !important; color: #000000 !important; }
       td { border-bottom: 1px solid #ddd !important; }
       code { background: #f0f0f0 !important; color: #000000 !important; border: 1px solid #cccccc !important; font-weight: bold !important; }
@@ -153,9 +153,73 @@
       Všechny prvky sdílejí stejný tvar, velikost, rámeček a zaoblení. Když chcete změnit barvu prvku, stačí k němu přiřadit příslušnou barevnou variantu (např. <code>prepinac-kapsle prepinac-kapsle-cerveny</code>). Změna barvy jednoho prvku nikdy neovlivní ostatní.
     </div>
 
-    <!-- 1. PŘEPÍNAČE A VOLBY -->
+    <!-- 1. MEDAILONEK PIZZY NA WEBU VS DLAŽDICE V ADMINISTRACI -->
     <div class="karta-sekce">
-      <h2>1. Přepínače a volby (css/prepinace.css)</h2>
+      <h2>1. Medailonek pizzy na webu &amp; Dlaždice v administraci (css/karty-a-seznamy.css)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 25%;">Prvek</th>
+            <th style="width: 35%;">Podprvky a součásti</th>
+            <th>Popis a chování</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <strong>Medailonek na webu:</strong><br>
+              <code>.medailonek-pizzy</code><br>
+              <small>(alias <code>.karta-pizzy</code>)</small>
+            </td>
+            <td>
+              • <code>.medailonek-pizzy-cislo</code> (číslo v rohu)<br>
+              • <code>.medailonek-pizzy-fotka-obal</code> (vycentrovaná fotka)<br>
+              • <code>.medailonek-pizzy-nazev</code> (font Britannic)<br>
+              • <code>.medailonek-pizzy-slozeni</code><br>
+              • <code>.medailonek-pizzy-alergeny</code><br>
+              • <code>.medailonek-pizzy-cena</code><br>
+              • <code>.medailonek-pizzy-tlacitko-pridat</code> (kulaté +)
+            </td>
+            <td>Karta v jídelním lístku na veřejném webu. Obsahuje fotku s padajícím stínem, cenu a kulaté červené tlačítko <strong>+</strong> pro vložení do objednávky.<br>
+              <span class="stitek-varianta var-zlata">.medailonek-pizzy-zlaty</span> (pro Pizzu týdne)
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Dlaždice v administraci:</strong><br>
+              <code>.admin-pizza-dlazdice</code><br>
+              <small>(alias <code>.pizza-dlazdice</code>)</small>
+            </td>
+            <td>
+              • <code>.admin-pizza-dlazdice-fotka-obal</code> (obdélníková fotka)<br>
+              • <code>.odznak-pizza-cislo-foto</code> (červené číslo v rohu fotky)<br>
+              • <code>.odznak-pizza-tydne</code> (zlatý štítek Pizza týdne)<br>
+              • <code>.admin-pizza-dlazdice-nazev</code><br>
+              • <code>.admin-pizza-dlazdice-slozeni</code><br>
+              • <code>.admin-pizza-dlazdice-cena</code><br>
+              • <code>.tlacitko-ikona-bila</code> (tužka) + <code>.tlacitko-ikona-cervena</code> (koš)
+            </td>
+            <td>Karta pizzy v administraci pro správce. Fotka pokrývá celý horní pruh, v rozích má štítky a v patičce čtvercové ikony pro úpravu a smazání.</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Řádek seznamu v adminu:</strong><br>
+              <code>.radek-pizza-seznam</code>
+            </td>
+            <td>
+              • <code>.radek-pizza-seznam-nazev</code> (např. 1. MARGHERITA)<br>
+              • <code>.radek-pizza-seznam-cena</code><br>
+              • Ikona tužky a koše
+            </td>
+            <td>Kompaktní vodorovný řádek bez fotky a surovin pro rychlou správu velkého počtu pizz.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 2. PŘEPÍNAČE A VOLBY -->
+    <div class="karta-sekce">
+      <h2>2. Přepínače a volby (css/prepinace.css)</h2>
       <table>
         <thead>
           <tr>
@@ -197,9 +261,9 @@
       </table>
     </div>
 
-    <!-- 2. TLAČÍTKA A IKONY -->
+    <!-- 3. TLAČÍTKA A IKONY -->
     <div class="karta-sekce">
-      <h2>2. Tlačítka a ikony (css/tlacitka.css)</h2>
+      <h2>3. Tlačítka a ikony (css/tlacitka.css)</h2>
       <table>
         <thead>
           <tr>
@@ -242,9 +306,9 @@
       </table>
     </div>
 
-    <!-- 3. VSTUPNÍ POLE A FORMULÁŘE -->
+    <!-- 4. VSTUPNÍ POLE A FORMULÁŘE -->
     <div class="karta-sekce">
-      <h2>3. Vstupní textová a číselná pole (css/vstupni-pole.css)</h2>
+      <h2>4. Vstupní textová a číselná pole (css/vstupni-pole.css)</h2>
       <table>
         <thead>
           <tr>
@@ -268,37 +332,6 @@
             <td><code>.vyber-fotky-tlacitko</code></td>
             <td><code>.vyber-fotky-nazev-souboru</code></td>
             <td>Tlačítko "Vybrat fotku" pro výběr obrázku + šedý popisek s názvem souboru.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- 4. KARTY A SEZNAMY -->
-    <div class="karta-sekce">
-      <h2>4. Zobrazení položek a tabulky (css/karty-a-seznamy.css)</h2>
-      <table>
-        <thead>
-          <tr>
-            <th style="width: 25%;">Základní prvek</th>
-            <th style="width: 35%;">Pohled / Styl</th>
-            <th>Popis</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>.karta-pizza-dlazdice</code></td>
-            <td>Dlaždice (Grid)</td>
-            <td>Karta pizzy s velkou fotkou nahoře, názvem, cenou a ikonami tužky a koše.</td>
-          </tr>
-          <tr>
-            <td><code>.pohled-seznam</code></td>
-            <td>Řádkový seznam (List)</td>
-            <td>Kompaktní vodorovné řádky s formátem <strong>1. MARGHERITA</strong>, cenou vpravo a akčními ikonami (bez fotky a surovin).</td>
-          </tr>
-          <tr>
-            <td><code>.tabulka-administrace</code></td>
-            <td>Tabulka s tmavým záhlavím</td>
-            <td>Univerzální přehledná tabulka pro <strong>Ingredience</strong> a historii <strong>Záloh databáze</strong>.</td>
           </tr>
         </tbody>
       </table>

@@ -10,7 +10,17 @@ Když chcete změnit barvu libovolného prvku, stačí k němu přiřadit přís
 
 ---
 
-## 1. Přepínače a volby (`css/prepinace.css`)
+## 1. Medailonek pizzy na webu & Dlaždice v administraci (`css/karty-a-seznamy.css`)
+
+| Prvek | Podprvky a součásti | Popis a chování |
+| :--- | :--- | :--- |
+| **Medailonek na webu:**<br>`.medailonek-pizzy`<br>*(alias `.karta-pizzy`)* | • `.medailonek-pizzy-cislo` (číslo v rohu)<br>• `.medailonek-pizzy-fotka-obal` (vycentrovaná fotka)<br>• `.medailonek-pizzy-nazev` (font Britannic)<br>• `.medailonek-pizzy-slozeni`<br>• `.medailonek-pizzy-alergeny`<br>• `.medailonek-pizzy-cena`<br>• `.medailonek-pizzy-tlacitko-pridat` (kulaté +) | Karta v jídelním lístku na veřejném webu. Obsahuje fotku s padajícím stínem, cenu a kulaté červené tlačítko **+** pro vložení do objednávky.<br>`.medailonek-pizzy-zlaty` (pro Pizzu týdne). |
+| **Dlaždice v administraci:**<br>`.admin-pizza-dlazdice`<br>*(alias `.pizza-dlazdice`)* | • `.admin-pizza-dlazdice-fotka-obal` (obdélníková fotka)<br>• `.odznak-pizza-cislo-foto` (červené číslo v rohu fotky)<br>• `.odznak-pizza-tydne` (zlatý štítek Pizza týdne)<br>• `.admin-pizza-dlazdice-nazev`<br>• `.admin-pizza-dlazdice-slozeni`<br>• `.admin-pizza-dlazdice-cena`<br>• `.tlacitko-ikona-bila` (tužka) + `.tlacitko-ikona-cervena` (koš) | Karta pizzy v administraci pro správce. Fotka pokrývá celý horní pruh, v rozích má štítky a v patičce čtvercové ikony pro úpravu a smazání. |
+| **Řádek seznamu v adminu:**<br>`.radek-pizza-seznam` | • `.radek-pizza-seznam-nazev` (např. 1. MARGHERITA)<br>• `.radek-pizza-seznam-cena`<br>• Ikona tužky a koše | Kompaktní vodorovný řádek bez fotky a surovin pro rychlou správu velkého počtu pizz. |
+
+---
+
+## 2. Přepínače a volby (`css/prepinace.css`)
 
 | Základní prvek | Dostupné barevné varianty | Kde se na webu používá |
 | :--- | :--- | :--- |
@@ -20,7 +30,7 @@ Když chcete změnit barvu libovolného prvku, stačí k němu přiřadit přís
 
 ---
 
-## 2. Tlačítka a ikony (`css/tlacitka.css`)
+## 3. Tlačítka a ikony (`css/tlacitka.css`)
 
 | Základní prvek | Dostupné barevné varianty | Kde se na webu používá |
 | :--- | :--- | :--- |
@@ -30,22 +40,12 @@ Když chcete změnit barvu libovolného prvku, stačí k němu přiřadit přís
 
 ---
 
-## 3. Vstupní textová a číselná pole (`css/vstupni-pole.css`)
+## 4. Vstupní textová a číselná pole (`css/vstupni-pole.css`)
 
 | Základní prvek | Účelové varianty | Vzhled a chování |
 | :--- | :--- | :--- |
 | **`.vstup-pole`** | `.vstup-pole-hledani`<br>`.vstup-pole-nazev`<br>`.vstup-pole-cena`<br>`.vstup-pole-cislo` | Jednotný tmavý vzhled (`#161616`), jemný rámeček (`#333333`), šedý placeholder, při kliknutí zlatý rámeček. |
 | **`.vyber-fotky-tlacitko`** | `.vyber-fotky-nazev-souboru` | Tlačítko "Vybrat fotku" pro výběr obrázku + šedý popisek s názvem souboru. |
-
----
-
-## 4. Zobrazení položek a tabulky (`css/karty-a-seznamy.css`)
-
-| Základní prvek | Pohled / Styl | Popis |
-| :--- | :--- | :--- |
-| **`.karta-pizza-dlazdice`** | Dlaždice (Grid) | Karta pizzy s velkou fotkou nahoře, názvem, cenou a ikonami tužky a koše. |
-| **`.pohled-seznam`** | Řádkový seznam (List) | Kompaktní vodorovné řádky s formátem **1. MARGHERITA**, cenou vpravo a akčními ikonami (bez fotky a surovin). |
-| **`.tabulka-administrace`** | Tabulka s tmavým záhlavím | Univerzální přehledná tabulka pro **Ingredience** a historii **Záloh databáze**. |
 
 ---
 

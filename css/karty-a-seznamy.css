@@ -1,35 +1,195 @@
 /* ==========================================================================
-   KARTY, SEZNAMY A TABULKY (DESIGN SYSTÉM - PIZZA OD KUŘETE)
+   KARTY, MEDAILONKY A SEZNAMY (DESIGN SYSTÉM - PIZZA OD KUŘETE)
    css/karty-a-seznamy.css
-   Dlaždicový pohled, řádkový seznam a tabulky.
+   1. Medailonek pizzy v jídelním lístku (veřejný web)
+   2. Dlaždice pizzy v administraci
+   3. Řádkový seznam pizz
+   4. Univerzální tabulky (Ingredience, Zálohy)
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   1. KONTEJNER PRO PIZZY (MŘÍŽKA VS SEZNAM)
-   -------------------------------------------------------------------------- */
-.pizzy-kontejner-zobrazeni {
-  margin-top: 25px;
+/* ==========================================================================
+   1. MEDAILONEK PIZZY V JÍDELNÍM LÍSTKU (PRO VEŘEJNÝ WEB / INDEX.PHP)
+   ========================================================================== */
+.mrizka-pizz,
+.mrizka-medailonku-pizz {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
 }
 
-/* --- DLAŽDICOVÝ POHLED --- */
+.medailonek-pizzy,
+.karta-pizzy {
+  background-color: var(--barva-pozadi-karet, #161616);
+  border-radius: var(--zaobleni-velke, 14px);
+  padding: 24px;
+  border: 1px solid var(--barva-ramecku-tmava, #2a2a2a);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: var(--prechod-stredni, all 0.3s ease);
+  box-shadow: var(--stin-karty, 0 8px 24px rgba(0, 0, 0, 0.35));
+}
+
+.medailonek-pizzy:hover,
+.karta-pizzy:hover {
+  transform: translateY(-5px);
+  border-color: var(--barva-zlata-hlavni, #f59e0b);
+  box-shadow: 0 12px 32px rgba(245, 158, 11, 0.2);
+}
+
+/* Číselný odznak v rohu medailonku */
+.medailonek-pizzy-cislo,
+.ciselny-odznak {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  background-color: var(--barva-cervena-hlavni, #e50914);
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 1.05rem;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--zaobleni-male, 6px);
+  z-index: 2;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Obal fotky pizzy (kruhový pohled s padajícím stínem) */
+.medailonek-pizzy-fotka-obal,
+.obrazek-pizzy-obal {
+  width: 100%;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  cursor: pointer;
+}
+
+.medailonek-pizzy-fotka-obal img,
+.obrazek-pizzy-obal img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.65));
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.medailonek-pizzy:hover img,
+.karta-pizzy:hover img {
+  transform: scale(1.08) rotate(2deg);
+}
+
+/* Název pizzy v medailonku */
+.medailonek-pizzy-nazev,
+.nazev-pizzy {
+  font-family: var(--font-logo, 'Britannic', sans-serif);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--barva-textu-bila, #ffffff);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+}
+
+/* Složení pizzy */
+.medailonek-pizzy-slozeni,
+.slozeni-pizzy {
+  color: var(--barva-textu-tlumena, #888888);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  margin-bottom: 14px;
+  flex-grow: 1;
+}
+
+/* Klikací štítek alergenů */
+.medailonek-pizzy-alergeny,
+.alergeny-klikaci-stitek {
+  font-size: 0.82rem;
+  color: #f87171;
+  font-weight: 700;
+  margin-bottom: 14px;
+  cursor: pointer;
+  display: inline-block;
+  transition: color 0.2s ease;
+}
+
+.medailonek-pizzy-alergeny:hover,
+.alergeny-klikaci-stitek:hover {
+  color: #ffffff;
+}
+
+/* Patička medailonku (Cena + Červené tlačítko +) */
+.medailonek-pizzy-paticka,
+.patka-karty-pizzy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--barva-ramecku-tmava, #2a2a2a);
+  padding-top: 16px;
+  margin-top: auto;
+}
+
+.medailonek-pizzy-cena,
+.cena-pizzy {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: var(--barva-zlata-hlavni, #f59e0b);
+}
+
+.medailonek-pizzy-tlacitko-pridat,
+.tlacitko-pridat-plus {
+  width: 38px;
+  height: 38px;
+  background-color: var(--barva-cervena-hlavni, #e50914);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--zaobleni-kruh, 50%);
+  font-size: 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--prechod-rychly, all 0.2s ease);
+  box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
+}
+
+.medailonek-pizzy-tlacitko-pridat:hover,
+.tlacitko-pridat-plus:hover {
+  background-color: var(--barva-cervena-tmava, #b20710);
+  transform: scale(1.1);
+}
+
+/* --- BAREVNÉ VARIANTY MEDAILONKU PIZZY --- */
+
+/* Zlatá varianta (Pizza týdne / Doporučujeme) */
+.medailonek-pizzy-zlaty,
+.karta-pizzy.karta-zlata {
+  border-color: rgba(245, 158, 11, 0.4);
+}
+.medailonek-pizzy-zlaty .medailonek-pizzy-cislo,
+.karta-pizzy .odznak-zlata {
+  background-color: var(--barva-zlata-hlavni, #f59e0b);
+  color: #000000;
+}
+
+
+/* ==========================================================================
+   2. DLAŽDICE PIZZY V ADMINISTRACI (ADMINISTRACE.PHP - DLAŽDICOVÝ POHLED)
+   ========================================================================== */
 .pizzy-kontejner-zobrazeni.pohled-dlazdice {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 22px;
 }
 
-/* --- SEZNAMOVÝ POHLED --- */
-.pizzy-kontejner-zobrazeni.pohled-seznam {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-
-/* --------------------------------------------------------------------------
-   2. DLAŽDICE PIZZY (Karta s fotkou)
-   -------------------------------------------------------------------------- */
-.karta-pizza-dlazdice {
+.admin-pizza-dlazdice,
+.pizza-dlazdice {
   background-color: var(--barva-pozadi-karet, #161616);
   border: 1px solid var(--barva-ramecku-tmava, #2a2a2a);
   border-radius: var(--zaobleni-karty, 16px);
@@ -37,17 +197,20 @@
   display: flex;
   flex-direction: column;
   transition: var(--prechod-stredni, all 0.3s ease);
-  box-shadow: var(--stin-karty);
+  box-shadow: var(--stin-karty, 0 8px 24px rgba(0, 0, 0, 0.35));
   position: relative;
 }
 
-.karta-pizza-dlazdice:hover {
+.admin-pizza-dlazdice:hover,
+.pizza-dlazdice:hover {
   border-color: var(--barva-zlata-hlavni, #f59e0b);
-  box-shadow: var(--stin-karty-hover);
+  box-shadow: var(--stin-karty-hover, 0 12px 32px rgba(245, 158, 11, 0.2));
   transform: translateY(-4px);
 }
 
-.karta-pizza-dlazdice-fotka-obal {
+/* Fotka pokrývající horní obdélník */
+.admin-pizza-dlazdice-fotka-obal,
+.pizza-dlazdice-foto-obal {
   position: relative;
   width: 100%;
   height: 180px;
@@ -55,25 +218,28 @@
   overflow: hidden;
 }
 
-.karta-pizza-dlazdice-fotka {
+.admin-pizza-dlazdice-fotka,
+.pizza-dlazdice-fotka {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.4s ease;
 }
 
-.karta-pizza-dlazdice:hover .karta-pizza-dlazdice-fotka {
+.admin-pizza-dlazdice:hover .admin-pizza-dlazdice-fotka,
+.pizza-dlazdice:hover .pizza-dlazdice-fotka {
   transform: scale(1.06);
 }
 
-.karta-pizza-dlazdice-telo {
+/* Tělo dlaždice v administraci */
+.admin-pizza-dlazdice-telo {
   padding: 18px 20px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
 
-.karta-pizza-dlazdice-nazev {
+.admin-pizza-dlazdice-nazev {
   font-size: 1.25rem;
   font-weight: 800;
   color: var(--barva-textu-bila, #ffffff);
@@ -81,7 +247,7 @@
   text-transform: uppercase;
 }
 
-.karta-pizza-dlazdice-slozeni {
+.admin-pizza-dlazdice-slozeni {
   color: var(--barva-textu-tlumena, #888888);
   font-size: 0.88rem;
   line-height: 1.4;
@@ -89,7 +255,7 @@
   flex-grow: 1;
 }
 
-.karta-pizza-dlazdice-paticka {
+.admin-pizza-dlazdice-paticka {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -98,22 +264,23 @@
   margin-top: auto;
 }
 
-.karta-pizza-dlazdice-cena {
+.admin-pizza-dlazdice-cena {
   font-size: 1.2rem;
   font-weight: 800;
   color: var(--barva-zlata-hlavni, #f59e0b);
 }
 
-.karta-pizza-dlazdice-akce {
+.admin-pizza-dlazdice-akce {
   display: flex;
   gap: 8px;
 }
 
 
-/* --------------------------------------------------------------------------
-   3. ŘÁDKOVÝ SEZNAM PIZZ (#. NÁZEV PIZZY, CENA, AKCE)
-   -------------------------------------------------------------------------- */
-.pohled-seznam .karta-pizza-dlazdice {
+/* ==========================================================================
+   3. ŘÁDKOVÝ SEZNAM PIZZ V ADMINISTRACI (SEZNAMOVÝ POHLED)
+   ========================================================================== */
+.pohled-seznam .admin-pizza-dlazdice,
+.pohled-seznam .pizza-dlazdice {
   flex-direction: row;
   align-items: center;
   padding: 12px 20px;
@@ -122,18 +289,21 @@
   box-shadow: none;
 }
 
-.pohled-seznam .karta-pizza-dlazdice:hover {
+.pohled-seznam .admin-pizza-dlazdice:hover,
+.pohled-seznam .pizza-dlazdice:hover {
   border-color: #444444;
   background-color: #1a1a1a;
 }
 
-.pohled-seznam .karta-pizza-dlazdice-fotka-obal,
-.pohled-seznam .karta-pizza-dlazdice-slozeni,
-.pohled-seznam .odznak-pizza-cislo-foto {
+.pohled-seznam .admin-pizza-dlazdice-fotka-obal,
+.pohled-seznam .pizza-dlazdice-foto-obal,
+.pohled-seznam .admin-pizza-dlazdice-slozeni,
+.pohled-seznam .odznak-pizza-cislo-foto,
+.pohled-seznam .odznak-pizza-tydne {
   display: none !important;
 }
 
-.pohled-seznam .karta-pizza-dlazdice-telo {
+.pohled-seznam .admin-pizza-dlazdice-telo {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
@@ -141,7 +311,7 @@
   width: 100%;
 }
 
-.pohled-seznam .karta-pizza-dlazdice-nazev {
+.pohled-seznam .admin-pizza-dlazdice-nazev {
   font-size: 1.1rem;
   margin-bottom: 0;
   display: flex;
@@ -149,7 +319,7 @@
   gap: 8px;
 }
 
-.pohled-seznam .karta-pizza-dlazdice-paticka {
+.pohled-seznam .admin-pizza-dlazdice-paticka {
   border-top: none;
   padding-top: 0;
   margin-top: 0;
@@ -157,9 +327,9 @@
 }
 
 
-/* --------------------------------------------------------------------------
+/* ==========================================================================
    4. UNIVERZÁLNÍ TABULKA PRO ADMINISTRACI (Ingredience, Zálohy)
-   -------------------------------------------------------------------------- */
+   ========================================================================== */
 .tabulka-administrace-obal {
   background-color: var(--barva-pozadi-karet, #161616);
   border: 1px solid var(--barva-ramecku-tmava, #2a2a2a);
@@ -168,13 +338,15 @@
   margin-top: 20px;
 }
 
-.tabulka-administrace {
+.tabulka-administrace,
+.admin-tabulka-surovin {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
 }
 
-.tabulka-administrace th {
+.tabulka-administrace th,
+.admin-tabulka-surovin th {
   background-color: #1a1a1a;
   color: #888888;
   font-weight: 700;
@@ -185,7 +357,8 @@
   border-bottom: 1px solid var(--barva-ramecku-tmava, #2a2a2a);
 }
 
-.tabulka-administrace td {
+.tabulka-administrace td,
+.admin-tabulka-surovin td {
   padding: 14px 20px;
   border-bottom: 1px solid #202020;
   color: var(--barva-textu-seda, #cccccc);
@@ -193,10 +366,12 @@
   vertical-align: middle;
 }
 
-.tabulka-administrace tr:last-child td {
+.tabulka-administrace tr:last-child td,
+.admin-tabulka-surovin tr:last-child td {
   border-bottom: none;
 }
 
-.tabulka-administrace tr:hover td {
+.tabulka-administrace tr:hover td,
+.admin-tabulka-surovin tr:hover td {
   background-color: #1c1c1c;
 }
