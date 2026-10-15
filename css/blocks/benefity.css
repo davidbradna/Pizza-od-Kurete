@@ -1,6 +1,9 @@
 /* ==========================================================================
-   2. SEKCE: ROZDIL V CHUTI (Celošířkový banner a 4 suroviny)
+   2. SEKCE: BENEFITY & PŘEDNOSTI (Původně Rozdíl v chuti)
+   Zahrnuje: celošířkový promo/CTA banner, medailonek garanta a očíslované dlaždice benefitů
    ========================================================================== */
+
+.sekce-benefity,
 .sekce-rozdil-v-chuti {
   padding: 0 0 60px 0;
   background-color: var(--barva-pozadi-tmava);
@@ -8,7 +11,8 @@
   overflow: hidden;
 }
 
-/* 1. Celošířkový hlavní banner (edge-to-edge) */
+/* 1. Celošířkový hlavní banner (edge-to-edge CTA banner) */
+.benefity-hero-banner,
 .rozdil-hero-banner {
   display: flex;
   align-items: center;
@@ -20,6 +24,7 @@
   cursor: pointer;
 }
 
+.benefity-hero-foto,
 .rozdil-hero-foto {
   position: absolute;
   inset: 0;
@@ -32,10 +37,12 @@
   transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
+.benefity-hero-banner:hover .benefity-hero-foto,
 .rozdil-hero-banner:hover .rozdil-hero-foto {
   transform: scale(1.03);
 }
 
+.benefity-hero-overlay,
 .rozdil-hero-overlay {
   position: absolute;
   inset: 0;
@@ -44,6 +51,7 @@
   pointer-events: none;
 }
 
+.benefity-hero-obsah,
 .rozdil-hero-obsah {
   position: relative;
   z-index: 3;
@@ -58,11 +66,13 @@
   box-sizing: border-box;
 }
 
+.benefity-hero-text-blok,
 .rozdil-hero-text-blok {
   flex: 0 0 auto;
   text-align: left;
 }
 
+.benefity-hero-nadpis,
 .rozdil-hero-nadpis {
   font-family: 'Outfit', sans-serif;
   font-size: 2.4rem;
@@ -75,6 +85,7 @@
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
 }
 
+.benefity-hero-cta-napis,
 .rozdil-hero-cta-napis {
   font-family: 'Outfit', sans-serif;
   font-size: 1.05rem;
@@ -85,6 +96,7 @@
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 
+.benefity-hero-sipka,
 .rozdil-hero-sipka {
   width: 46px;
   height: 46px;
@@ -102,11 +114,13 @@
   transition: transform 0.25s ease, background-color 0.25s ease;
 }
 
+.benefity-hero-banner:hover .benefity-hero-sipka,
 .rozdil-hero-banner:hover .rozdil-hero-sipka {
   transform: scale(1.08) translateX(4px);
   background-color: rgba(255, 255, 255, 0.25);
 }
 
+.benefity-hero-sipka svg,
 .rozdil-hero-sipka svg {
   width: 22px;
   height: 22px;
@@ -115,7 +129,7 @@
   display: block;
 }
 
-/* 1. Představení šéfpizzaře a majitele Kuřete */
+/* 2. Představení šéfpizzaře / garanta */
 .kure-predstaveni-banner {
   width: 100%;
   max-width: 1140px;
@@ -208,7 +222,8 @@
   }
 }
 
-/* 2. Suroviny pod bannerem: Desktop (3 položky vedle sebe v řadě) */
+/* 3. Očíslované dlaždice benefitů: Desktop (3 položky vedle sebe v řadě) */
+.benefity-obal,
 .rozdil-suroviny-obal {
   width: 100%;
   max-width: 1140px;
@@ -217,6 +232,7 @@
   box-sizing: border-box;
 }
 
+.benefity-pas,
 .rozdil-suroviny-pas {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -224,6 +240,7 @@
   width: 100%;
 }
 
+.benefity-karta,
 .rozdil-surovina-karta {
   display: flex;
   flex-direction: column;
@@ -237,12 +254,14 @@
   transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
+.benefity-karta:hover,
 .rozdil-surovina-karta:hover {
   transform: translateY(-4px);
   border-color: rgba(229, 9, 20, 0.5);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
 }
 
+.benefity-karta-foto,
 .rozdil-surovina-foto {
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -251,6 +270,7 @@
   position: relative;
 }
 
+.benefity-karta-foto img,
 .rozdil-surovina-foto img {
   width: 100%;
   height: 100%;
@@ -259,10 +279,12 @@
   transition: transform 0.35s ease;
 }
 
+.benefity-karta:hover .benefity-karta-foto img,
 .rozdil-surovina-karta:hover .rozdil-surovina-foto img {
   transform: scale(1.05);
 }
 
+.benefity-karta-cislo,
 .rozdil-surovina-cislo {
   position: absolute;
   bottom: 8px;
@@ -276,6 +298,7 @@
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
 }
 
+.benefity-karta-obsah,
 .rozdil-surovina-obsah {
   padding: 16px 18px 20px 18px;
   display: flex;
@@ -283,6 +306,7 @@
   flex-grow: 1;
 }
 
+.benefity-karta-nadpis,
 .rozdil-surovina-nadpis {
   font-family: 'Outfit', sans-serif;
   font-size: 0.95rem;
@@ -298,6 +322,7 @@
   text-overflow: ellipsis;
 }
 
+.benefity-fakta-hp,
 .rozdil-fakta-hp {
   margin-top: auto !important;
   gap: 10px 14px !important;
@@ -305,11 +330,13 @@
   flex-wrap: nowrap !important;
 }
 
+.benefity-fakta-hp .pribeh-pizzy-fakt-hodnota,
 .rozdil-fakta-hp .pribeh-pizzy-fakt-hodnota {
   font-size: 0.98rem;
   white-space: nowrap;
 }
 
+.benefity-fakta-hp .pribeh-pizzy-fakt-popis,
 .rozdil-fakta-hp .pribeh-pizzy-fakt-popis {
   font-size: 0.76rem;
   white-space: nowrap;
@@ -345,7 +372,8 @@
   transform: scale(1.04);
 }
 
-/* Mobilní varianta sekce Rozdíl v chuti (ve výchozím stavu na desktopu skrytá) */
+/* Mobilní varianta (ve výchozím stavu na desktopu skrytá) */
+.benefity-mobil-verze,
 .rozdil-mobil-verze {
   display: none !important;
 }

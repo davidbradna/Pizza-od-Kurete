@@ -155,8 +155,8 @@ $suroviny = ziskatSuroviny();
     </div>
   </section>
 
-  <!-- 3. SEKCE: ROZDIL V CHUTI -->
-  <section class="sekce-rozdil-v-chuti">
+  <!-- 3. SEKCE: BENEFITY / PŘEDNOSTI (PŮVODNĚ ROZDÍL V CHUTI) -->
+  <section class="sekce-benefity sekce-rozdil-v-chuti">
     <!-- 1. HLAVNÍ BANNER: PŘEDSTAVENÍ ŠÉFPIZZAŘE A MAJITELE KUŘETE -->
     <div class="kure-predstaveni-banner">
       <div class="kure-predstaveni-kontejner">
@@ -176,39 +176,39 @@ $suroviny = ziskatSuroviny();
     </div>
 
     <!-- 2. SUROVINY POD BANNEREM (na desktopu 3 v řadě, na mobilu touch-carousel) -->
-    <div class="rozdil-suroviny-obal">
-      <div class="rozdil-suroviny-pas">
+    <div class="benefity-obal rozdil-suroviny-obal">
+      <div class="benefity-pas rozdil-suroviny-pas">
         
         <!-- Položka 1: Těsto -->
-        <a href="nase-pizza.php#pribeh-pizzy-sekce" class="rozdil-surovina-karta" title="Přejít na detail o těstě">
-          <div class="rozdil-surovina-foto">
+        <a href="nase-pizza.php#pribeh-pizzy-sekce" class="benefity-karta rozdil-surovina-karta" title="Přejít na detail o těstě">
+          <div class="benefity-karta-foto rozdil-surovina-foto">
             <img src="https://images.unsplash.com/photo-1579684947550-22e945225d9a?q=80&w=600&auto=format&fit=crop" alt="Těsto je alfa a omega" loading="lazy">
-            <span class="rozdil-surovina-cislo">01</span>
+            <span class="benefity-karta-cislo rozdil-surovina-cislo">01</span>
           </div>
-          <div class="rozdil-surovina-obsah">
-            <div class="rozdil-surovina-nadpis">TĚSTO JE ALFA A OMEGA</div>
+          <div class="benefity-karta-obsah rozdil-surovina-obsah">
+            <div class="benefity-karta-nadpis rozdil-surovina-nadpis">TĚSTO JE ALFA A OMEGA</div>
           </div>
         </a>
 
         <!-- Položka 2: Pec -->
-        <a href="nase-pizza.php#pribeh-pizzy-sekce" class="rozdil-surovina-karta" title="Přejít na detail o peci">
-          <div class="rozdil-surovina-foto">
+        <a href="nase-pizza.php#pribeh-pizzy-sekce" class="benefity-karta rozdil-surovina-karta" title="Přejít na detail o peci">
+          <div class="benefity-karta-foto rozdil-surovina-foto">
             <img src="https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?q=80&w=600&auto=format&fit=crop" alt="Pizza nesmí v peci klepat kosu" loading="lazy">
-            <span class="rozdil-surovina-cislo">02</span>
+            <span class="benefity-karta-cislo rozdil-surovina-cislo">02</span>
           </div>
-          <div class="rozdil-surovina-obsah">
-            <div class="rozdil-surovina-nadpis">PIZZA NESMÍ V PECI KLEPAT KOSU</div>
+          <div class="benefity-karta-obsah rozdil-surovina-obsah">
+            <div class="benefity-karta-nadpis rozdil-surovina-nadpis">PIZZA NESMÍ V PECI KLEPAT KOSU</div>
           </div>
         </a>
 
         <!-- Položka 3: Suroviny -->
-        <a href="nase-pizza.php#pribeh-pizzy-sekce" class="rozdil-surovina-karta" title="Přejít na detail o surovinách">
-          <div class="rozdil-surovina-foto">
+        <a href="nase-pizza.php#pribeh-pizzy-sekce" class="benefity-karta rozdil-surovina-karta" title="Přejít na detail o surovinách">
+          <div class="benefity-karta-foto rozdil-surovina-foto">
             <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=600&auto=format&fit=crop" alt="Suroviny pro vybíravé" loading="lazy">
-            <span class="rozdil-surovina-cislo">03</span>
+            <span class="benefity-karta-cislo rozdil-surovina-cislo">03</span>
           </div>
-          <div class="rozdil-surovina-obsah">
-            <div class="rozdil-surovina-nadpis">SUROVINY PRO VYBÍRAVÉ</div>
+          <div class="benefity-karta-obsah rozdil-surovina-obsah">
+            <div class="benefity-karta-nadpis rozdil-surovina-nadpis">SUROVINY PRO VYBÍRAVÉ</div>
           </div>
         </a>
 

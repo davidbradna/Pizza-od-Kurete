@@ -211,11 +211,11 @@ $cssModuly = [
         </div>'
     ],
     [
-      'soubor' => 'css/blocks/rozdil-v-chuti.css',
-      'nazev' => 'Rozdíl v chuti',
-      'popis' => 'Sekce „Rozdíl v chuti poznáte na první zobnutí“: edge-to-edge klikací banner, vizitka pizzeristy Kuřete a 3 dlaždice klíčových surovin s prémiovým stínováním.',
-      'prvky' => '.sekce-rozdil-v-chuti, .rozdil-hero-banner, .kure-predstaveni-banner, .rozdil-surovina-karta',
-      'vyskyt' => 'index.php',
+      'soubor' => 'css/blocks/benefity.css',
+      'nazev' => 'Benefity & přednosti (původně Rozdíl v chuti)',
+      'popis' => 'Sekce předností a benefitů: celošířkový promo/CTA banner, vizitka pizzeristy Kuřete a očíslované dlaždice benefitů/surovin s prémiovým stínováním.',
+      'prvky' => '.sekce-benefity, .benefity-hero-banner, .kure-predstaveni-banner, .benefity-karta, .sekce-rozdil-v-chuti, .rozdil-surovina-karta',
+      'vyskyt' => 'index.php (znovupoužitelné kdekoliv)',
       'nahled' => '
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
           <div style="background: #161616; border: 1px solid rgba(229,9,20,0.4); border-radius: 6px; padding: 10px;">
@@ -353,7 +353,7 @@ $strukturaSouboru = [
     ['cesta' => 'styl.css', 'popis' => 'Hlavní CSS manifest webu. Obsahuje přesně seřazené @import direktivy načítající jednotlivé moduly v přesném pořadí kaskády (Base → Components → Blocks → Responsive).'],
     ['cesta' => 'css/base/', 'popis' => 'Adresář základních pravidel: definice barevných proměnných, reset prvků a globální sdílená typografie sekcí.'],
     ['cesta' => 'css/components/', 'popis' => 'Znovupoužitelné designové komponenty: tlačítka, modální okna, košík, přepínače poboček, podstránková navigace, náhledy surovin a dlaždice jídelního lístku (karty pizz).'],
-    ['cesta' => 'css/blocks/', 'popis' => 'Konkrétní bloky a sekce stránek: hero, rozdíl v chuti, jídelní lístek, rozvoz s mapou, provozovna, karusel a magazínový příběh pizzy.'],
+    ['cesta' => 'css/blocks/', 'popis' => 'Konkrétní bloky a sekce stránek: hero, benefity a přednosti, jídelní lístek, rozvoz s mapou, provozovna, karusel a magazínový příběh pizzy.'],
     ['cesta' => 'css/responsive/', 'popis' => 'Mobilní responzivní vrstva importovaná na konci kaskády pro displeje tabletů a chytrých telefonů.'],
     ['cesta' => 'css/administrace.css', 'popis' => 'Specializované styly pro rozhraní webové administrace (formuláře, tabulky, editační okna a správa záloh).']
   ],
@@ -1014,7 +1014,7 @@ $strukturaSouboru = [
 ├── <span class="s-slozka">css/</span>                              <span class="s-komentar"># Modulární architektura stylů STETSON</span>
 │   ├── <span class="s-slozka">base/</span>                         <span class="s-komentar"># Základ: promenne.css, reset.css</span>
 │   ├── <span class="s-slozka">components/</span>                   <span class="s-komentar"># Komponenty: tlacitko, modal, kosik, prepinace, navigace</span>
-│   ├── <span class="s-slozka">blocks/</span>                       <span class="s-komentar"># Bloky sekcí: hero, rozdil, menu, rozvoz, provozovny, karusel</span>
+│   ├── <span class="s-slozka">blocks/</span>                       <span class="s-komentar"># Bloky sekcí: hero, benefity, menu, rozvoz, provozovny, karusel</span>
 │   ├── <span class="s-slozka">responsive/</span>                   <span class="s-komentar"># Responzivita: mobile.css</span>
 │   └── <span class="s-css">administrace.css</span>              <span class="s-komentar"># Samostatné styly pro administrátorské rozhraní</span>
 │

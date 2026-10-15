@@ -380,47 +380,56 @@
   }
 
   /* Mobilní úprava sekce Rozdíl v chuti */
+  .sekce-benefity,
   .sekce-rozdil-v-chuti {
     padding: 10px 0 35px 0 !important;
     overflow: hidden;
   }
 
+  .benefity-hero-banner,
   .rozdil-hero-banner {
     min-height: 195px;
   }
 
+  .benefity-hero-obsah,
   .rozdil-hero-obsah {
     padding: 16px 18px;
     max-width: 100%;
   }
 
+  .benefity-hero-text-blok,
   .rozdil-hero-text-blok {
     padding-right: 14px;
   }
 
+  .benefity-hero-nadpis,
   .rozdil-hero-nadpis {
     font-size: 1.25rem;
     margin: 0 0 6px 0;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.75);
   }
 
+  .benefity-hero-cta-napis,
   .rozdil-hero-cta-napis {
     font-size: 0.92rem;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.75);
   }
 
+  .benefity-hero-sipka,
   .rozdil-hero-sipka {
     width: 40px;
     height: 40px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
   }
 
+  .benefity-hero-sipka svg,
   .rozdil-hero-sipka svg {
     width: 20px;
     height: 20px;
   }
 
   /* Na mobilu touch carousel se 4 položkami (2 celé vidět, 3. napůl) */
+  .benefity-obal,
   .rozdil-suroviny-obal {
     margin-top: 6px;
     padding: 0;
@@ -428,6 +437,7 @@
     overflow: hidden;
   }
 
+  .benefity-pas,
   .rozdil-suroviny-pas {
     display: flex;
     grid-template-columns: none;
@@ -440,10 +450,12 @@
     box-sizing: border-box;
   }
 
+  .benefity-pas::-webkit-scrollbar,
   .rozdil-suroviny-pas::-webkit-scrollbar {
     display: none;
   }
 
+  .benefity-karta,
   .rozdil-surovina-karta {
     flex: 0 0 78%;
     min-width: 240px;
