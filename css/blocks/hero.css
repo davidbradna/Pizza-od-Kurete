@@ -1,0 +1,253 @@
+/* ==========================================================================
+   BLOK: HORNÍ LIŠTA A HLAVIČKA (HERO SEKCE)
+   ========================================================================== */
+.horni-kontakty-lista {
+  background-color: rgba(14, 14, 14, 0.92);
+  backdrop-filter: blur(14px);
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.35);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(245, 158, 11, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+  will-change: transform;
+}
+
+.horni-kontakty-lista.lista-skryta {
+  transform: translateY(-100%) !important;
+}
+
+.kontakty-obsah {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.kontakt-položka {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: var(--barva-pismo-sekundarni);
+}
+
+.kontakt-položka strong {
+  color: var(--barva-pismo-hlavni);
+}
+
+.telefonni-odkaz {
+  color: var(--barva-pismo-hlavni);
+  text-decoration: none;
+  font-weight: 700;
+  transition: var(--prechod-rychly);
+}
+
+.telefonni-odkaz:hover {
+  color: var(--barva-zlata-akcent);
+}
+
+/* Hero Uvodni Sekce s Pozadim */
+.sekce-uvod-hero {
+  position: relative;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(13, 13, 13, 0.45) 0%, rgba(13, 13, 13, 0.96) 100%),
+              url('https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;
+  padding: 60px 20px 70px 20px;
+}
+
+.obsah-hero {
+  max-width: 820px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo-kure-ikona {
+  display: inline-block;
+  max-width: 140px;
+  margin-bottom: 20px;
+  text-decoration: none;
+  filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.6));
+  transition: transform 0.3s ease;
+}
+
+.logo-kure-ikona:hover {
+  transform: scale(1.04);
+}
+
+.logo-kure-ikona img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.nadpis-hlavni {
+  font-size: 3.6rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--barva-pismo-hlavni);
+  text-shadow: 2px 4px 14px rgba(0, 0, 0, 0.9);
+  margin-bottom: 6px;
+}
+
+.podnadpis-hlavni {
+  font-size: 1.55rem;
+  font-weight: 500;
+  color: #f5f5f5;
+  font-style: italic;
+  letter-spacing: 0.6px;
+  margin-bottom: 18px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
+}
+
+.oteviraci-doba-stitek {
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 8px 24px;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--barva-pismo-sekundarni);
+  margin-bottom: 32px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+/* Navigacni Tlacitka v hlavicce */
+.tlacitka-hlavicka-skupina {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.appky-rada-1 {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.appky-rada-2 {
+  display: none !important;
+}
+
+.tlacitko-app-polozka {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 8px; /* Původní tvar tlačítka */
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.25s ease;
+  color: #ffffff;
+}
+
+button.tlacitko-app-polozka {
+  background: none;
+  border: none;
+  font-family: inherit;
+  color: inherit;
+  outline: none;
+}
+
+/* Na desktopu bez ikon */
+.tlacitko-app-polozka .appka-ikona-box {
+  display: none;
+}
+
+.tlacitko-app-polozka .appka-popisek {
+  display: inline;
+  font-size: inherit;
+  font-weight: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+}
+
+.mobil-text-jen {
+  display: none;
+}
+
+.desktop-text-jen {
+  display: inline;
+}
+
+.mobil-pouze-flex {
+  display: none !important;
+}
+
+.desktop-pouze-flex {
+  display: inline-flex !important;
+}
+
+/* Styl desktop: Jídelní lístek (červená z obrázku) */
+.tlacitko-app-polozka.appka-listek {
+  order: 1;
+  background-color: rgba(229, 9, 20, 0.78);
+  border: 1px solid rgba(229, 9, 20, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(229, 9, 20, 0.4);
+  color: #ffffff;
+}
+
+.tlacitko-app-polozka.appka-listek:hover {
+  background-color: #e50914;
+  border-color: #ff333e;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(229, 9, 20, 0.65);
+}
+
+/* Styl desktop: Pizzerie (vínová / tmavě červená z obrázku) */
+.tlacitko-app-polozka.appka-pizzerie {
+  order: 2;
+  background-color: rgba(139, 0, 0, 0.72);
+  border: 1px solid rgba(139, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+}
+
+.tlacitko-app-polozka.appka-pizzerie:hover {
+  background-color: #8b0000;
+  border-color: rgba(255, 90, 100, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(139, 0, 0, 0.5);
+}
+
+/* Styl desktop: Rozvoz (kouřová poloprůhledná šedá z obrázku) */
+.tlacitko-app-polozka.appka-rozvoz {
+  order: 3;
+  background-color: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  color: #ffffff;
+}
+
+.tlacitko-app-polozka.appka-rozvoz:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+}
