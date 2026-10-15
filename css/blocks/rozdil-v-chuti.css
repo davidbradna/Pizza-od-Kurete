@@ -1,0 +1,351 @@
+/* ==========================================================================
+   2. SEKCE: ROZDIL V CHUTI (Celošířkový banner a 4 suroviny)
+   ========================================================================== */
+.sekce-rozdil-v-chuti {
+  padding: 0 0 60px 0;
+  background-color: var(--barva-pozadi-tmava);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 1. Celošířkový hlavní banner (edge-to-edge) */
+.rozdil-hero-banner {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  min-height: 220px;
+  overflow: hidden;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.rozdil-hero-foto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  z-index: 1;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.rozdil-hero-banner:hover .rozdil-hero-foto {
+  transform: scale(1.03);
+}
+
+.rozdil-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.35) 60%, rgba(0, 0, 0, 0.2) 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.rozdil-hero-obsah {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 32px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 24px;
+  box-sizing: border-box;
+}
+
+.rozdil-hero-text-blok {
+  flex: 0 0 auto;
+  text-align: left;
+}
+
+.rozdil-hero-nadpis {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 8px 0;
+  line-height: 1.25;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
+}
+
+.rozdil-hero-cta-napis {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-transform: none;
+  letter-spacing: normal;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.rozdil-hero-sipka {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.25s ease, background-color 0.25s ease;
+}
+
+.rozdil-hero-banner:hover .rozdil-hero-sipka {
+  transform: scale(1.08) translateX(4px);
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.rozdil-hero-sipka svg {
+  width: 22px;
+  height: 22px;
+  stroke: #ffffff;
+  stroke-width: 2.8;
+  display: block;
+}
+
+/* 1. Představení šéfpizzaře a majitele Kuřete */
+.kure-predstaveni-banner {
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto 30px auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.kure-predstaveni-kontejner {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 35px;
+  align-items: center;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+}
+
+.kure-predstaveni-foto-box {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.kure-predstaveni-foto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.kure-predstaveni-obsah {
+  text-align: left;
+}
+
+.kure-predstaveni-stitek {
+  display: inline-block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--barva-cervena-hlavni, #e50914);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.kure-predstaveni-nadpis {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 10px 0;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.kure-predstaveni-text {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.02rem;
+  color: #d1d5db;
+  line-height: 1.6;
+  margin: 0 0 20px 0;
+}
+
+.kure-predstaveni-tlacitko {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  font-size: 0.92rem;
+}
+
+@media (max-width: 768px) {
+  .kure-predstaveni-kontejner {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 0;
+  }
+  .kure-predstaveni-foto-box {
+    aspect-ratio: 16 / 10;
+  }
+  .kure-predstaveni-nadpis {
+    font-size: 1.35rem;
+  }
+  .kure-predstaveni-text {
+    font-size: 0.95rem;
+  }
+}
+
+/* 2. Suroviny pod bannerem: Desktop (3 položky vedle sebe v řadě) */
+.rozdil-suroviny-obal {
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.rozdil-suroviny-pas {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+.rozdil-surovina-karta {
+  display: flex;
+  flex-direction: column;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  background: var(--barva-pozadi-karty, #161616);
+  border: 1px solid var(--barva-ramcek, rgba(255, 255, 255, 0.12));
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.rozdil-surovina-karta:hover {
+  transform: translateY(-4px);
+  border-color: rgba(229, 9, 20, 0.5);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+}
+
+.rozdil-surovina-foto {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #18181b;
+  position: relative;
+}
+
+.rozdil-surovina-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.rozdil-surovina-karta:hover .rozdil-surovina-foto img {
+  transform: scale(1.05);
+}
+
+.rozdil-surovina-cislo {
+  position: absolute;
+  bottom: 8px;
+  left: 14px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--barva-cervena-hlavni, #e50914);
+  z-index: 2;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+.rozdil-surovina-obsah {
+  padding: 16px 18px 20px 18px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.rozdil-surovina-nadpis {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.3;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rozdil-fakta-hp {
+  margin-top: auto !important;
+  gap: 10px 14px !important;
+  padding-top: 6px;
+  flex-wrap: nowrap !important;
+}
+
+.rozdil-fakta-hp .pribeh-pizzy-fakt-hodnota {
+  font-size: 0.98rem;
+  white-space: nowrap;
+}
+
+.rozdil-fakta-hp .pribeh-pizzy-fakt-popis {
+  font-size: 0.76rem;
+  white-space: nowrap;
+}
+
+/* Prémiový rámeček a stín pro fotografii pizzeristy */
+.obale-fotky-picer {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  background: #0f1015;
+}
+
+.obale-fotky-picer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+.obale-fotky-picer img {
+  width: 100%;
+  height: 440px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.obale-fotky-picer:hover img {
+  transform: scale(1.04);
+}
+
+/* Mobilní varianta sekce Rozdíl v chuti (ve výchozím stavu na desktopu skrytá) */
+.rozdil-mobil-verze {
+  display: none !important;
+}

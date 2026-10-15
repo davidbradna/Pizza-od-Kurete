@@ -29,3 +29,22 @@ body {
   margin: 0 auto;
   padding: 0 20px;
 }
+
+/* Globální typografie sekcí */
+.nadpis-sekce {
+  font-size: 2.4rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1.25;
+  margin-bottom: 24px;
+  color: var(--barva-pismo-hlavni);
+  letter-spacing: 0.5px;
+}
+
+.text-popis {
+  font-size: 1.15rem;
+  color: var(--barva-pismo-sekundarni);
+  margin-bottom: 35px;
+  line-height: 1.8;
+}
+
