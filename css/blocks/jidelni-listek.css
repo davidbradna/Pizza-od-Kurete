@@ -1,0 +1,492 @@
+/* --------------------------------------------------------------------------
+   3. SEKCE: JIDELNI LISTEK (MENU)
+   -------------------------------------------------------------------------- */
+.sekce-jidelni-listek {
+  padding: 80px 0;
+  background-color: var(--barva-pozadi-sekce);
+}
+
+.hlavicka-jidelniku {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.podnadpis-vyberte {
+  color: var(--barva-pismo-sekundarni);
+  font-size: 1.2rem;
+  margin-top: 5px;
+}
+
+/* Filtry (Zaklikavaci policka sugo, bily zaklad, atd.) */
+.obalo-filtru {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  margin-bottom: 50px;
+}
+
+/* STYLY PRO MINI KAPSLOVE PREPINACE V JIDELNIM LISTKU */
+.mrizka-prepinacu-filtrum {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+}
+
+.mini-kapsle-prepinac {
+  display: inline-flex;
+  align-items: center;
+  background-color: rgba(22, 22, 26, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 4px;
+  border-radius: 30px;
+  user-select: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.mini-kapsle-tlacitko {
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  font-family: var(--font-hlavni);
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 7px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.mini-kapsle-tlacitko:hover {
+  color: #ffffff;
+}
+
+.mini-kapsle-tlacitko.aktivni {
+  background-color: #e50914;
+  color: #ffffff;
+  box-shadow: 0 2px 10px rgba(229, 9, 20, 0.55);
+}
+
+.alergeny-klikaci-stitek {
+  font-size: 0.8rem;
+  color: #e53e3e;
+  font-weight: 700;
+  margin-bottom: 12px;
+  cursor: default;
+  display: inline-block;
+}
+
+.stitek-policko {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--barva-pismo-sekundarni);
+  user-select: none;
+}
+
+.stitek-policko input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--barva-cervena-hlavni);
+  cursor: pointer;
+}
+
+.skupina-kategorii {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+.tlacitko-kategorie {
+  background-color: rgba(22, 22, 26, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #d1d5db;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 10px 24px;
+  border-radius: 25px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 0.6px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.tlacitko-kategorie:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.tlacitko-kategorie.aktivni {
+  background-color: #e50914;
+  color: #ffffff;
+  border-color: #e50914;
+  box-shadow: 0 4px 16px rgba(229, 9, 20, 0.5);
+}
+
+.tlacitko-kategorie[data-kategorie="doporucujeme"].aktivni {
+  background-color: #f59e0b;
+  color: #000000;
+  border-color: #f59e0b;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.5);
+}
+
+/* Mrizka Karty Pizz */
+.mrizka-pizz {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 1080px) {
+  .mrizka-pizz {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+.karta-pizzy {
+  background-color: var(--barva-pozadi-karty);
+  border-radius: 12px;
+  padding: 20px 18px;
+  border: 1px solid var(--barva-ramcek);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: var(--prechod-rychly);
+}
+
+.karta-pizzy:hover {
+  border-color: #f59e0b;
+  box-shadow: 0 12px 32px rgba(245, 158, 11, 0.2);
+}
+
+.ciselny-odznak {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background-color: var(--barva-cervena-hlavni);
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 1.1rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  z-index: 4;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.odznak-zlata {
+  background-color: var(--barva-zlata-akcent);
+  color: #000000;
+}
+
+.karta-pizzy.karta-pizza-tydne {
+  border: 2px solid #f59e0b !important;
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.28) 0%, rgba(245, 158, 11, 0.12) 45%, rgba(32, 24, 14, 0.95) 75%, #161616 100%) !important;
+  box-shadow: 0 10px 32px rgba(245, 158, 11, 0.28) !important;
+}
+
+.karta-pizzy.karta-pizza-tydne:hover {
+  border-color: #fbbf24 !important;
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.35) 0%, rgba(245, 158, 11, 0.16) 50%, rgba(38, 28, 16, 0.98) 80%, #161616 100%) !important;
+  box-shadow: 0 16px 42px rgba(245, 158, 11, 0.42) !important;
+}
+
+/* Skrytí čísla pizzy u Pizzy týdne */
+.karta-pizzy.karta-pizza-tydne .ciselny-odznak {
+  display: none !important;
+}
+
+.stitek-pizza-tydne-roh {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(18, 18, 18, 0.92);
+  border: 1px solid #f59e0b;
+  color: #ffffff !important;
+  font-weight: 800;
+  font-size: 0.78rem;
+  padding: 5px 12px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 10px rgba(245, 158, 11, 0.25);
+}
+
+.stitek-pizza-tydne-roh .hvezda-ikona-tydne {
+  color: #f59e0b;
+  font-size: 1.15rem;
+  line-height: 1;
+  display: inline-block;
+  filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.7));
+}
+
+/* Odznaky vlastností pizzy na kartě (Nejprodávanější - plamínek, Doporučujeme - palec nahoru) */
+.karta-pizzy-odznaky-vpravo {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 4;
+}
+
+.karta-pizzy.karta-pizza-tydne .karta-pizzy-odznaky-vpravo {
+  top: 50px;
+}
+
+.odznak-pizza-vlastnost {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgba(18, 18, 22, 0.88);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.odznak-pizza-vlastnost:hover {
+  transform: scale(1.1);
+}
+
+.odznak-pizza-vlastnost.odznak-nejprodavanejsi {
+  color: #ff5722;
+  border-color: rgba(255, 87, 34, 0.4);
+}
+
+.odznak-pizza-vlastnost.odznak-doporucujeme {
+  color: #f43f5e;
+  border-color: rgba(244, 63, 94, 0.4);
+}
+
+/* Obrázek pizzy roztažený nahoru a po stranách až ke kraji dlaždice */
+.obrazek-pizzy-obal {
+  width: calc(100% + 36px);
+  margin-top: -20px;
+  margin-left: -18px;
+  margin-right: -18px;
+  margin-bottom: 16px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  background-color: #0d0d0d;
+}
+
+.obrazek-pizzy-obal img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.stitek-pouze-na-miste-patka {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(229, 9, 20, 0.12);
+  border: 1px solid var(--barva-cervena-hlavni, #e50914);
+  color: #ffffff !important;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 0.72rem;
+  padding: 6px 12px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Obrázek pizzy se při najetí myši na dlaždici nepohybuje */
+
+.nazev-pizzy {
+  font-size: 1.25rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--barva-pismo-hlavni);
+}
+
+.slozeni-pizzy {
+  font-size: 0.92rem;
+  color: var(--barva-pismo-sekundarni);
+  margin-bottom: 12px;
+  flex-grow: 1;
+}
+
+.odkaz-ingredience-karta {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.odkaz-ingredience-karta:hover {
+  color: var(--barva-zlata-akcent, #f59e0b);
+}
+
+.alergeny-klikaci-stitek {
+  font-size: 0.82rem;
+  color: #888888;
+  font-weight: 600;
+  margin-bottom: 14px;
+  cursor: default;
+  display: inline-block;
+}
+
+.patka-karty-pizzy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cena-pizzy {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--barva-pismo-hlavni);
+}
+
+.obal-pridani-karta {
+  display: flex;
+  align-items: center;
+  gap: 16px; /* Zvětšený rozestup od tlačítka plus na desktopu */
+  flex-shrink: 0;
+}
+
+.pocet-v-kosiku-odznak {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(245, 158, 11, 0.16);
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  color: #f59e0b;
+  font-weight: 800;
+  font-size: 0.95rem;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 8px;
+  box-sizing: border-box;
+  border-radius: 17px;
+  line-height: 1;
+  letter-spacing: 0.2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  user-select: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pocet-v-kosiku-odznak.viditelny {
+  display: inline-flex;
+}
+
+.pocet-v-kosiku-odznak .pocet-minus-ikona {
+  display: none;
+  font-size: 1.15rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.pocet-v-kosiku-odznak:hover .pocet-cislo-text {
+  display: none;
+}
+
+.pocet-v-kosiku-odznak:hover .pocet-minus-ikona {
+  display: inline-block;
+}
+
+.pocet-v-kosiku-odznak:hover {
+  background: rgba(229, 9, 20, 0.25);
+  border-color: rgba(229, 9, 20, 0.7);
+  color: #ffffff;
+  transform: scale(1.08);
+}
+
+.pocet-v-kosiku-odznak.pocet-pop {
+  animation: animacePocetPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes animacePocetPop {
+  0% { transform: scale(0.7); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.tlacitko-pridat-plus {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 42px;
+  height: 42px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tlacitko-pridat-plus:hover {
+  background-color: #e50914;
+  border-color: #e50914;
+  color: #ffffff;
+  transform: scale(1.08);
+  box-shadow: 0 4px 14px rgba(229, 9, 20, 0.5);
+}
+
+/* Bílé zbarvení tlačítka + POUZE po dobu, kdy je zmáčknutá myš */
+.tlacitko-pridat-plus:active {
+  background-color: #ffffff !important;
+  border-color: #ffffff !important;
+  color: #000000 !important;
+  transform: scale(0.95) !important;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.6) !important;
+  transition: none !important;
+}
+
+/* Jemné poskočení plovoucího košíku v rohu */
+.plovuci-kosik-tlacitko.kosik-poskoceni {
+  animation: animaceKosikPoskoceni 0.4s ease;
+}
+
+@keyframes animaceKosikPoskoceni {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.14); }
+  100% { transform: scale(1); }
+}
+
