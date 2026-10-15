@@ -1923,6 +1923,9 @@ function vykreslitIkonyPalivosti($uroven, $velikost = 18) {
       <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
         <a href="index.php" class="tlacitko tlacitko-cervene" style="padding: 6px 16px; font-size: 0.85rem;">&lsaquo; Zpět na web</a>
         <?php if ($jePrihlasen): ?>
+          <a href="sprava-webu.php" class="tlacitko tlacitko-sede horni-zalozka-btn" style="padding: 6px 16px; font-size: 0.85rem; text-decoration: none;">
+            Správa webu
+          </a>
           <button type="button" class="tlacitko tlacitko-sede horni-zalozka-btn <?php echo ($aktivniZalozka === 'zalohy') ? 'aktivni' : ''; ?>" onclick="prepnoutZalozku('zalohy')" style="padding: 6px 16px; font-size: 0.85rem; cursor: pointer;">
             Zálohy a verzování (<?php echo count($seznamZaloh); ?>)
           </button>
