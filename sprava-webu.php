@@ -529,10 +529,10 @@ $strukturaSouboru = [
     <!-- PŘEPÍNAČ ZÁLOŽEK -->
     <div class="admin-zalozky-obal">
       <button type="button" class="admin-zalozka-tlacitko <?php echo ($aktivniZalozka === 'komponenty') ? 'aktivni' : ''; ?>" onclick="prepnoutZalozkuSpravy('komponenty')">
-        🧩 Seznam komponent & bloků (16)
+        Seznam komponent
       </button>
       <button type="button" class="admin-zalozka-tlacitko <?php echo ($aktivniZalozka === 'struktura') ? 'aktivni' : ''; ?>" onclick="prepnoutZalozkuSpravy('struktura')">
-        📁 Souborová struktura projektu
+        Souborová struktura
       </button>
     </div>
 
