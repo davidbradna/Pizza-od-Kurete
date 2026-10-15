@@ -1,0 +1,210 @@
+/* --------------------------------------------------------------------------
+   5. SEKCE: PROVOZOVNY
+   -------------------------------------------------------------------------- */
+.sekce-provozovny {
+  padding: 64px 0 90px 0;
+  background-color: var(--barva-pozadi-tmava);
+}
+
+.mrizka-provozovny {
+  display: flex;
+  justify-content: center;
+}
+
+.karta-provozovny {
+  background-color: var(--barva-pozadi-karty);
+  border-radius: 12px;
+  border: 1px solid var(--barva-ramcek);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.obsah-provozovny {
+  padding: 35px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nazev-provozovny {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.adresa-provozovny {
+  color: var(--barva-pismo-sekundarni);
+  margin-bottom: 20px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.blok-hodin {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.nadpis-hodin {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--barva-pismo-hlavni);
+  text-align: center;
+}
+
+.cas-hodin {
+  color: var(--barva-pismo-sekundarni);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.fotka-provozovny-obal {
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  position: relative;
+}
+
+.fotka-provozovny-obal img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Karusel fotek provozovny (pod textovým blokem) */
+.karusel-provozovny-obal {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.karusel-snimky-pas {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.karusel-snimek {
+  min-width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.karusel-snimek img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.karusel-popisek {
+  display: none !important;
+}
+
+/* Tlacitka sipky karuselu */
+.karusel-sipka {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(18, 18, 18, 0.75);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+  max-width: 40px !important;
+  max-height: 40px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  border-radius: 50% !important;
+  aspect-ratio: 1 / 1;
+  cursor: pointer;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 10;
+  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  outline: none;
+}
+
+.karusel-sipka svg {
+  width: 20px;
+  height: 20px;
+  stroke: #ffffff;
+  stroke-width: 2.6;
+  fill: none;
+  display: block;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.karusel-sipka:hover {
+  background-color: var(--barva-cervena-hlavni, #e50914);
+  border-color: var(--barva-cervena-hlavni, #e50914);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 18px rgba(229, 9, 20, 0.6);
+}
+
+.karusel-sipka:active {
+  transform: translateY(-50%) scale(0.94);
+}
+
+.karusel-sipka-vlevo {
+  left: 12px;
+}
+
+.karusel-sipka-vpravo {
+  right: 12px;
+}
+
+/* Indikatory tecky karuselu */
+.karusel-tecky-obalo {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+  padding: 4px 8px;
+  background-color: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 20px;
+}
+
+.karusel-tecka {
+  width: 10px;
+  height: 10px;
+  min-width: 10px;
+  min-height: 10px;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.45);
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  outline: none;
+}
+
+.karusel-tecka.aktivni {
+  background-color: var(--barva-zlata-akcent, #f59e0b);
+  width: 22px;
+  border-radius: 10px;
+}
+
+
