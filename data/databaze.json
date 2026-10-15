@@ -1,242 +1,784 @@
 {
-    "suroviny": [
-        {
-            "id": "sugomarzano",
-            "nazev": "Rajcata San Marzano D.O.P.",
-            "kategorie": "omacky",
-            "puvod": "🇮🇹 Neapol, Italie",
-            "popis": "Pravá italská rajčata pěstovaná na úrodné vulkanické půdě pod Vesuvem. Mají přirozeně sladkou chuť a hustou dužinu.",
-            "alergeny": "Bez alergenů",
-            "obrazek": "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?q=80&w=600&auto=format&fit=crop"
-        },
-        {
-            "id": "mozzarella",
-            "nazev": "Mozzarella di Bufala",
-            "kategorie": "syry",
-            "puvod": "🇮🇹 Kampánie, Italie",
-            "popis": "Tradiční čerstvý sýr z buvolího mléka s chráněným označením původu (D.O.P.). Neuvěřitelně krémový a šťavnatý.",
-            "alergeny": "Alergen 7 (mléko)",
-            "obrazek": "https://images.unsplash.com/photo-1559561853-08451507cbe7?q=80&w=600&auto=format&fit=crop"
-        },
-        {
-            "id": "kurecimaso",
-            "nazev": "Šťavnaté Kuřecí Maso",
-            "kategorie": "maso",
-            "puvod": "🇨🇿 Lokální české farmy",
-            "popis": "Čerstvá kuřecí prsa marinovaná v panenském olivovém oleji a čerstvých bylinkách pro maximální křehkost.",
-            "alergeny": "Bez alergenů",
-            "obrazek": "https://images.unsplash.com/photo-1604503468506-a8da13d82791?q=80&w=600&auto=format&fit=crop"
-        },
-        {
-            "id": "moukacaputo",
-            "nazev": "Italská Mouka Caputo 00",
-            "kategorie": "omacky",
-            "puvod": "🇮🇹 Neapol, Italie",
-            "popis": "Špičková pšeničná mouka mletá z nejkvalitnějších zrn. Naše těsto kyne a zraje minimálně 48 hodin.",
-            "alergeny": "Alergen 1 (lepek)",
-            "obrazek": "https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=600&auto=format&fit=crop"
-        },
-        {
-            "id": "chorizospanelske",
-            "nazev": "Spaniol & Italské Chorizo",
-            "kategorie": "maso",
-            "puvod": "🇪🇸 Španělsko / 🇮🇹 Itálie",
-            "popis": "Tradiční pikantní klobása sušená na vzduchu, ochucená uzenou sladkou i pálivou paprikou.",
-            "alergeny": "Bez alergenů",
-            "obrazek": "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=600&auto=format&fit=crop"
-        },
-        {
-            "id": "spinacbazalka",
-            "nazev": "Čerstvá Bazalka a Špenát",
-            "kategorie": "zelenina",
-            "puvod": "🇨🇿 Čerstvá sklizeň",
-            "popis": "Lístky čerstvé bazalky přidávané po upečení pro zachování výrazného esenciálního aroma.",
-            "alergeny": "Bez alergenů",
-            "obrazek": "https://images.unsplash.com/photo-1608683134044-22c976a238bb?q=80&w=600&auto=format&fit=crop"
-        }
-    ],
-    "pizzy": [
-        {
-            "id": 1,
-            "cislo": 1,
-            "nazev": "MARGHERITA",
-            "slozeni": "Rajcata San Marzano D.O.P., Mozzarella di Bufala, Italská Mouka Caputo 00, Čerstvá Bazalka a Špenát",
-            "ingredience": [
-                "sugomarzano",
-                "mozzarella",
-                "moukacaputo",
-                "spinacbazalka"
-            ],
-            "alergeny": "(1, 7)",
-            "alergeny_cisla": [
-                1,
-                7
-            ],
-            "cena": 165,
-            "masite": false,
-            "bezmase": true,
-            "paliva": false,
-            "nepaliva": true,
-            "sugo": true,
-            "bilyZaklad": false,
-            "naMiste": true,
-            "sSebou": true,
-            "pizzaTydne": false,
-            "nejprodavanejsi": true,
-            "doporucujeme": false,
-            "zlata": false,
-            "obrazek": "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?q=80&w=500&auto=format&fit=crop"
-        },
-        {
-            "id": 2,
-            "cislo": 2,
-            "nazev": "PROSCIUTTO E FUNGHI",
-            "slozeni": "Rajcata San Marzano D.O.P., Mozzarella di Bufala, Italská Mouka Caputo 00",
-            "ingredience": [
-                "sugomarzano",
-                "mozzarella",
-                "moukacaputo"
-            ],
-            "alergeny": "(1, 7)",
-            "alergeny_cisla": [
-                1,
-                7
-            ],
-            "cena": 175,
-            "masite": true,
-            "bezmase": false,
-            "paliva": false,
-            "nepaliva": true,
-            "sugo": true,
-            "bilyZaklad": false,
-            "naMiste": true,
-            "sSebou": true,
-            "pizzaTydne": true,
-            "nejprodavanejsi": true,
-            "doporucujeme": true,
-            "zlata": true,
-            "obrazek": "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?q=80&w=500&auto=format&fit=crop"
-        },
-        {
-            "id": 3,
-            "cislo": 3,
-            "nazev": "QUATTRO FORMAGGI",
-            "slozeni": "Mozzarella di Bufala, Italská Mouka Caputo 00",
-            "ingredience": [
-                "mozzarella",
-                "moukacaputo"
-            ],
-            "alergeny": "(1, 7)",
-            "alergeny_cisla": [
-                1,
-                7
-            ],
-            "cena": 185,
-            "masite": false,
-            "bezmase": true,
-            "paliva": false,
-            "nepaliva": true,
-            "sugo": false,
-            "bilyZaklad": true,
-            "naMiste": true,
-            "sSebou": true,
-            "pizzaTydne": false,
-            "nejprodavanejsi": false,
-            "doporucujeme": true,
-            "zlata": true,
-            "obrazek": "https://images.unsplash.com/photo-1573821663912-569905455b1c?q=80&w=500&auto=format&fit=crop"
-        },
-        {
-            "id": 4,
-            "cislo": 4,
-            "nazev": "DIAVOLA CHILI",
-            "slozeni": "Rajcata San Marzano D.O.P., Mozzarella di Bufala, Italská Mouka Caputo 00, Spaniol & Italské Chorizo",
-            "ingredience": [
-                "sugomarzano",
-                "mozzarella",
-                "moukacaputo",
-                "chorizospanelske"
-            ],
-            "alergeny": "(1, 7)",
-            "alergeny_cisla": [
-                1,
-                7
-            ],
-            "cena": 180,
-            "masite": true,
-            "bezmase": false,
-            "paliva": true,
-            "nepaliva": false,
-            "sugo": true,
-            "bilyZaklad": false,
-            "naMiste": true,
-            "sSebou": true,
-            "pizzaTydne": false,
-            "nejprodavanejsi": true,
-            "doporucujeme": false,
-            "zlata": false,
-            "obrazek": "https://images.unsplash.com/photo-1628840042765-356cda07504e?q=80&w=500&auto=format&fit=crop"
-        },
-        {
-            "id": 5,
-            "cislo": 5,
-            "nazev": "POLLO E SPINACI",
-            "slozeni": "Mozzarella di Bufala, Šťavnaté Kuřecí Maso, Italská Mouka Caputo 00, Čerstvá Bazalka a Špenát",
-            "ingredience": [
-                "mozzarella",
-                "kurecimaso",
-                "moukacaputo",
-                "spinacbazalka"
-            ],
-            "alergeny": "(1, 7)",
-            "alergeny_cisla": [
-                1,
-                7
-            ],
-            "cena": 190,
-            "masite": true,
-            "bezmase": false,
-            "paliva": false,
-            "nepaliva": true,
-            "sugo": false,
-            "bilyZaklad": true,
-            "naMiste": true,
-            "sSebou": true,
-            "pizzaTydne": true,
-            "nejprodavanejsi": false,
-            "doporucujeme": true,
-            "zlata": false,
-            "obrazek": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=500&auto=format&fit=crop"
-        },
-        {
-            "id": 6,
-            "cislo": 6,
-            "nazev": "HAWAI SPECIAL",
-            "slozeni": "Rajcata San Marzano D.O.P., Mozzarella di Bufala, Italská Mouka Caputo 00",
-            "ingredience": [
-                "sugomarzano",
-                "mozzarella",
-                "moukacaputo"
-            ],
-            "alergeny": "(1, 7)",
-            "alergeny_cisla": [
-                1,
-                7
-            ],
-            "cena": 175,
-            "masite": true,
-            "bezmase": false,
-            "paliva": false,
-            "nepaliva": true,
-            "sugo": true,
-            "bilyZaklad": false,
-            "naMiste": true,
-            "sSebou": true,
-            "pizzaTydne": false,
-            "nejprodavanejsi": false,
-            "doporucujeme": false,
-            "zlata": false,
-            "obrazek": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?q=80&w=500&auto=format&fit=crop"
-        }
-    ]
+  "pizzy": [
+    {
+      "id": 1,
+      "cislo": 1,
+      "nazev": "MARGHERITA",
+      "slozeni": "Sugo pomodoro, Mozzarella Fior di latte, Čerstvá bazalka",
+      "ingredience": [
+        "sugomarzano",
+        "mozzarella",
+        "spinacbazalka"
+      ],
+      "alergeny_cisla": [
+        1,
+        6,
+        7
+      ],
+      "cena": 165,
+      "masite": false,
+      "bezmase": true,
+      "paliva": false,
+      "nepaliva": true,
+      "sugo": true,
+      "bilyZaklad": false,
+      "naMiste": true,
+      "sSebou": true,
+      "doporucujeme": false,
+      "nejprodavanejsi": true,
+      "pizzaTydne": false,
+      "aktivniPizzaTydne": false,
+      "obrazek": "obrazky/pizza_1791034486_913.jpeg"
+    },
+    {
+      "id": 2,
+      "cislo": 2,
+      "nazev": "PROSCIUTTO E FUNGHI",
+      "slozeni": "Sugo pomodoro, Mozzarella Fior di latte, Prosciutto cotto",
+      "ingredience": [
+        "sugomarzano",
+        "mozzarella",
+        "moukacaputo"
+      ],
+      "alergeny_cisla": [
+        1,
+        7
+      ],
+      "cena": 175,
+      "masite": true,
+      "bezmase": false,
+      "paliva": false,
+      "nepaliva": true,
+      "sugo": true,
+      "bilyZaklad": false,
+      "naMiste": true,
+      "sSebou": true,
+      "doporucujeme": false,
+      "nejprodavanejsi": false,
+      "pizzaTydne": true,
+      "aktivniPizzaTydne": true,
+      "obrazek": "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?q=80&w=500&auto=format&fit=crop"
+    },
+    {
+      "id": 1790956439,
+      "cislo": 2,
+      "nazev": "Cotto e funghi",
+      "slozeni": "Sugo pomodoro, Mozzarella Fior di latte, Prosciutto cotto, Žampióny",
+      "ingredience": [
+        "sugomarzano",
+        "mozzarella",
+        "moukacaputo",
+        "surovina_1790967682_897"
+      ],
+      "alergeny_cisla": [
+        1,
+        6,
+        7
+      ],
+      "cena": 200,
+      "masite": true,
+      "bezmase": false,
+      "paliva": false,
+      "nepaliva": true,
+      "sugo": true,
+      "bilyZaklad": false,
+      "naMiste": true,
+      "sSebou": true,
+      "doporucujeme": false,
+      "nejprodavanejsi": true,
+      "pizzaTydne": false,
+      "aktivniPizzaTydne": false,
+      "obrazek": "obrazky/pizza_1790956439_729.jpg"
+    },
+    {
+      "id": 1790947169,
+      "cislo": 3,
+      "nazev": "Salami",
+      "slozeni": "Sugo pomodoro, Mozzarella Fior di latte, Ventricina, Chorizo",
+      "ingredience": [
+        "sugomarzano",
+        "mozzarella",
+        "surovina_1790966098_689",
+        "chorizospanelske"
+      ],
+      "alergeny_cisla": [
+        1,
+        6,
+        7
+      ],
+      "cena": 210,
+      "masite": true,
+      "bezmase": false,
+      "paliva": true,
+      "nepaliva": false,
+      "sugo": true,
+      "bilyZaklad": false,
+      "naMiste": true,
+      "sSebou": true,
+      "doporucujeme": false,
+      "nejprodavanejsi": false,
+      "pizzaTydne": false,
+      "aktivniPizzaTydne": false,
+      "obrazek": "obrazky/pizza_1790967765_661.jpg"
+    },
+    {
+      "id": 4,
+      "cislo": 4,
+      "nazev": "DIAVOLA",
+      "slozeni": "Sugo pomodoro, Mozzarella Fior di latte, Ventricina, Jalapeňos",
+      "ingredience": [
+        "sugomarzano",
+        "mozzarella",
+        "surovina_1790966098_689",
+        "surovina_1790947248_564"
+      ],
+      "alergeny_cisla": [
+        1,
+        6,
+        7
+      ],
+      "cena": 215,
+      "masite": true,
+      "bezmase": false,
+      "paliva": true,
+      "nepaliva": false,
+      "sugo": true,
+      "bilyZaklad": false,
+      "naMiste": true,
+      "sSebou": true,
+      "doporucujeme": false,
+      "nejprodavanejsi": false,
+      "pizzaTydne": false,
+      "aktivniPizzaTydne": false,
+      "obrazek": "obrazky/pizza_1790967815_930.jpg"
+    },
+    {
+      "id": 5,
+      "cislo": 5,
+      "nazev": "Quattro staggioni",
+      "slozeni": "Sugo pomodoro, Mozzarella Fior di latte, Prosciutto cotto, Ventricina, Špenát, Žampióny",
+      "ingredience": [
+        "sugomarzano",
+        "mozzarella",
+        "moukacaputo",
+        "surovina_1790966098_689",
+        "surovina_1790967098_949",
+        "surovina_1790967682_897"
+      ],
+      "alergeny_cisla": [
+        1,
+        6,
+        7
+      ],
+      "cena": 220,
+      "masite": true,
+      "bezmase": false,
+      "paliva": true,
+      "nepaliva": false,
+      "sugo": true,
+      "bilyZaklad": false,
+      "naMiste": true,
+      "sSebou": true,
+      "doporucujeme": false,
+      "nejprodavanejsi": true,
+      "pizzaTydne": false,
+      "aktivniPizzaTydne": false,
+      "obrazek": "obrazky/pizza_1791096269_756.jpeg"
+    },
+    {
+      "id": 6,
+      "cislo": 6,
+      "nazev": "Quattro formaggi",
+      "slozeni": "Mozzarella Fior di latte, Gorgonzola, Taleggio, Parmigiano reggiano",
+      "ingredience": [
+        "mozzarella",
+        "surovina_1790967543_582",
+        "surovina_1790948119_252",
+        "surovina_1790966399_839"
+      ],
+      "alergeny_cisla": [
+        1,
+        6,
+        7
+      ],
+      "cena": 175,
+      "masite": false,
+      "bezmase": true,
+      "paliva": false,
+      "nepaliva": true,
+      "sugo": false,
+      "bilyZaklad": true,
+      "naMiste": true,
+      "sSebou": true,
+      "doporucujeme": true,
+      "nejprodavanejsi": false,
+      "pizzaTydne": false,
+      "aktivniPizzaTydne": false,
+      "obrazek": "obrazky/pizza_1790967920_122.jpg"
+    },
+    {
+      "id": 1790947166,
+      "cislo": 7,
+      "nazev": "nejaka nova pizza",
+      "slozeni": "Kuřecí Maso, Ricotta, Tuňák, Jalapeňos",
+      "ingredience": [
+        "kurecimaso",
+        "surovina_1790946406_752",
+        "surovina_1790946929_224",
+        "surovina_1790947248_564"
+      ],
+      "alergeny_cisla": [
+        1,
+        2
+      ],
+      "cena": 999,
+      "masite": true,
+      "bezmase": false,
+      "paliva": true,
+      "nepaliva": false,
+      "sugo": true,
+      "bilyZaklad": false,
+      "naMiste": false,
+      "sSebou": false,
+      "doporucujeme": false,
+      "nejprodavanejsi": false,
+      "pizzaTydne": true,
+      "aktivniPizzaTydne": false,
+      "obrazek": "obrazky/pizza_1791057527_399.jpg"
+    },
+    {
+      "id": 1790967979,
+      "cislo": 7,
+      "nazev": "Prosciutto",
+      "slozeni": "Sugo pomodoro, Mozzarella Fior di latte, Rucola, Prosciutto di Parma, Parmigiano reggiano",
+      "ingredience": [
+        "sugomarzano",
+        "mozzarella",
+        "surovina_1790967453_435",
+        "surovina_1790965942_621",
+        "surovina_1790966399_839"
+      ],
+      "alergeny_cisla": [
+        1,
+        6,
+        7
+      ],
+      "cena": 240,
+      "masite": true,
+      "bezmase": false,
+      "paliva": false,
+      "nepaliva": true,
+      "sugo": true,
+      "bilyZaklad": false,
+      "naMiste": true,
+      "sSebou": true,
+      "doporucujeme": true,
+      "nejprodavanejsi": true,
+      "pizzaTydne": false,
+      "aktivniPizzaTydne": false,
+      "obrazek": "obrazky/pizza_1791034549_598.jpeg"
+    },
+    {
+      "id": 1790968084,
+      "cislo": 8,
+      "nazev": "Tonno",
+      "slozeni": "Sugo pomodoro, Mozzarella Fior di latte, Tuňák, Olivy, Červená cibule",
+      "ingredience": [
+        "sugomarzano",
+        "mozzarella",
+        "surovina_1790946929_224",
+        "surovina_1790967355_126",
+        "surovina_1790967201_601"
+      ],
+      "alergeny_cisla": [
+        1,
+        4,
+        6,
+        7
+      ],
+      "cena": 220,
+      "masite": true,
+      "bezmase": false,
+      "paliva": false,
+      "nepaliva": true,
+      "sugo": true,
+      "bilyZaklad": false,
+      "naMiste": true,
+      "sSebou": true,
+      "doporucujeme": false,
+      "nejprodavanejsi": false,
+      "pizzaTydne": false,
+      "aktivniPizzaTydne": false,
+      "obrazek": "obrazky/pizza_1790968084_977.jpg"
+    },
+    {
+      "id": 1790968171,
+      "cislo": 9,
+      "nazev": "Mexicana",
+      "slozeni": "Sugo pomodoro, Mozzarella Fior di latte, Ventricina, Chorizo, Jalapeňos, Červená cibule",
+      "ingredience": [
+        "sugomarzano",
+        "mozzarella",
+        "surovina_1790966098_689",
+        "chorizospanelske",
+        "surovina_1790947248_564",
+        "surovina_1790967201_601"
+      ],
+      "alergeny_cisla": [
+        1,
+        6,
+        7
+      ],
+      "cena": 230,
+      "masite": true,
+      "bezmase": false,
+      "paliva": true,
+      "nepaliva": false,
+      "sugo": true,
+      "bilyZaklad": false,
+      "naMiste": true,
+      "sSebou": true,
+      "doporucujeme": true,
+      "nejprodavanejsi": true,
+      "pizzaTydne": false,
+      "aktivniPizzaTydne": false,
+      "obrazek": "obrazky/pizza_1790968171_395.jpg"
+    },
+    {
+      "id": 1790968412,
+      "cislo": 10,
+      "nazev": "Pomodori secchi",
+      "slozeni": "Sugo pomodoro, Mozzarella Fior di latte, Ricotta, Rucola, Sušená rajčata, Parmigiano reggiano",
+      "ingredience": [
+        "sugomarzano",
+        "mozzarella",
+        "surovina_1790946406_752",
+        "surovina_1790967453_435",
+        "surovina_1790968345_185",
+        "surovina_1790966399_839"
+      ],
+      "alergeny_cisla": [
+        1,
+        6,
+        7
+      ],
+      "cena": 235,
+      "masite": false,
+      "bezmase": true,
+      "paliva": false,
+      "nepaliva": true,
+      "sugo": true,
+      "bilyZaklad": false,
+      "naMiste": true,
+      "sSebou": true,
+      "doporucujeme": true,
+      "nejprodavanejsi": false,
+      "pizzaTydne": false,
+      "aktivniPizzaTydne": false,
+      "obrazek": "obrazky/pizza_1790968412_589.jpg"
+    },
+    {
+      "id": 1790968488,
+      "cislo": 11,
+      "nazev": "Bianca con pancetta",
+      "slozeni": "Mozzarella Fior di latte, Gorgonzola, Pancetta, Červená cibule",
+      "ingredience": [
+        "mozzarella",
+        "surovina_1790967543_582",
+        "surovina_1790965370_911",
+        "surovina_1790967201_601"
+      ],
+      "alergeny_cisla": [
+        1,
+        6,
+        7
+      ],
+      "cena": 220,
+      "masite": true,
+      "bezmase": false,
+      "paliva": false,
+      "nepaliva": true,
+      "sugo": false,
+      "bilyZaklad": true,
+      "naMiste": true,
+      "sSebou": true,
+      "doporucujeme": false,
+      "nejprodavanejsi": false,
+      "pizzaTydne": false,
+      "aktivniPizzaTydne": false,
+      "obrazek": "obrazky/pizza_1790968488_590.jpg"
+    },
+    {
+      "id": 1790968592,
+      "cislo": 12,
+      "nazev": "Bianca con pollo",
+      "slozeni": "Mozzarella Fior di latte, Gorgonzola, Špenát, Kuřecí Maso",
+      "ingredience": [
+        "mozzarella",
+        "surovina_1790967543_582",
+        "surovina_1790967098_949",
+        "kurecimaso"
+      ],
+      "alergeny_cisla": [
+        1,
+        6,
+        7
+      ],
+      "cena": 230,
+      "masite": true,
+      "bezmase": false,
+      "paliva": false,
+      "nepaliva": true,
+      "sugo": false,
+      "bilyZaklad": true,
+      "naMiste": true,
+      "sSebou": true,
+      "doporucujeme": true,
+      "nejprodavanejsi": true,
+      "pizzaTydne": false,
+      "aktivniPizzaTydne": false,
+      "obrazek": "obrazky/pizza_1790968592_822.jpg"
+    },
+    {
+      "id": 1790968924,
+      "cislo": 13,
+      "nazev": "Capo di tutti capi",
+      "slozeni": "Mozzarella Fior di latte, Prosciutto cotto, Gorgonzola, Taleggio, Parmigiano reggiano",
+      "ingredience": [
+        "mozzarella",
+        "moukacaputo",
+        "surovina_1790967543_582",
+        "surovina_1790948119_252",
+        "surovina_1790966399_839"
+      ],
+      "alergeny_cisla": [
+        1,
+        6,
+        7
+      ],
+      "cena": 235,
+      "masite": true,
+      "bezmase": false,
+      "paliva": false,
+      "nepaliva": true,
+      "sugo": false,
+      "bilyZaklad": true,
+      "naMiste": true,
+      "sSebou": true,
+      "doporucujeme": true,
+      "nejprodavanejsi": false,
+      "pizzaTydne": false,
+      "aktivniPizzaTydne": false,
+      "obrazek": "obrazky/pizza_1791096322_267.jpeg"
+    },
+    {
+      "id": 1790969086,
+      "cislo": 14,
+      "nazev": "Calzone con pancetta",
+      "slozeni": "Mozzarella Fior di latte, Gorgonzola, Špenát, Pancetta",
+      "ingredience": [
+        "mozzarella",
+        "surovina_1790967543_582",
+        "surovina_1790967098_949",
+        "surovina_1790965370_911"
+      ],
+      "alergeny_cisla": [
+        1,
+        6,
+        7
+      ],
+      "cena": 235,
+      "masite": true,
+      "bezmase": false,
+      "paliva": false,
+      "nepaliva": true,
+      "sugo": false,
+      "bilyZaklad": true,
+      "naMiste": true,
+      "sSebou": false,
+      "doporucujeme": true,
+      "nejprodavanejsi": false,
+      "pizzaTydne": false,
+      "aktivniPizzaTydne": false,
+      "obrazek": "obrazky/pizza_1790969086_972.jpg"
+    },
+    {
+      "id": 1790969329,
+      "cislo": 15,
+      "nazev": "Focaccia con crudo",
+      "slozeni": "Mozzarella Fior di latte, Rucola, Prosciutto di Parma, Cherry rajčata, Parmigiano reggiano",
+      "ingredience": [
+        "mozzarella",
+        "surovina_1790967453_435",
+        "surovina_1790965942_621",
+        "surovina_1790969281_504",
+        "surovina_1790966399_839"
+      ],
+      "alergeny_cisla": [
+        1,
+        6,
+        7
+      ],
+      "cena": 250,
+      "masite": true,
+      "bezmase": false,
+      "paliva": false,
+      "nepaliva": true,
+      "sugo": false,
+      "bilyZaklad": true,
+      "naMiste": true,
+      "sSebou": false,
+      "doporucujeme": true,
+      "nejprodavanejsi": false,
+      "pizzaTydne": false,
+      "aktivniPizzaTydne": false,
+      "obrazek": "obrazky/pizza_1790969329_367.jpg"
+    }
+  ],
+  "suroviny": [
+    {
+      "id": "sugomarzano",
+      "nazev": "Sugo pomodoro",
+      "kategorie": "omacky",
+      "puvod": "🇮🇹 Neapol, Italie",
+      "popis": "Tradiční italská omáčka z vyzrálých italských rajčat dochucená česnekem, bylinkami a olivovým olejem.",
+      "palivost": 0,
+      "alergeny_cisla": [],
+      "obrazek": "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+      "id": "mozzarella",
+      "nazev": "Mozzarella Fior di latte",
+      "kategorie": "syry",
+      "puvod": "🇮🇹 Kampánie, Italie",
+      "popis": "Tradiční čerstvý sýr z kravského mléka. Neuvěřitelně krémový a šťavnatý.",
+      "palivost": 0,
+      "alergeny_cisla": [
+        7
+      ],
+      "obrazek": "https://images.unsplash.com/photo-1559561853-08451507cbe7?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+      "id": "moukacaputo",
+      "nazev": "Prosciutto cotto",
+      "kategorie": "maso",
+      "puvod": "🇮🇹  Itálie",
+      "popis": "Tradiční vařená nebo dušená italská šunka z veprové kýty.",
+      "palivost": 0,
+      "alergeny_cisla": [],
+      "obrazek": "obrazky/surovina_1790965605_644.jpeg"
+    },
+    {
+      "id": "surovina_1790966098_689",
+      "nazev": "Ventricina",
+      "kategorie": "maso",
+      "puvod": "🇮🇹 Itálie",
+      "popis": "Oblíbený italský, výrazně pikantní fermentovaný salám pocházející hlavně z regionů Abruzzo a Molise.",
+      "palivost": 1,
+      "alergeny_cisla": [],
+      "obrazek": "obrazky/surovina_1790966098_295.jpg"
+    },
+    {
+      "id": "chorizospanelske",
+      "nazev": "Chorizo",
+      "kategorie": "maso",
+      "puvod": "🇪🇸 Španělsko",
+      "popis": "Tradiční španělský sušený salám ochucený hlavně sladkou, popřípadě i pálivou paprikou.",
+      "palivost": 0,
+      "alergeny_cisla": [],
+      "obrazek": "obrazky/surovina_1790965693_465.jpg"
+    },
+    {
+      "id": "surovina_1790967543_582",
+      "nazev": "Gorgonzola",
+      "kategorie": "syry",
+      "puvod": "🇮🇹 Itálie",
+      "popis": "Gorgonzola je slámově bílý sýr s typicky modrou plísní, který je jedním z nejznámějších představitelů italských plísňových sýrů. Má krémovou a vláčnou strukturu s výraznou a pro něj typickou chutí a nezaměnitelnou vůní.",
+      "palivost": 0,
+      "alergeny_cisla": [
+        7
+      ],
+      "obrazek": "obrazky/surovina_1790967543_326.jpg"
+    },
+    {
+      "id": "surovina_1790967098_949",
+      "nazev": "Špenát",
+      "kategorie": "zelenina",
+      "puvod": "🇮🇹 Itálie",
+      "popis": "Listy špenátu ochucené pepřem a česnekem.",
+      "palivost": 0,
+      "alergeny_cisla": [],
+      "obrazek": "obrazky/surovina_1790967098_247.jpg"
+    },
+    {
+      "id": "kurecimaso",
+      "nazev": "Kuřecí Maso",
+      "kategorie": "maso",
+      "puvod": "🇨🇿 Lokální české farmy",
+      "popis": "Čerstvá kuřecí prsa marinovaná v panenském olivovém oleji a koření pro maximální křehkost.",
+      "palivost": 0,
+      "alergeny_cisla": [],
+      "obrazek": "https://images.unsplash.com/photo-1604503468506-a8da13d82791?q=80&w=600&auto=format&fit=crop"
+    },
+    {
+      "id": "surovina_1790965370_911",
+      "nazev": "Pancetta",
+      "kategorie": "maso",
+      "puvod": "🇮🇹 Itálie",
+      "popis": "Tradiční italský nasolený a sušený vepřový bůček, který se na rozdíl od běžné české slaniny obvykle neudí, ale zraje procesem sušení a kořenění. Používáme druh zvaný \"arrotolata\" - tedy rolovanou verzi pancetty.",
+      "palivost": 0,
+      "alergeny_cisla": [],
+      "obrazek": "obrazky/surovina_1790966991_139.webp"
+    },
+    {
+      "id": "spinacbazalka",
+      "nazev": "Čerstvá bazalka",
+      "kategorie": "zelenina",
+      "puvod": "🇨🇿 Čerstvá sklizeň",
+      "popis": "Lístky čerstvé bazalky přidávané po upečení pro zachování výrazného esenciálního aroma.",
+      "palivost": 0,
+      "alergeny_cisla": [],
+      "obrazek": "obrazky/surovina_1790965776_306.jpeg"
+    },
+    {
+      "id": "surovina_1790946406_752",
+      "nazev": "Ricotta",
+      "kategorie": "syry",
+      "puvod": "🇮🇹 Itálie",
+      "popis": "Tradiční italský syrovátkový sýr, který se vyrábí ze syrovátky (kravské, ovčí, kozí nebo buvolí), jež zbyde při výrobě jiných sýrů. Má jemnou, lehce nasládlou chuť a krémovou, zrnitou texturu.",
+      "palivost": 0,
+      "alergeny_cisla": [
+        7
+      ],
+      "obrazek": "obrazky/surovina_1790966705_772.webp"
+    },
+    {
+      "id": "surovina_1790946929_224",
+      "nazev": "Tuňák",
+      "kategorie": "maso",
+      "puvod": "🇮🇹 Itálie",
+      "popis": "Kousky tuňáka žlutoploutvého naložené ve slunečnicovém oleji.",
+      "palivost": 0,
+      "alergeny_cisla": [
+        4
+      ],
+      "obrazek": "obrazky/surovina_1790966243_251.jpg"
+    },
+    {
+      "id": "surovina_1790947248_564",
+      "nazev": "Jalapeňos",
+      "kategorie": "zelenina",
+      "puvod": "🇮🇹 Mexico",
+      "popis": "Mexické pálivé zelené papričky naložené v příjemně kyselém láku.",
+      "palivost": 2,
+      "alergeny_cisla": [],
+      "obrazek": "obrazky/surovina_1790965746_777.jpeg"
+    },
+    {
+      "id": "surovina_1790948119_252",
+      "nazev": "Taleggio",
+      "kategorie": "syry",
+      "puvod": "🇮🇹 Itálie",
+      "popis": "Taleggio je tradiční italský poloměkký sýr z kravského mléka s charakteristickým čtvercovým tvarem, který pochází z oblasti Lombardie na severu Itálie. Patří mezi vůbec nejstarší měkké sýry na světě (jeho historie sahá až do 9. až 11. století) a pyšní se chráněným evropským označením původu DOP. Sýr je proslulý především jedním velkým paradoxem: voní mnohem intenzivněji, než jak ve skutečnosti chutná.",
+      "palivost": 0,
+      "alergeny_cisla": [
+        7
+      ],
+      "obrazek": "obrazky/surovina_1790966788_461.jpg"
+    },
+    {
+      "id": "surovina_1790967453_435",
+      "nazev": "Rucola",
+      "kategorie": "zelenina",
+      "puvod": "🇮🇹 Itálie",
+      "popis": "Oblíbená listová zelenina s charakteristickou štiplavou, lehce nahořklou a oříškovou chutí.",
+      "palivost": 0,
+      "alergeny_cisla": [],
+      "obrazek": "obrazky/surovina_1790967453_537.jpg"
+    },
+    {
+      "id": "surovina_1790965942_621",
+      "nazev": "Prosciutto di Parma",
+      "kategorie": "maso",
+      "puvod": "🇮🇹 Parma, Itálie",
+      "popis": "Tradiční sušená italská šunka z vepřové kýty s chráněným označením původu D.O.P.",
+      "palivost": 0,
+      "alergeny_cisla": [],
+      "obrazek": "obrazky/surovina_1790965942_202.webp"
+    },
+    {
+      "id": "surovina_1790967355_126",
+      "nazev": "Olivy",
+      "kategorie": "zelenina",
+      "puvod": "🇮🇹 Itálie",
+      "popis": "Mix černých a zelených oliv.",
+      "palivost": 0,
+      "alergeny_cisla": [],
+      "obrazek": "obrazky/surovina_1790967355_594.jpg"
+    },
+    {
+      "id": "surovina_1790967201_601",
+      "nazev": "Červená cibule",
+      "kategorie": "zelenina",
+      "puvod": "🇮🇹 Itálie",
+      "popis": "Klasická červená cibule od našeho lokálního dodavatele",
+      "palivost": 0,
+      "alergeny_cisla": [],
+      "obrazek": "obrazky/surovina_1790967201_885.jpg"
+    },
+    {
+      "id": "surovina_1790967682_897",
+      "nazev": "Žampióny",
+      "kategorie": "zelenina",
+      "puvod": "🇨🇿 Česká republika",
+      "popis": "Oblíbené houby od našeho lokálního dodavatele",
+      "palivost": 0,
+      "alergeny_cisla": [],
+      "obrazek": "obrazky/surovina_1790967682_714.jpg"
+    },
+    {
+      "id": "surovina_1790968345_185",
+      "nazev": "Sušená rajčata",
+      "kategorie": "zelenina",
+      "puvod": "🇮🇹 Itálie",
+      "popis": "Sušená italská rajčata naložená v rostlinném oleji.",
+      "palivost": 0,
+      "alergeny_cisla": [],
+      "obrazek": "obrazky/surovina_1790968345_295.webp"
+    },
+    {
+      "id": "surovina_1790969281_504",
+      "nazev": "Cherry rajčata",
+      "kategorie": "zelenina",
+      "puvod": "🇨🇿 Česká republika",
+      "popis": "Sladká malá rajčátka.",
+      "palivost": 0,
+      "alergeny_cisla": [],
+      "obrazek": "obrazky/surovina_1790969281_307.jpg"
+    },
+    {
+      "id": "surovina_1790966399_839",
+      "nazev": "Parmigiano reggiano",
+      "kategorie": "syry",
+      "puvod": "🇮🇹 Itálie",
+      "popis": "Tradiční italský tvrdý sýr z kravského mléka z oblasti Parma, chráněné označení původu D.O.P. Jediný sýr, kterému se dle zákona v ČR může říkat \"parmezán\". Pro zachování výrazné chuti přidáváme parmezán na každou pizzu až po upečení.",
+      "palivost": 0,
+      "alergeny_cisla": [
+        7
+      ],
+      "obrazek": "obrazky/surovina_1790966399_218.JPEG"
+    },
+    {
+      "id": "surovina_1791037775_130",
+      "nazev": "Pecorino",
+      "kategorie": "syry",
+      "puvod": "🇮🇹 Itálie",
+      "popis": "Tradiční italský tvrdý ovčí sýr.",
+      "palivost": 0,
+      "alergeny_cisla": [
+        7
+      ],
+      "obrazek": "obrazky/surovina_1791037775_787.webp"
+    }
+  ]
 }
