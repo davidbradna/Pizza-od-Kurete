@@ -1,0 +1,698 @@
+/* --------------------------------------------------------------------------
+   7. RESPONZIVITA (MOBILNI ZOBRAZENI PODLE MOBILE.PDF)
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  /* ==========================================================================
+     MOBILNÍ HARDWAROVÁ OPTIMALIZACE VÝKONU (VYPNUTÍ NÁROČNÉHO BACKDROP-FILTER NA GPU)
+     ========================================================================== */
+  .oteviraci-doba-stitek,
+  .tlacitko-kategorie,
+  .kapsle-prepinac,
+  .mini-kapsle-tlacitko,
+  .karta-pizzy,
+  .karta-pizzy-tag,
+  .pizza-tag,
+  .karta-rozvoz-info,
+  .tlacitko-cervene-syté,
+  .tlacitko-tmave-cervene,
+  .tlacitko-sede,
+  .obal-ikona-sipka-info,
+  .info-bublina,
+  .karta-recenze,
+  .recenze-stitek-overeno,
+  .recenze-hvezdy-bublina,
+  .rozvoz-mapa-tooltip,
+  .podokno-volani-box,
+  .obal-filtru-kategorií,
+  .obal-filtru-kategorii {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Hlavní stránka (index): Horní navigační lišta ZCELA NEEXISTUJE (ani průhledná) – vpravo nahoře jsou pouze samostatná plovoucí tlačítka */
+  .stranka-index .horni-kontakty-lista,
+  .horni-kontakty-lista.horni-lista-index {
+    position: fixed !important;
+    top: 14px !important;
+    right: 16px !important;
+    left: auto !important;
+    bottom: auto !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    background: none !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    pointer-events: none !important;
+    z-index: 1100 !important;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    will-change: transform;
+  }
+
+  /* Při scroll down: zmizí (vysunou se nahoru) */
+  .stranka-index .horni-kontakty-lista.lista-skryta,
+  .horni-kontakty-lista.horni-lista-index.lista-skryta {
+    transform: translateY(-90px) !important;
+  }
+
+  .stranka-index .navigace-podstranka-obsah,
+  .horni-lista-index .navigace-podstranka-obsah {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: auto !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Skrytí loga a grafického nápisu v liště na indexu */
+  .stranka-index .navigace-brand-obal,
+  .stranka-index .navigace-brand-logo,
+  .stranka-index .navigace-brand-napis-img,
+  .horni-lista-index .navigace-brand-obal,
+  .horni-lista-index .navigace-brand-logo,
+  .horni-lista-index .navigace-brand-napis-img {
+    display: none !important;
+  }
+
+  .stranka-index .navigace-prava-skupina,
+  .horni-lista-index .navigace-prava-skupina {
+    margin-left: auto !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+  }
+
+  .stranka-index .navigace-akce-obal,
+  .horni-lista-index .navigace-akce-obal {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    pointer-events: auto !important;
+  }
+
+  /* Telefon vpravo nahoře na indexu: kulaté červené tlačítko */
+  .stranka-index .tlacitko-telefon-ikona,
+  .horni-lista-index .tlacitko-telefon-ikona {
+    display: inline-flex !important;
+    pointer-events: auto !important;
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 50% !important;
+    background: var(--barva-cervena-hlavni, #e50914) !important;
+    border: 1px solid rgba(255, 120, 125, 0.7) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+    color: #ffffff !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: transform 0.2s ease, background 0.2s ease !important;
+  }
+
+  .stranka-index .tlacitko-telefon-ikona:active,
+  .stranka-index .tlacitko-telefon-ikona.aktivni,
+  .horni-lista-index .tlacitko-telefon-ikona:active,
+  .horni-lista-index .tlacitko-telefon-ikona.aktivni {
+    background: #b20710 !important;
+    transform: scale(0.94) !important;
+  }
+
+  /* Hamburger vpravo nahoře na indexu: squircle tlačítko vedle telefonu */
+  .stranka-index .tlacitko-hamburger,
+  .horni-lista-index .tlacitko-hamburger {
+    display: inline-flex !important;
+    pointer-events: auto !important;
+    position: static !important;
+    width: 44px !important;
+    height: 44px !important;
+    background: rgba(22, 22, 26, 0.94) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55) !important;
+    color: #ffffff !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: transform 0.2s ease, background 0.2s ease !important;
+  }
+
+  .stranka-index .tlacitko-hamburger:active,
+  .stranka-index .tlacitko-hamburger.aktivni,
+  .horni-lista-index .tlacitko-hamburger:active,
+  .horni-lista-index .tlacitko-hamburger.aktivni {
+    background: rgba(229, 9, 20, 0.85) !important;
+    border-color: #ff333e !important;
+    transform: scale(0.94) !important;
+  }
+
+  /* Vyvážená hero sekce na mobilu – posunuto dolů s dostatečným odstupem od telefonu a hamburgeru */
+  .sekce-uvod-hero {
+    min-height: auto;
+    padding: 85px 16px 85px 16px;
+    background: linear-gradient(180deg, rgba(13, 13, 13, 0.45) 0%, rgba(13, 13, 13, 0.96) 100%),
+                url('https://images.unsplash.com/photo-1513104890138-7c749659a591?q=75&w=800&auto=format&fit=crop') center/cover no-repeat;
+  }
+
+  .obsah-hero {
+    max-width: 100%;
+  }
+
+  /* Logo kuřete zmenšeno o 20 % (z původních 140px na 112px) */
+  .logo-kure-ikona {
+    max-width: 112px;
+    margin-bottom: 14px;
+  }
+
+  .nadpis-hlavni {
+    font-size: 2.15rem;
+    line-height: 1.2;
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+    word-break: break-word;
+  }
+  
+  .podnadpis-hlavni {
+    font-size: 1.12rem;
+    font-weight: 500;
+    color: #ffffff;
+    margin-bottom: 14px;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+  }
+
+  .oteviraci-doba-stitek {
+    font-size: 0.88rem;
+    padding: 6px 18px;
+    margin-bottom: 46px;
+    border-radius: 24px;
+    max-width: 100%;
+  }
+
+  .kontakty-obsah {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  /* Skupina tlačítek v hero sekci na mobilu: 1 řada se 3 tlačítky */
+  .tlacitka-hlavicka-skupina {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  .appky-rada,
+  .appky-rada-1 {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 10px;
+    row-gap: 0;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+    justify-items: center;
+    align-items: start;
+  }
+
+  .appky-rada-2 {
+    display: none !important;
+  }
+
+  /* 1. řada na mobilu: Pizzerie (vlevo), Rozvoz (uprostřed), Jídelní lístek (zcela vpravo) */
+  .appky-rada-1 .appka-pizzerie {
+    order: 1;
+  }
+  .appky-rada-1 .appka-rozvoz {
+    order: 2;
+  }
+  .appky-rada-1 .appka-listek {
+    order: 3;
+  }
+
+  .tlacitko-app-polozka {
+    width: 100%;
+    max-width: 82px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    text-align: center;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .tlacitko-app-polozka:hover,
+  .tlacitko-app-polozka:active {
+    transform: translateY(0);
+    background: transparent !important;
+  }
+
+  /* Na mobilu se ikony zobrazují ve squircle boxu */
+  .tlacitko-app-polozka .appka-ikona-box {
+    display: flex;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .tlacitko-app-polozka:active .appka-ikona-box {
+    transform: scale(0.92);
+  }
+
+  /* 1. řada: Pizzerie (vínová z obrázku) */
+  .tlacitko-app-polozka.appka-pizzerie .appka-ikona-box {
+    background: rgba(139, 0, 0, 0.94);
+    border: 1px solid rgba(255, 80, 90, 0.4);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+  }
+
+  /* 1. řada: Rozvoz (kouřová poloprůhledná šedá z obrázku) */
+  .tlacitko-app-polozka.appka-rozvoz .appka-ikona-box {
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+  }
+
+  /* 1. řada: Jídelní lístek (červená z obrázku, vpravo pod palcem) – čistý černý stín, ŽÁDNÝ červený glow do nápisu */
+  .tlacitko-app-polozka.appka-listek .appka-ikona-box {
+    background: rgba(229, 9, 20, 0.95);
+    border: 1px solid rgba(255, 120, 125, 0.7);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+    color: #ffffff;
+  }
+
+  .tlacitko-app-polozka .appka-ikona-box svg {
+    width: 23px;
+    height: 23px;
+  }
+
+  .tlacitko-app-polozka .appka-popisek {
+    display: block;
+    width: 100%;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #e5e5e5;
+    margin-top: 10px;
+    text-transform: none !important;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  }
+
+  .tlacitko-app-polozka.appka-listek .appka-popisek {
+    color: #ffffff;
+    font-weight: 700;
+  }
+
+  .mobil-text-jen {
+    display: inline !important;
+  }
+
+  .desktop-text-jen {
+    display: none !important;
+  }
+
+  .mobil-pouze-flex {
+    display: flex !important;
+  }
+
+  .desktop-pouze-flex {
+    display: none !important;
+  }
+
+  /* Centrování dialogu volání na mobilu */
+  .podokno-volani-pobocky {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: calc(100% - 48px) !important;
+    max-width: 320px !important;
+    z-index: 2000 !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95), 0 0 0 100vmax rgba(0, 0, 0, 0.65) !important;
+    pointer-events: auto !important;
+  }
+
+  .tlacitka-hlavicka-skupina .tlacitko {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 0.92rem;
+    letter-spacing: 0.6px;
+  }
+
+  .sekce-jidelni-listek {
+    padding: 50px 0;
+  }
+
+  .sekce-rozvoz {
+    padding: 50px 0 16px 0;
+  }
+
+  .sekce-provozovny {
+    padding: 24px 0 50px 0;
+  }
+
+  .karusel-provozovny-obal {
+    height: 280px;
+  }
+
+  /* Mobilní úprava sekce Rozdíl v chuti */
+  .sekce-rozdil-v-chuti {
+    padding: 10px 0 35px 0 !important;
+    overflow: hidden;
+  }
+
+  .rozdil-hero-banner {
+    min-height: 195px;
+  }
+
+  .rozdil-hero-obsah {
+    padding: 16px 18px;
+    max-width: 100%;
+  }
+
+  .rozdil-hero-text-blok {
+    padding-right: 14px;
+  }
+
+  .rozdil-hero-nadpis {
+    font-size: 1.25rem;
+    margin: 0 0 6px 0;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.75);
+  }
+
+  .rozdil-hero-cta-napis {
+    font-size: 0.92rem;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.75);
+  }
+
+  .rozdil-hero-sipka {
+    width: 40px;
+    height: 40px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  }
+
+  .rozdil-hero-sipka svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Na mobilu touch carousel se 4 položkami (2 celé vidět, 3. napůl) */
+  .rozdil-suroviny-obal {
+    margin-top: 6px;
+    padding: 0;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .rozdil-suroviny-pas {
+    display: flex;
+    grid-template-columns: none;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 6px 16px 10px 16px;
+    box-sizing: border-box;
+  }
+
+  .rozdil-suroviny-pas::-webkit-scrollbar {
+    display: none;
+  }
+
+  .rozdil-surovina-karta {
+    flex: 0 0 78%;
+    min-width: 240px;
+    max-width: 280px;
+    scroll-snap-align: start;
+  }
+
+  .mrizka-rozdil {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .nadpis-sekce {
+    font-size: 2rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .text-popis {
+    font-size: 1.05rem;
+    margin-bottom: 24px;
+  }
+
+  .tlacitko-ingredience-cta {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .obale-fotky-picer img {
+    height: 280px;
+  }
+
+  .mrizka-pizz {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .skupina-zaškrtavatelna {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .skupina-kategorii {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .tlacitko-kategorie {
+    width: 100%;
+    text-align: center;
+  }
+
+  .mrizka-prepinacu-filtrum {
+    gap: 10px;
+    width: 100%;
+  }
+
+  .mini-kapsle-prepinac {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .kontejner {
+    padding: 0 16px;
+  }
+
+  .nadpis-hlavni {
+    font-size: 1.95rem;
+    line-height: 1.2;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+  }
+
+  .podnadpis-hlavni {
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+
+  .nadpis-sekce {
+    font-size: 1.65rem;
+  }
+
+  .karta-pizzy {
+    padding: 20px 16px;
+  }
+
+  .obrazek-pizzy-obal {
+    width: calc(100% + 32px);
+    margin-top: -20px;
+    margin-left: -16px;
+    margin-right: -16px;
+    margin-bottom: 16px;
+    height: 180px;
+  }
+
+  .nazev-pizzy {
+    font-size: 1.25rem;
+  }
+
+  .cena-pizzy {
+    font-size: 1.35rem;
+  }
+
+  /* Větší rozestup a pohodlnější klikací plocha pro číslo u tlačítka plus na mobilu */
+  .obal-pridani-karta {
+    gap: 18px;
+  }
+
+  .pocet-v-kosiku-odznak {
+    min-width: 38px;
+    height: 38px;
+    font-size: 1.05rem;
+    border-radius: 19px;
+    padding: 0 10px;
+    touch-action: manipulation;
+  }
+
+  .mrizka-karet-rozvozu {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .kapsle-prepinac-pobocky,
+  .kapsle-prepinac-cernobily {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .kapsle-polozka,
+  .kapsle-polozka-cb {
+    padding: 8px 10px;
+    font-size: 0.82rem;
+  }
+}
+
+
+
+/* --- NÁKUPNÍ SEZNAM: ROZVOZ A TELEFON --- */
+.podokno-volani-kosik {
+  bottom: 68px !important;
+  top: auto !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  width: 290px !important;
+  max-width: calc(100vw - 32px) !important;
+  z-index: 1000 !important;
+  text-align: left;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.9), 0 0 1px rgba(255, 255, 255, 0.25) !important;
+}
+
+.tlacitko-telefon-kosik:hover {
+  transform: scale(1.1);
+  background-color: var(--barva-cervena-tmava, #b90710) !important;
+}
+
+.kosik-rozvoz-sekce .vstup-vyhledat-obec {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 0.9rem;
+  padding: 10px 14px;
+  background: #18181f;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.kosik-rozvoz-sekce .vstup-vyhledat-obec:focus {
+  border-color: #f59e0b;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.35);
+  outline: none;
+}
+
+/* Mobilní responzivita pro modální okna a nákupní seznam */
+@media (max-width: 640px) {
+  .modalni-okno-obsah {
+    width: 94%;
+    max-width: calc(100vw - 20px);
+    padding: 22px 16px 20px;
+    max-height: 88vh;
+    border-radius: 14px;
+    box-sizing: border-box;
+  }
+
+  #modal-kosiku .nadpis-sekce {
+    font-size: 1.45rem !important;
+    margin-top: 0 !important;
+    margin-bottom: 14px !important;
+    padding-right: 32px;
+    text-align: left;
+  }
+
+  .zavrit-modal {
+    top: 14px;
+    right: 14px;
+    font-size: 1.8rem;
+    padding: 4px;
+  }
+
+  .polozka-kosiku {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px 0;
+  }
+
+  .polozka-kosiku-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    width: 100%;
+  }
+
+  .polozka-kosiku-ovladani {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .polozka-kosiku-cena-celkem {
+    font-size: 1.15rem;
+  }
+}
+
+/* Mobil: při otevřeném modálním okně skrýt horní lištu (hamburger + telefon), aby nepřekrývala křížek */
+@media (max-width: 768px) {
+  body:has(.modalni-okno-pozadi.zobrazeno) .horni-kontakty-lista {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+}
+
+/* Mobil: větší kruhové tlačítko telefonu v nákupním seznamu (pohodlné pro palec) */
+@media (max-width: 768px) {
+  #btn-otevrit-volani-kosik {
+    width: 64px !important;
+    height: 64px !important;
+  }
+
+  #btn-otevrit-volani-kosik svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .podokno-volani-kosik {
+    bottom: 76px !important;
+  }
+}

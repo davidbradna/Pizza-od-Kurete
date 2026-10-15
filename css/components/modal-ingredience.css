@@ -1,0 +1,311 @@
+/* ==========================================================================
+   MODÁLNÍ OKNO: VELKÝ NÁHLED INGREDIENCE
+   ========================================================================== */
+.karta-ingredience {
+  cursor: default;
+}
+
+.modal-nahled-ingredience-obsah {
+  padding: 0 !important;
+  max-width: 620px;
+  width: 92%;
+  height: 560px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 16px;
+  background-color: #16161a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+  position: relative;
+}
+
+#modal-nahled-ingredience-telo,
+.nahled-ingredience-obal {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.modal-nahled-ingredience-obsah .zavrit-modal {
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 1.6rem;
+  line-height: 1;
+  z-index: 10;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-nahled-ingredience-obsah .zavrit-modal:hover {
+  background: #e50914;
+  border-color: #e50914;
+  color: #ffffff;
+}
+
+.nahled-ingredience-foto-obal {
+  width: 100%;
+  height: 350px;
+  min-height: 350px;
+  max-height: 350px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  background: #0d0d10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nahled-ingredience-velka-fotka {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.nahled-ingredience-foto-obal .nahled-puvod {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: auto;
+}
+
+.nahled-ingredience-popis-blok {
+  flex: 1;
+  min-height: 0;
+  padding: 20px 26px 22px 26px;
+  background: #16161a;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.nahled-ingredience-popis-blok::-webkit-scrollbar {
+  width: 6px;
+}
+
+.nahled-ingredience-popis-blok::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.nahled-ingredience-popis-blok::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.nahled-ingredience-popis-blok::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.nahled-ingredience-nazev {
+  font-family: var(--font-hlavni);
+  font-size: 1.55rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0 0 8px 0;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.nahled-ingredience-popis {
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: #d1d5db;
+  margin: 0;
+}
+
+/* Šipky karuselu v náhledu ingredience */
+.nahled-karusel-sipka {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  cursor: pointer;
+  z-index: 8;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  padding: 0;
+}
+
+.nahled-karusel-sipka:hover {
+  background: var(--barva-zlata-akcent, #f59e0b);
+  border-color: var(--barva-zlata-akcent, #f59e0b);
+  color: #000000;
+  transform: translateY(-50%) scale(1.08);
+}
+
+.nahled-karusel-vlevo {
+  left: 14px;
+}
+
+.nahled-karusel-vpravo {
+  right: 14px;
+}
+
+/* Tečky karuselu */
+.nahled-karusel-tecky-obal {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 8;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nahled-karusel-tecka {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.nahled-karusel-tecka.aktivni {
+  background: var(--barva-zlata-akcent, #f59e0b);
+  width: 22px;
+  border-radius: 10px;
+}
+
+.nahled-karusel-tecka:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* Info lišta pizzy a počítadlo v popisu */
+.nahled-ingredience-meta-lista {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.nahled-pizza-nazev-odznak {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--barva-zlata-akcent, #f59e0b);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.nahled-pocitadlo-text {
+  font-size: 0.82rem;
+  color: #888888;
+  font-weight: 600;
+}
+
+/* Jemná animace při přepnutí suroviny */
+@keyframes fadeInSurovina {
+  from { opacity: 0.45; transform: scale(0.985); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.nahled-ingredience-obal.animace-prepnuti {
+  animation: fadeInSurovina 0.25s ease-out;
+}
+
+@media (max-width: 768px) {
+  .modal-nahled-ingredience-obsah {
+    width: 94%;
+    max-width: 440px;
+    height: 500px;
+    max-height: 85vh;
+  }
+
+  .nahled-ingredience-foto-obal {
+    height: 270px;
+    min-height: 270px;
+    max-height: 270px;
+  }
+
+  .nahled-ingredience-velka-fotka {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .nahled-ingredience-popis-blok {
+    padding: 16px 18px 20px 18px;
+  }
+
+  .nahled-ingredience-nazev {
+    font-size: 1.3rem;
+    margin-bottom: 6px;
+  }
+
+  .nahled-ingredience-popis {
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+
+  .nahled-karusel-sipka {
+    width: 36px;
+    height: 36px;
+  }
+
+  .nahled-karusel-vlevo {
+    left: 8px;
+  }
+
+  .nahled-karusel-vpravo {
+    right: 8px;
+  }
+
+  .nahled-karusel-tecky-obal {
+    bottom: 8px;
+    padding: 4px 10px;
+  }
+}
+
+@media (max-height: 600px) {
+  .modal-nahled-ingredience-obsah {
+    height: 90vh;
+    max-height: 90vh;
+  }
+
+  .nahled-ingredience-foto-obal {
+    height: 52%;
+    min-height: 140px;
+    max-height: 52%;
+  }
+}
+

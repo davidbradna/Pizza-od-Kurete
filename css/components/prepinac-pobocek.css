@@ -1,0 +1,299 @@
+/* --------------------------------------------------------------------------
+   9. KAPSULOVY PREPINAC POBOCEK (DLE VLADANI)
+   -------------------------------------------------------------------------- */
+.horni-kontakty-lista {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 8px 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+  will-change: transform;
+}
+
+/* Zkompaktnena hlavička pri scrollovani */
+.horni-kontakty-lista.skrolovalo-se {
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.85);
+}
+
+/* PLOVUCI KULATE TLACITKO VOLANI (FAB - PRAVO DOLE NAD KOSIKEM) */
+.plovuci-volani-tlacitko {
+  position: fixed;
+  bottom: 90px;
+  right: 25px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--barva-cervena-hlavni);
+  border: 2px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 25px rgba(229, 9, 20, 0.7);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
+  animation: pulzovani-volani 2.5s infinite ease-in-out;
+}
+
+.plovuci-volani-tlacitko.zobrazeno {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.plovuci-volani-tlacitko:hover {
+  transform: scale(1.12);
+  background-color: var(--barva-cervena-tmava);
+}
+
+@keyframes pulzovani-volani {
+  0%, 100% { box-shadow: 0 0 15px rgba(229, 9, 20, 0.6); }
+  50% { box-shadow: 0 0 28px rgba(229, 9, 20, 0.95); }
+}
+
+.kontakty-obsah-stredovy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+
+
+/* Kapslovy track (Cerveny podklad jako na obrazku) */
+.kapsle-prepinac-pobocky {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--barva-cervena-hlavni);
+  padding: 5px;
+  border-radius: 40px;
+  user-select: none;
+  touch-action: manipulation;
+  box-shadow: 0 4px 15px rgba(229, 9, 20, 0.4);
+  width: 340px;
+  min-width: 340px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Bily vnitrni slajdr pill */
+.kapsle-slajdr-bily {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  left: 5px;
+  width: calc(50% - 5px);
+  background-color: #ffffff;
+  border-radius: 35px;
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  z-index: 1;
+}
+
+.kapsle-prepinac-pobocky[data-aktivni="usti"] .kapsle-slajdr-bily {
+  transform: translateX(100%);
+}
+
+.kapsle-polozka {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  text-align: center;
+  padding: 10px 24px;
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: #ffffff !important;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  white-space: nowrap;
+  border: none;
+  background: none;
+  font-family: var(--font-hlavni);
+  letter-spacing: 0.02em;
+}
+
+.kapsle-prepinac-pobocky .kapsle-polozka.aktivni,
+.kapsle-prepinac-pobocky[data-aktivni="rychnov"] .kapsle-polozka:first-of-type,
+.kapsle-prepinac-pobocky[data-aktivni="usti"] .kapsle-polozka:last-of-type {
+  color: #e50914 !important;
+  font-weight: 800 !important;
+}
+
+.kapsle-prepinac-pobocky[data-aktivni="rychnov"] .kapsle-polozka:last-of-type,
+.kapsle-prepinac-pobocky[data-aktivni="usti"] .kapsle-polozka:first-of-type {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   CERNOBILY KAPSULOVY PREPINAC PRO SEKCI PROVOZOVNA
+   -------------------------------------------------------------------------- */
+.provozovny-switch-obal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 32px auto;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.kapsle-prepinac-cernobily {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #161616;
+  border: 1px solid #333333;
+  padding: 4px;
+  border-radius: 40px;
+  user-select: none;
+  touch-action: manipulation;
+  width: 320px;
+  max-width: 100%;
+  box-sizing: border-box;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.45);
+}
+
+.kapsle-slajdr-bily-cb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  background-color: #ffffff;
+  border-radius: 35px;
+  transition: transform 0.28s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  z-index: 1;
+}
+
+.kapsle-prepinac-cernobily[data-aktivni="usti"] .kapsle-slajdr-bily-cb {
+  transform: translateX(100%);
+}
+
+.kapsle-polozka-cb {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  text-align: center;
+  padding: 9px 18px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #cccccc;
+  cursor: pointer;
+  transition: color 0.25s ease, opacity 0.2s ease;
+  white-space: nowrap;
+  border: none;
+  background: none;
+  font-family: var(--font-hlavni);
+  letter-spacing: 0.02em;
+  outline: none;
+}
+
+.kapsle-polozka-cb:hover {
+  color: #ffffff;
+}
+
+.kapsle-polozka-cb.aktivni,
+.kapsle-prepinac-cernobily[data-aktivni="rychnov"] .kapsle-polozka-cb:first-of-type,
+.kapsle-prepinac-cernobily[data-aktivni="usti"] .kapsle-polozka-cb:last-of-type {
+  color: #000000 !important;
+  font-weight: 800 !important;
+}
+
+.kapsle-prepinac-cernobily[data-aktivni="rychnov"] .kapsle-polozka-cb:last-of-type,
+.kapsle-prepinac-cernobily[data-aktivni="usti"] .kapsle-polozka-cb:first-of-type {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.telefon-pod-switchem {
+  display: block !important;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+  text-align: center;
+}
+
+.telefon-pod-switchem a {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.telefon-pod-switchem a:hover {
+  color: var(--barva-zlata-akcent);
+}
+
+.karta-provozovny.skryta-pobocka {
+  display: none !important;
+}
+
+/* PRO DESKTOP (PC) */
+@media (min-width: 769px) {
+  .telefon-pod-switchem {
+    display: block !important;
+  }
+  .plovuci-volani-tlacitko {
+    display: none !important;
+  }
+}
+
+/* PRO MOBILNI ZARIZENI - Telefon v lište ZŮSTÁVÁ VIDITELNÝ přímo pod switchem */
+@media (max-width: 768px) {
+  .kapsle-prepinac-pobocky,
+  .kapsle-prepinac-cernobily {
+    min-width: 270px;
+  }
+  .kapsle-polozka,
+  .kapsle-polozka-cb {
+    padding: 8px 14px;
+    font-size: 0.88rem;
+  }
+  .telefon-pod-switchem {
+    display: block !important;
+    font-size: 1.05rem;
+    margin-top: 3px;
+  }
+  .plovuci-volani-tlacitko {
+    display: none !important;
+  }
+  .provozovny-switch-obal {
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .provozovny-switch-obal {
+    margin-bottom: 20px;
+  }
+  .kapsle-prepinac-cernobily {
+    min-width: 240px;
+  }
+  .kapsle-polozka-cb {
+    padding: 8px 10px;
+    font-size: 0.84rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .kapsle-prepinac-cernobily {
+    min-width: 0;
+    width: 100%;
+  }
+  .kapsle-polozka-cb {
+    padding: 7px 6px;
+    font-size: 0.78rem;
+  }
+}
+
