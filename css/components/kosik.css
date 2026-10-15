@@ -161,4 +161,15 @@
   margin-top: 15px;
   color: var(--barva-zlata-akcent, #f59e0b);
 }
+
+/* Jemné poskočení plovoucího košíku v rohu */
+.plovuci-kosik-tlacitko.kosik-poskoceni {
+  animation: animaceKosikPoskoceni 0.4s ease;
+}
+
+@keyframes animaceKosikPoskoceni {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.14); }
+  100% { transform: scale(1); }
+}
 

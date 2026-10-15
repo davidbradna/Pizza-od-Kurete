@@ -167,6 +167,30 @@ $cssModuly = [
           </div>
           <button type="button" class="tlacitko" style="background: #2ed573; color: #fff; padding: 4px 8px; font-size: 0.72rem; border: none; border-radius: 4px; font-weight: 700;">Přidáno (1 ks)</button>
         </div>'
+    ],
+    [
+      'soubor' => 'css/components/karta-pizzy.css',
+      'nazev' => 'Dlaždice jídelního lístku (Karta pizzy)',
+      'popis' => 'Samostatná produktová dlaždice pizzy v nabídce. Zahrnuje číslovaný odznak, štítek Pizzy týdne, odznaky vlastností (nejprodávanější, doporučujeme), velký obrázek pizzy, název s prolinkovanými surovinami do detailu, alergeny, cenu a interaktivní ovládání množství s tlačítkem přidání do košíku.',
+      'prvky' => '.karta-pizzy, .ciselny-odznak, .karta-pizza-tydne, .stitek-pizza-tydne-roh, .odznak-pizza-vlastnost, .obrazek-pizzy-obal, .nazev-pizzy, .slozeni-pizzy, .odkaz-ingredience-karta, .cena-pizzy, .obal-pridani-karta, .pocet-v-kosiku-odznak, .tlacitko-pridat-plus',
+      'vyskyt' => 'index.php, nase-pizza.php',
+      'nahled' => '
+        <div class="karta-pizzy" style="padding: 12px; position: relative; max-width: 200px; margin: 0 auto; background: #141418;">
+          <div class="ciselny-odznak" style="width: 22px; height: 22px; font-size: 0.75rem; top: 8px; left: 8px;">1</div>
+          <div class="karta-pizzy-odznaky-vpravo" style="top: 8px; right: 8px;">
+            <span class="odznak-pizza-vlastnost odznak-nejprodavanejsi" style="width: 24px; height: 24px; font-size: 0.65rem; font-weight: 900;">TOP</span>
+          </div>
+          <div class="obrazek-pizzy-obal" style="width: calc(100% + 24px); margin: -12px -12px 10px -12px; height: 75px; background: #0b0b0e; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #555;">FOTOGRAFIE PIZZY</div>
+          <div class="nazev-pizzy" style="font-size: 0.88rem; margin-bottom: 2px;">Margherita</div>
+          <div class="slozeni-pizzy" style="font-size: 0.7rem; margin-bottom: 6px; line-height: 1.25; color: #888;">Sugo, mozzarella fior di latte, čerstvá bazalka.</div>
+          <div class="patka-karty-pizzy" style="padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.06);">
+            <span class="cena-pizzy" style="font-size: 0.95rem;">155 Kč</span>
+            <div class="obal-pridani-karta" style="gap: 6px;">
+              <span class="pocet-v-kosiku-odznak viditelny" style="min-width: 24px; height: 24px; font-size: 0.75rem; padding: 0 4px;"><span class="pocet-cislo-text">1 ks</span></span>
+              <button type="button" class="tlacitko-pridat-plus" style="width: 28px; height: 28px; font-size: 1.1rem; line-height: 1;">+</button>
+            </div>
+          </div>
+        </div>'
     ]
   ],
   'blocks' => [
@@ -208,24 +232,21 @@ $cssModuly = [
     ],
     [
       'soubor' => 'css/blocks/jidelni-listek.css',
-      'nazev' => 'Jídelní lístek & filtry',
-      'popis' => 'Mřížka dlaždic pizz, interaktivní kapslové filtry (sugo / bílý základ, pálivost, masitost), kategorie (nejprodávanější, doporučujeme), zvýrazněná Pizza týdne a tlačítka rychlého vložení do košíku.',
-      'prvky' => '.sekce-jidelni-listek, .mini-kapsle-prepinac, .mrizka-pizz, .karta-pizzy, .tlacitko-pridat-plus',
+      'nazev' => 'Sekce Jídelní lístek (Blok & filtry)',
+      'popis' => 'Hlavní sekce nabídky: záhlaví sekce, interaktivní kapslové filtry (sugo / bílý základ), výběr kategorií (všechny, nejprodávanější, doporučujeme) a responzivní mřížka pro uspořádání dlaždic.',
+      'prvky' => '.sekce-jidelni-listek, .hlavicka-jidelniku, .obalo-filtru, .mini-kapsle-prepinac, .skupina-kategorii, .tlacitko-kategorie, .mrizka-pizz',
       'vyskyt' => 'index.php',
       'nahled' => '
         <div style="display: flex; flex-direction: column; gap: 8px;">
           <div style="display: flex; gap: 6px; flex-wrap: wrap;">
             <span class="tlacitko-kategorie aktivni" style="padding: 4px 10px; font-size: 0.72rem;">VŠECHNY</span>
             <span class="tlacitko-kategorie" style="padding: 4px 10px; font-size: 0.72rem;">NEJPRODÁVANĚJŠÍ</span>
+            <span class="tlacitko-kategorie" style="padding: 4px 10px; font-size: 0.72rem;">DOPORUČUJEME</span>
           </div>
-          <div class="karta-pizzy" style="padding: 10px; position: relative;">
-            <div class="ciselny-odznak" style="width: 20px; height: 20px; font-size: 0.75rem; top: 8px; left: 8px;">1</div>
-            <div style="height: 45px; background: #1a1a1a; border-radius: 4px; margin-bottom: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #666;">FOTO PIZZY</div>
-            <strong class="nazev-pizzy" style="font-size: 0.85rem; margin-bottom: 2px;">MARGHERITA</strong>
-            <div class="patka-karty-pizzy" style="padding-top: 6px;">
-              <span class="cena-pizzy" style="font-size: 0.95rem;">155 Kč</span>
-              <button type="button" class="tlacitko-pridat-plus" style="width: 26px; height: 26px; font-size: 1rem;">+</button>
-            </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+            <div style="background: #18181f; border: 1px dashed #333; border-radius: 4px; height: 35px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: #777;">Dlaždice 1</div>
+            <div style="background: #18181f; border: 1px dashed #333; border-radius: 4px; height: 35px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: #777;">Dlaždice 2</div>
+            <div style="background: #18181f; border: 1px dashed #333; border-radius: 4px; height: 35px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: #777;">Dlaždice 3</div>
           </div>
         </div>'
     ],
@@ -331,7 +352,7 @@ $strukturaSouboru = [
   'css' => [
     ['cesta' => 'styl.css', 'popis' => 'Hlavní CSS manifest webu. Obsahuje přesně seřazené @import direktivy načítající jednotlivé moduly v přesném pořadí kaskády (Base → Components → Blocks → Responsive).'],
     ['cesta' => 'css/base/', 'popis' => 'Adresář základních pravidel: definice barevných proměnných, reset prvků a globální sdílená typografie sekcí.'],
-    ['cesta' => 'css/components/', 'popis' => 'Znovupoužitelné designové komponenty: tlačítka, modální okna, košík, přepínače poboček, podstránková navigace a náhledy surovin.'],
+    ['cesta' => 'css/components/', 'popis' => 'Znovupoužitelné designové komponenty: tlačítka, modální okna, košík, přepínače poboček, podstránková navigace, náhledy surovin a dlaždice jídelního lístku (karty pizz).'],
     ['cesta' => 'css/blocks/', 'popis' => 'Konkrétní bloky a sekce stránek: hero, rozdíl v chuti, jídelní lístek, rozvoz s mapou, provozovna, karusel a magazínový příběh pizzy.'],
     ['cesta' => 'css/responsive/', 'popis' => 'Mobilní responzivní vrstva importovaná na konci kaskády pro displeje tabletů a chytrých telefonů.'],
     ['cesta' => 'css/administrace.css', 'popis' => 'Specializované styly pro rozhraní webové administrace (formuláře, tabulky, editační okna a správa záloh).']
