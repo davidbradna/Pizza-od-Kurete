@@ -126,6 +126,9 @@
 
     if (obsahData && cil && modal) {
       cil.innerHTML = obsahData.innerHTML;
+      if (typeof window.aktualizovatPocitadlaPizzNaKartach === 'function') {
+        window.aktualizovatPocitadlaPizzNaKartach();
+      }
       modal.classList.add('zobrazeno');
       modal.style.display = 'flex';
       if (document.body) document.body.style.overflow = 'hidden';

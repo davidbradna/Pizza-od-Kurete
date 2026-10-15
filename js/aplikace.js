@@ -739,19 +739,12 @@ function pridatDoKosikuZeSuroviny(idPizzy, btn) {
     if (!btn.getAttribute('data-puvodni-text')) {
       btn.setAttribute('data-puvodni-text', puvodniText);
     }
+    clearTimeout(btn._resetTimeout);
     const pocet = ziskatPocetPizzyVKosiku(idPizzy);
     btn.innerHTML = `✓ Přidáno (${pocet} ks)`;
     btn.style.backgroundColor = 'var(--barva-zelena-hlavni, #2ed573)';
     btn.style.borderColor = 'var(--barva-zelena-hlavni, #2ed573)';
     btn.style.color = '#ffffff';
-
-    clearTimeout(btn._resetTimeout);
-    btn._resetTimeout = setTimeout(() => {
-      btn.innerHTML = puvodniText;
-      btn.style.backgroundColor = '';
-      btn.style.borderColor = '';
-      btn.style.color = '';
-    }, 1800);
   }
 }
 window.pridatDoKosikuZeSuroviny = pridatDoKosikuZeSuroviny;
@@ -837,7 +830,32 @@ function aktualizovatPocitadlaPizzNaKartach(zvyraznitId = null) {
       odznak.classList.remove('viditelny', 'pocet-pop');
     }
   });
+
+  const tlacitkaSurovin = document.querySelectorAll('.tlacitko-pridat-ze-suroviny');
+  tlacitkaSurovin.forEach(btn => {
+    const m = btn.getAttribute('onclick')?.match(/pridatDoKosikuZeSuroviny\((\d+)/);
+    if (m) {
+      const id = parseInt(m[1], 10);
+      const pocet = ziskatPocetPizzyVKosiku(id);
+      if (pocet > 0) {
+        if (!btn.getAttribute('data-puvodni-text')) {
+          btn.setAttribute('data-puvodni-text', btn.innerHTML);
+        }
+        btn.innerHTML = `✓ Přidáno (${pocet} ks)`;
+        btn.style.backgroundColor = 'var(--barva-zelena-hlavni, #2ed573)';
+        btn.style.borderColor = 'var(--barva-zelena-hlavni, #2ed573)';
+        btn.style.color = '#ffffff';
+      } else {
+        const puvodniText = btn.getAttribute('data-puvodni-text') || 'Přidat do seznamu';
+        btn.innerHTML = puvodniText;
+        btn.style.backgroundColor = '';
+        btn.style.borderColor = '';
+        btn.style.color = '';
+      }
+    }
+  });
 }
+window.aktualizovatPocitadlaPizzNaKartach = aktualizovatPocitadlaPizzNaKartach;
 
 // Aktualizace pocitadla kosiku (zobrazí se teprve po přidání první položky)
 function aktualizovatVzhledKosiku(zvyraznitId = null) {

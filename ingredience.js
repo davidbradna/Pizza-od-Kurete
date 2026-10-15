@@ -116,6 +116,9 @@ function zobrazitPizzySeSurovinou(idSuroviny) {
       <p style="color: #ccc; margin-bottom: 20px;">Tuto poctivou surovinu najdete v následujících pizzách z našeho jídelníčku:</p>
       <div>${seznamHTML}</div>
     `;
+    if (typeof window.aktualizovatPocitadlaPizzNaKartach === 'function') {
+      window.aktualizovatPocitadlaPizzNaKartach();
+    }
     const modal = document.getElementById('modal-detail-suroviny');
     if (modal) modal.classList.add('zobrazeno');
   }
