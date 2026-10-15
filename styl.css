@@ -3,141 +3,8 @@
    Vsechny tridy a komentare jsou v cestine bez diakritiky pro snadnou orientaci
    ========================================================================== */
 
-/* DEFINICE LOKÁLNÍCH FONTŮ BRITANNIC */
-@font-face {
-  font-family: 'Britannic';
-  src: local('Britannic Light'), local('Britannic-Light'),
-       url('fonty/Britannic-Light.otf') format('opentype'),
-       url('fonty/Britannic-Light.otf') format('truetype'),
-       url('fonty/Britannic-Light.otf');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Britannic';
-  src: local('Britannic Medium'), local('Britannic-Medium'), local('Britannic'),
-       url('fonty/Britannic-Medium.otf') format('opentype'),
-       url('fonty/Britannic-Medium.otf') format('truetype'),
-       url('fonty/Britannic-Medium.otf');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Britannic';
-  src: local('Britannic Medium'), local('Britannic-Medium'), local('Britannic'),
-       url('fonty/Britannic-Medium.otf') format('opentype'),
-       url('fonty/Britannic-Medium.otf') format('truetype'),
-       url('fonty/Britannic-Medium.otf');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Britannic';
-  src: local('Britannic Bold'), local('Britannic-Bold'), local('Britannic'),
-       url('fonty/Britannic-Bold.otf') format('opentype'),
-       url('fonty/Britannic-Bold.otf') format('truetype'),
-       url('fonty/Britannic-Bold.otf');
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Britannic';
-  src: local('Britannic Bold'), local('Britannic-Bold'), local('Britannic'),
-       url('fonty/Britannic-Bold.otf') format('opentype'),
-       url('fonty/Britannic-Bold.otf') format('truetype'),
-       url('fonty/Britannic-Bold.otf');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Britannic';
-  src: local('Britannic Bold'), local('Britannic-Bold'), local('Britannic'),
-       url('fonty/Britannic-Bold.otf') format('opentype'),
-       url('fonty/Britannic-Bold.otf') format('truetype'),
-       url('fonty/Britannic-Bold.otf');
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Britannic';
-  src: local('Britannic D Ultra'), local('Britannic-D-Ultra'), local('Britannic Ultra'),
-       url('fonty/Britannic-D-Ultra.otf') format('opentype'),
-       url('fonty/Britannic-D-Ultra.otf') format('truetype'),
-       url('fonty/Britannic-D-Ultra.otf');
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Britannic Compress';
-  src: local('Britannic Compress D Medium'), local('Britannic-Compress-D-Medium'),
-       url('fonty/Britannic-Compress-D-Medium.otf') format('opentype'),
-       url('fonty/Britannic-Compress-D-Medium.otf') format('truetype'),
-       url('fonty/Britannic-Compress-D-Medium.otf');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* Zakladni nastaveni a promenne barev */
-:root {
-  --barva-pozadi-tmava: #0d0d0d;
-  --barva-pozadi-karty: #161616;
-  --barva-pozadi-sekce: #1a1a1a;
-  --barva-cervena-hlavni: #e50914;
-  --barva-cervena-tmava: #b20710;
-  --barva-zlata-akcent: #f59e0b;
-  --barva-pismo-hlavni: #ffffff;
-  --barva-pismo-sekundarni: #cccccc;
-  --barva-pismo-tlumene: #888888;
-  --barva-ramcek: #2a2a2a;
-  --font-hlavni: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --stin-karty: 0 10px 30px rgba(0, 0, 0, 0.5);
-  --prechod-rychly: all 0.25s ease-in-out;
-}
-
-/* Reset okraju a box-sizing */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  scrollbar-gutter: stable;
-}
-
-html, body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, a, span, label {
-  font-family: var(--font-hlavni);
-}
-
-body {
-  background-color: var(--barva-pozadi-tmava);
-  color: var(--barva-pismo-hlavni);
-  font-family: var(--font-hlavni);
-  line-height: 1.6;
-  overflow-x: hidden;
-}
-
-/* Obalujici kontejner pro zarovnani */
-.kontejner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
+@import "css/base/promenne.css";
+@import "css/base/reset.css";
 
 /* --------------------------------------------------------------------------
    1. HORNI LISTA A HLAVICKA (HERO SEKCE)
@@ -4350,7 +4217,7 @@ button.tlacitko-app-polozka {
 }
 
 .nahled-ingredience-nazev {
-  font-family: var(--font-logo, 'Britannic', sans-serif);
+  font-family: var(--font-hlavni);
   font-size: 1.55rem;
   font-weight: 800;
   text-transform: uppercase;

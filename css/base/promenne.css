@@ -1,0 +1,18 @@
+/* ==========================================================================
+   BAREVNÁ PALETA A GLOBÁLNÍ PROMĚNNÉ (:root)
+   ========================================================================== */
+:root {
+  --barva-pozadi-tmava: #0d0d0d;
+  --barva-pozadi-karty: #161616;
+  --barva-pozadi-sekce: #1a1a1a;
+  --barva-cervena-hlavni: #e50914;
+  --barva-cervena-tmava: #b20710;
+  --barva-zlata-akcent: #f59e0b;
+  --barva-pismo-hlavni: #ffffff;
+  --barva-pismo-sekundarni: #cccccc;
+  --barva-pismo-tlumene: #888888;
+  --barva-ramcek: #2a2a2a;
+  --font-hlavni: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --stin-karty: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --prechod-rychly: all 0.25s ease-in-out;
+}

@@ -1,0 +1,31 @@
+/* ==========================================================================
+   RESET OKRAJŮ, BOX-SIZING A ZÁKLADNÍ ROZVRŽENÍ
+   ========================================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+html, body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, a, span, label {
+  font-family: var(--font-hlavni);
+}
+
+body {
+  background-color: var(--barva-pozadi-tmava);
+  color: var(--barva-pismo-hlavni);
+  font-family: var(--font-hlavni);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Obalující kontejner pro zarovnání */
+.kontejner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
