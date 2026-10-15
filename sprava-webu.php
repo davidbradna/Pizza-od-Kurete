@@ -32,28 +32,290 @@ try {
 
 $cssModuly = [
   'base' => [
-    ['soubor' => 'css/base/promenne.css', 'nazev' => 'CSS Proměnné', 'popis' => 'Centrální definice globálních CSS proměnných – barvy (červená #e50914, tmavé pozadí #0d0d0d, zlatý akcent #f59e0b), písmo Google Font Outfit, rámečky, přechody a stíny.', 'prvky' => ':root, --barva-cervena-hlavni, --font-hlavni, --stin-karty', 'vyskyt' => 'Globálně celý web (index, nase-pizza, administrace)'],
-    ['soubor' => 'css/base/reset.css', 'nazev' => 'Reset a základní typografie', 'popis' => 'Reset okrajů a výplní (*, html, body), nastavení box-sizing, tělo dokumentu, centrální layout kontejner a globální sdílená typografie sekcí.', 'prvky' => '*, html, body, .kontejner, .nadpis-sekce, .text-popis', 'vyskyt' => 'Všechny šablony webu']
+    [
+      'soubor' => 'css/base/promenne.css',
+      'nazev' => 'CSS Proměnné',
+      'popis' => 'Centrální definice globálních CSS proměnných – barvy (červená #e50914, tmavé pozadí #0d0d0d, zlatý akcent #f59e0b), písmo Google Font Outfit, rámečky, přechody a stíny.',
+      'prvky' => ':root, --barva-cervena-hlavni, --font-hlavni, --stin-karty',
+      'vyskyt' => 'Globálně celý web (index, nase-pizza, administrace)',
+      'nahled' => '
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: #161616; border: 1px solid #333; border-radius: 6px; font-size: 0.78rem;">
+            <span style="width: 14px; height: 14px; background: #e50914; border-radius: 3px; display: inline-block;"></span> #e50914 (Červená)
+          </span>
+          <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: #161616; border: 1px solid #333; border-radius: 6px; font-size: 0.78rem;">
+            <span style="width: 14px; height: 14px; background: #f59e0b; border-radius: 3px; display: inline-block;"></span> #f59e0b (Zlatá)
+          </span>
+          <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: #161616; border: 1px solid #333; border-radius: 6px; font-size: 0.78rem;">
+            <span style="width: 14px; height: 14px; background: #0d0d0d; border: 1px solid #444; border-radius: 3px; display: inline-block;"></span> #0d0d0d (Pozadí)
+          </span>
+          <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: #161616; border: 1px solid #333; border-radius: 6px; font-size: 0.78rem;">
+            <span style="font-weight: 800; font-family: Outfit, sans-serif;">Aa</span> Outfit (Font)
+          </span>
+        </div>'
+    ],
+    [
+      'soubor' => 'css/base/reset.css',
+      'nazev' => 'Reset a základní typografie',
+      'popis' => 'Reset okrajů a výplní (*, html, body), nastavení box-sizing, tělo dokumentu, centrální layout kontejner a globální sdílená typografie sekcí.',
+      'prvky' => '*, html, body, .kontejner, .nadpis-sekce, .text-popis',
+      'vyskyt' => 'Všechny šablony webu',
+      'nahled' => '
+        <div style="padding: 10px; background: #141416; border-radius: 6px;">
+          <div class="nadpis-sekce" style="font-size: 1.15rem; margin-bottom: 6px;">Nadpis sekce (.nadpis-sekce)</div>
+          <div class="text-popis" style="font-size: 0.85rem; margin-bottom: 0; line-height: 1.5;">Ukázka standardního odstavcového popisu sekcí se sekundární barvou písma a čitelnou výškou řádku.</div>
+        </div>'
+    ]
   ],
   'components' => [
-    ['soubor' => 'css/components/tlacitko.css', 'nazev' => 'Tlačítka', 'popis' => 'Základní designový systém tlačítek s hover efekty, barevnými variantami (červená, šedá, tmavě červená) a stíny.', 'prvky' => '.tlacitko, .tlacitko-cervene, .tlacitko-sede, .tlacitko-cervene-tmave', 'vyskyt' => 'Celý web a administrace'],
-    ['soubor' => 'css/components/modal.css', 'nazev' => 'Univerzální modální okna', 'popis' => 'Styly překryvné modální vrstvy s rozostřením pozadí (backdrop-filter: blur), animací zobrazení, centrovaným bílo-černým boxem a zavíracím křížkem.', 'prvky' => '.modalni-okno-pozadi, .modalni-okno-obsah, .zavrit-modal', 'vyskyt' => 'Nákupní seznam, alergeny, náhledy surovin'],
-    ['soubor' => 'css/components/kosik.css', 'nazev' => 'Košík / Nákupní seznam', 'popis' => 'Plovoucí FAB tlačítko v pravém dolním rohu, odznak s počtem kusů, rozbalovací obsah seznamu s ovládacími prvky plus/mínus a celkový cenový součet.', 'prvky' => '.plovuci-kosik-tlacitko, .polozka-kosiku, .tlacitko-kosik-mnozstvi, .kosik-celkovy-soucet', 'vyskyt' => 'index.php, nase-pizza.php'],
-    ['soubor' => 'css/components/prepinac-pobocek.css', 'nazev' => 'Přepínače poboček a kontakty', 'popis' => 'Horní kontaktní lišta se zkompaktněním při scrollu, plovoucí FAB tlačítko rychlého volání s pulzující animací a přepínače poboček (Ústí nad Labem / Teplice).', 'prvky' => '.horni-kontakty-lista, .plovuci-volani-tlacitko, .podokno-volani-box, .pobocky-kapsle-obal', 'vyskyt' => 'Hlavička webu, sekce Provozovny'],
-    ['soubor' => 'css/components/navigace-podstranka.css', 'nazev' => 'Navigační lišta podstránek', 'popis' => 'Plnohodnotná responzivní navigační lišta pro podstránky (jako Naše pizza) s logem, telefonem, odkazy, mobilním hamburgerem a off-canvas výsuvným menu.', 'prvky' => '.navigace-podstranka-obsah, .hamburger-tlacitko, .mobilni-menu-vysuvne', 'vyskyt' => 'nase-pizza.php'],
-    ['soubor' => 'css/components/modal-ingredience.css', 'nazev' => 'Náhled suroviny (Pop-up)', 'popis' => 'Velké modální okno zobrazující detail suroviny: velkou fotografii, nutriční hodnoty (bílkoviny, tuky, sacharidy, kalorie), popis původu a seznam pizz obsahujících tuto surovinu.', 'prvky' => '.modal-nahled-ingredience-obsah, .nahled-ingredience-nutricni-grid, .modal-pizza-surovina-radek', 'vyskyt' => 'index.php, nase-pizza.php']
+    [
+      'soubor' => 'css/components/tlacitko.css',
+      'nazev' => 'Tlačítka',
+      'popis' => 'Základní designový systém tlačítek s hover efekty, barevnými variantami (červená, šedá, tmavě červená) a stíny.',
+      'prvky' => '.tlacitko, .tlacitko-cervene, .tlacitko-sede, .tlacitko-cervene-tmave',
+      'vyskyt' => 'Celý web a administrace',
+      'nahled' => '
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+          <button type="button" class="tlacitko tlacitko-cervene" style="padding: 6px 14px; font-size: 0.82rem;">Červené</button>
+          <button type="button" class="tlacitko tlacitko-cervene-tmave" style="padding: 6px 14px; font-size: 0.82rem;">Tmavě červené</button>
+          <button type="button" class="tlacitko tlacitko-sede" style="padding: 6px 14px; font-size: 0.82rem;">Šedé tlačítko</button>
+        </div>'
+    ],
+    [
+      'soubor' => 'css/components/modal.css',
+      'nazev' => 'Univerzální modální okna',
+      'popis' => 'Styly překryvné modální vrstvy s rozostřením pozadí (backdrop-filter: blur), animací zobrazení, centrovaným bílo-černým boxem a zavíracím křížkem.',
+      'prvky' => '.modalni-okno-pozadi, .modalni-okno-obsah, .zavrit-modal',
+      'vyskyt' => 'Nákupní seznam, alergeny, náhledy surovin',
+      'nahled' => '
+        <div style="position: relative; background: rgba(0,0,0,0.6); padding: 12px; border-radius: 8px; border: 1px solid #2a2a2a;">
+          <div style="background: #161616; border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 12px 14px; position: relative;">
+            <span style="position: absolute; top: 6px; right: 10px; font-size: 1.3rem; color: #888; cursor: pointer;">&times;</span>
+            <strong style="color: #ffffff; font-size: 0.88rem; text-transform: uppercase;">Modální dialog</strong>
+            <p style="color: #999; font-size: 0.78rem; margin: 4px 0 0 0;">Centrovaný box s tmavým pozadím a rozostřením okolí.</p>
+          </div>
+        </div>'
+    ],
+    [
+      'soubor' => 'css/components/kosik.css',
+      'nazev' => 'Košík / Nákupní seznam',
+      'popis' => 'Plovoucí FAB tlačítko v pravém dolním rohu, odznak s počtem kusů, rozbalovací obsah seznamu s ovládacími prvky plus/mínus a celkový cenový součet.',
+      'prvky' => '.plovuci-kosik-tlacitko, .polozka-kosiku, .tlacitko-kosik-mnozstvi, .kosik-celkovy-soucet',
+      'vyskyt' => 'index.php, nase-pizza.php',
+      'nahled' => '
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: inline-flex; align-items: center; gap: 10px; background: #e50914; color: #fff; padding: 6px 14px; border-radius: 30px; width: fit-content; font-weight: 700; font-size: 0.84rem; box-shadow: 0 4px 12px rgba(229,9,20,0.45);">
+            <span>Seznam</span>
+            <span style="background: #ffffff; color: #e50914; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.75rem;">2</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: #18181f; border-radius: 6px; font-size: 0.82rem;">
+            <div><strong>1. Margherita</strong> <span style="color: #888;">(32 cm)</span></div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="background: #262626; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 0.75rem;">- 1 +</span>
+              <span style="color: #f59e0b; font-weight: 800;">155 Kč</span>
+            </div>
+          </div>
+        </div>'
+    ],
+    [
+      'soubor' => 'css/components/prepinac-pobocek.css',
+      'nazev' => 'Přepínače poboček a kontakty',
+      'popis' => 'Horní kontaktní lišta se zkompaktněním při scrollu, plovoucí FAB tlačítko rychlého volání s pulzující animací a přepínače poboček (Ústí nad Labem / Teplice).',
+      'prvky' => '.horni-kontakty-lista, .plovuci-volani-tlacitko, .podokno-volani-box, .pobocky-kapsle-obal',
+      'vyskyt' => 'Hlavička webu, sekce Provozovny',
+      'nahled' => '
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div class="mini-kapsle-prepinac" style="width: fit-content;">
+            <button type="button" class="mini-kapsle-tlacitko aktivni">Ústí nad Labem</button>
+            <button type="button" class="mini-kapsle-tlacitko">Teplice</button>
+          </div>
+          <div style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #9ca3af;">
+            <span style="width: 28px; height: 28px; border-radius: 50%; background: #e50914; border: 2px solid #fff; display: inline-flex; align-items: center; justify-content: center; color: #fff; font-weight: 900; font-size: 0.7rem; box-shadow: 0 2px 8px rgba(229,9,20,0.6);">TEL</span>
+            <span>Plovoucí tlačítko přímého volání</span>
+          </div>
+        </div>'
+    ],
+    [
+      'soubor' => 'css/components/navigace-podstranka.css',
+      'nazev' => 'Navigační lišta podstránek',
+      'popis' => 'Plnohodnotná responzivní navigační lišta pro podstránky (jako Naše pizza) s logem, telefonem, odkazy, mobilním hamburgerem a off-canvas výsuvným menu.',
+      'prvky' => '.navigace-podstranka-obsah, .hamburger-tlacitko, .mobilni-menu-vysuvne',
+      'vyskyt' => 'nase-pizza.php',
+      'nahled' => '
+        <div style="background: #000; border: 1px solid #262626; border-radius: 6px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;">
+          <div style="font-weight: 900; font-size: 0.8rem; color: #fff;">PIZZA OD KUŘETE</div>
+          <div style="display: flex; gap: 10px; font-size: 0.75rem; font-weight: 700; color: #aaa;">
+            <span style="color: #e50914;">Menu</span>
+            <span>O nás</span>
+            <span>Rozvoz</span>
+          </div>
+          <div style="background: #222; border: 1px solid #444; border-radius: 4px; padding: 2px 6px; font-size: 0.7rem; font-weight: 800; color: #fff;">MENU</div>
+        </div>'
+    ],
+    [
+      'soubor' => 'css/components/modal-ingredience.css',
+      'nazev' => 'Náhled suroviny (Pop-up)',
+      'popis' => 'Velké modální okno zobrazující detail suroviny: velkou fotografii, nutriční hodnoty (bílkoviny, tuky, sacharidy, kalorie), popis původu a seznam pizz obsahujících tuto surovinu.',
+      'prvky' => '.modal-nahled-ingredience-obsah, .nahled-ingredience-nutricni-grid, .modal-pizza-surovina-radek',
+      'vyskyt' => 'index.php, nase-pizza.php',
+      'nahled' => '
+        <div style="background: #141418; border: 1px solid #282830; border-radius: 8px; padding: 10px; display: flex; gap: 10px; align-items: center;">
+          <div style="width: 70px; height: 50px; background: #222; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; color: #777;">FOTO</div>
+          <div style="flex-grow: 1;">
+            <strong style="color: #fff; font-size: 0.82rem; display: block; text-transform: uppercase;">San Marzano D.O.P.</strong>
+            <span style="color: #999; font-size: 0.72rem;">22 kcal | Bílkoviny 1.1 g</span>
+          </div>
+          <button type="button" class="tlacitko" style="background: #2ed573; color: #fff; padding: 4px 8px; font-size: 0.72rem; border: none; border-radius: 4px; font-weight: 700;">Přidáno (1 ks)</button>
+        </div>'
+    ]
   ],
   'blocks' => [
-    ['soubor' => 'css/blocks/hero.css', 'nazev' => 'Hero sekce (Úvod)', 'popis' => 'Úvodní banner s fotografií pizzeristy a pece, logo pizzerie, hlavní nadpis, dynamický štítek otevírací doby v reálném čase a tlačítka aplikací.', 'prvky' => '.sekce-uvod-hero, .obsah-hero, .logo-kure-ikona, .oteviraci-doba-stitek', 'vyskyt' => 'index.php (hlavní stránka)'],
-    ['soubor' => 'css/blocks/rozdil-v-chuti.css', 'nazev' => 'Rozdíl v chuti', 'popis' => 'Sekce „Rozdíl v chuti poznáte na první zobnutí“: edge-to-edge klikací banner, vizitka pizzeristy Kuřete a 3 dlaždice klíčových surovin s prémiovým stínováním.', 'prvky' => '.sekce-rozdil-v-chuti, .rozdil-hero-banner, .kure-predstaveni-banner, .rozdil-surovina-karta', 'vyskyt' => 'index.php'],
-    ['soubor' => 'css/blocks/jidelni-listek.css', 'nazev' => 'Jídelní lístek & filtry', 'popis' => 'Mřížka dlaždic pizz, interaktivní kapslové filtry (sugo / bílý základ, pálivost, masitost), kategorie (nejprodávanější, doporučujeme), zvýrazněná Pizza týdne a tlačítka rychlého vložení do košíku.', 'prvky' => '.sekce-jidelni-listek, .mini-kapsle-prepinac, .mrizka-pizz, .karta-pizzy, .tlacitko-pridat-plus', 'vyskyt' => 'index.php'],
-    ['soubor' => 'css/blocks/rozvoz.css', 'nazev' => 'Rozvoz a interaktivní mapa', 'popis' => 'Sekce rozvozu: 3 karty parametrů doručení, interaktivní mapa s rozvozovými zónami a vyhledávač obcí s okamžitým zobrazením ceny doručení a kilometráže.', 'prvky' => '.sekce-rozvoz, .mapa-ram, .blok-vyhledavani-obce, .karta-pasmo, .stitek-obec-polozka', 'vyskyt' => 'index.php'],
-    ['soubor' => 'css/blocks/provozovny.css', 'nazev' => 'Provozovna a kontakty', 'popis' => 'Karta provozovny: přesná adresa, tabulka otevírací doby pro každý den v týdnu, tlačítka rychlého volání, sociální sítě a fotogalerie provozovny s karuselem.', 'prvky' => '.sekce-provozovny, .karta-provozovny, .oteviraci-doba-tabulka, .karusel-provozovna', 'vyskyt' => 'index.php'],
-    ['soubor' => 'css/blocks/karusel.css', 'nazev' => 'Hero karusel (Naše pizza)', 'popis' => 'Velký fotografický karusel přes celou šířku obrazovky na stránce Naše pizza. Plynulý dotykový i tlačítkový posun, navigace šipkami a tečkami.', 'prvky' => '.hlavni-karusel-sekce, .hlavni-karusel-pas, .hlavni-karusel-snimek, .hlavni-karusel-sipka', 'vyskyt' => 'nase-pizza.php'],
-    ['soubor' => 'css/blocks/pribeh-pizzy.css', 'nazev' => 'Příběh pizzy (Magazín)', 'popis' => 'Magazínové zig-zag rozložení surovin: střídání velkých fotografií s textovými příběhy, nutriční karty faktů a tlačítka na zobrazení pizz, které danou surovinu obsahují.', 'prvky' => '.pribeh-pizzy-sekce, .pribeh-pizzy-radek, .pribeh-pizzy-fakta-grid, .tlacitko-pizzy-surovina', 'vyskyt' => 'nase-pizza.php']
+    [
+      'soubor' => 'css/blocks/hero.css',
+      'nazev' => 'Hero sekce (Úvod)',
+      'popis' => 'Úvodní banner s fotografií pizzeristy a pece, logo pizzerie, hlavní nadpis, dynamický štítek otevírací doby v reálném čase a tlačítka aplikací.',
+      'prvky' => '.sekce-uvod-hero, .obsah-hero, .logo-kure-ikona, .oteviraci-doba-stitek',
+      'vyskyt' => 'index.php (hlavní stránka)',
+      'nahled' => '
+        <div style="background: linear-gradient(180deg, #18181b 0%, #0d0d0f 100%); border: 1px solid #282830; border-radius: 8px; padding: 12px; text-align: center;">
+          <span class="oteviraci-doba-stitek" style="display: inline-block; font-size: 0.72rem; padding: 3px 10px; margin-bottom: 6px;">PRÁVĚ MÁME OTEVŘENO: 11:00 - 22:00</span>
+          <div style="margin: 2px 0 6px 0; font-size: 0.95rem; font-weight: 900; text-transform: uppercase; color: #fff;">POCTIVÁ NEAPOLSKÁ PIZZA</div>
+          <div style="display: flex; gap: 6px; justify-content: center;">
+            <span style="background: #222; border: 1px solid #333; padding: 3px 10px; border-radius: 4px; font-size: 0.72rem; color: #fff; font-weight: 700;">App Store</span>
+            <span style="background: #222; border: 1px solid #333; padding: 3px 10px; border-radius: 4px; font-size: 0.72rem; color: #fff; font-weight: 700;">Google Play</span>
+          </div>
+        </div>'
+    ],
+    [
+      'soubor' => 'css/blocks/rozdil-v-chuti.css',
+      'nazev' => 'Rozdíl v chuti',
+      'popis' => 'Sekce „Rozdíl v chuti poznáte na první zobnutí“: edge-to-edge klikací banner, vizitka pizzeristy Kuřete a 3 dlaždice klíčových surovin s prémiovým stínováním.',
+      'prvky' => '.sekce-rozdil-v-chuti, .rozdil-hero-banner, .kure-predstaveni-banner, .rozdil-surovina-karta',
+      'vyskyt' => 'index.php',
+      'nahled' => '
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div style="background: #161616; border: 1px solid rgba(229,9,20,0.4); border-radius: 6px; padding: 10px;">
+            <div style="color: #e50914; font-size: 1.2rem; font-weight: 900; line-height: 1;">01</div>
+            <strong style="color: #fff; font-size: 0.8rem; text-transform: uppercase;">Mouka Caputo</strong>
+            <p style="color: #888; font-size: 0.7rem; margin: 2px 0 0 0;">Pšeničná mouka typu 00 z Neapole.</p>
+          </div>
+          <div style="background: #161616; border: 1px solid #2a2a2a; border-radius: 6px; padding: 10px;">
+            <div style="color: #e50914; font-size: 1.2rem; font-weight: 900; line-height: 1;">02</div>
+            <strong style="color: #fff; font-size: 0.8rem; text-transform: uppercase;">San Marzano</strong>
+            <p style="color: #888; font-size: 0.7rem; margin: 2px 0 0 0;">Vulkanická rajčata pod Vesuvem.</p>
+          </div>
+        </div>'
+    ],
+    [
+      'soubor' => 'css/blocks/jidelni-listek.css',
+      'nazev' => 'Jídelní lístek & filtry',
+      'popis' => 'Mřížka dlaždic pizz, interaktivní kapslové filtry (sugo / bílý základ, pálivost, masitost), kategorie (nejprodávanější, doporučujeme), zvýrazněná Pizza týdne a tlačítka rychlého vložení do košíku.',
+      'prvky' => '.sekce-jidelni-listek, .mini-kapsle-prepinac, .mrizka-pizz, .karta-pizzy, .tlacitko-pridat-plus',
+      'vyskyt' => 'index.php',
+      'nahled' => '
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+            <span class="tlacitko-kategorie aktivni" style="padding: 4px 10px; font-size: 0.72rem;">VŠECHNY</span>
+            <span class="tlacitko-kategorie" style="padding: 4px 10px; font-size: 0.72rem;">NEJPRODÁVANĚJŠÍ</span>
+          </div>
+          <div class="karta-pizzy" style="padding: 10px; position: relative;">
+            <div class="ciselny-odznak" style="width: 20px; height: 20px; font-size: 0.75rem; top: 8px; left: 8px;">1</div>
+            <div style="height: 45px; background: #1a1a1a; border-radius: 4px; margin-bottom: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #666;">FOTO PIZZY</div>
+            <strong class="nazev-pizzy" style="font-size: 0.85rem; margin-bottom: 2px;">MARGHERITA</strong>
+            <div class="patka-karty-pizzy" style="padding-top: 6px;">
+              <span class="cena-pizzy" style="font-size: 0.95rem;">155 Kč</span>
+              <button type="button" class="tlacitko-pridat-plus" style="width: 26px; height: 26px; font-size: 1rem;">+</button>
+            </div>
+          </div>
+        </div>'
+    ],
+    [
+      'soubor' => 'css/blocks/rozvoz.css',
+      'nazev' => 'Rozvoz a interaktivní mapa',
+      'popis' => 'Sekce rozvozu: 3 karty parametrů doručení, interaktivní mapa s rozvozovými zónami a vyhledávač obcí s okamžitým zobrazením ceny doručení a kilometráže.',
+      'prvky' => '.sekce-rozvoz, .mapa-ram, .blok-vyhledavani-obce, .karta-pasmo, .stitek-obec-polozka',
+      'vyskyt' => 'index.php',
+      'nahled' => '
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <div class="karta-pasmo pasmo-1" style="padding: 8px 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <strong style="color: #fff; font-size: 0.78rem;">PÁSMO 1 (MĚSTO)</strong>
+              <span class="cena-odznak zdarma" style="font-size: 0.7rem; padding: 2px 6px;">ZDARMA</span>
+            </div>
+          </div>
+          <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+            <span class="stitek-obec-polozka" style="font-size: 0.7rem; padding: 2px 6px;">Centrum (zdarma)</span>
+            <span class="stitek-obec-polozka shoda" style="font-size: 0.7rem; padding: 2px 6px;">Povrly (8 km) 49 Kč</span>
+          </div>
+        </div>'
+    ],
+    [
+      'soubor' => 'css/blocks/provozovny.css',
+      'nazev' => 'Provozovna a kontakty',
+      'popis' => 'Karta provozovny: přesná adresa, tabulka otevírací doby pro každý den v týdnu, tlačítka rychlého volání, sociální sítě a fotogalerie provozovny s karuselem.',
+      'prvky' => '.sekce-provozovny, .karta-provozovny, .oteviraci-doba-tabulka, .karusel-provozovna',
+      'vyskyt' => 'index.php',
+      'nahled' => '
+        <div style="background: #141418; border: 1px solid #282830; border-radius: 6px; padding: 10px; font-size: 0.75rem;">
+          <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #242424; padding-bottom: 4px; margin-bottom: 4px;">
+            <strong style="color: #fff;">POBOČKA ÚSTÍ NAD LABEM</strong>
+            <span style="color: #f59e0b; font-weight: 700;">OTEVŘENO</span>
+          </div>
+          <div style="color: #aaa; margin-bottom: 4px;">Mírové náměstí 102/5</div>
+          <div style="display: flex; justify-content: space-between; color: #888;">
+            <span>Po - Čt:</span> <span style="color: #fff;">11:00 - 22:00</span>
+          </div>
+        </div>'
+    ],
+    [
+      'soubor' => 'css/blocks/karusel.css',
+      'nazev' => 'Hero karusel (Naše pizza)',
+      'popis' => 'Velký fotografický karusel přes celou šířku obrazovky na stránce Naše pizza. Plynulý dotykový i tlačítkový posun, navigace šipkami a tečkami.',
+      'prvky' => '.hlavni-karusel-sekce, .hlavni-karusel-pas, .hlavni-karusel-snimek, .hlavni-karusel-sipka',
+      'vyskyt' => 'nase-pizza.php',
+      'nahled' => '
+        <div style="background: #000; border: 1px solid #282830; border-radius: 6px; padding: 12px; text-align: center;">
+          <div style="font-size: 0.68rem; color: #f59e0b; font-weight: 800; text-transform: uppercase;">PŘÍBĚH NAŠÍ PIZZY</div>
+          <strong style="color: #fff; font-size: 0.82rem; display: block; margin: 2px 0 6px 0;">RUČNĚ VYTÁHOVANÉ TĚSTO</strong>
+          <div style="display: flex; justify-content: center; align-items: center; gap: 8px;">
+            <span style="background: #222; color: #fff; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem;">&lsaquo;</span>
+            <span style="color: #888; font-size: 0.65rem; letter-spacing: 2px;">• — •</span>
+            <span style="background: #222; color: #fff; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem;">&rsaquo;</span>
+          </div>
+        </div>'
+    ],
+    [
+      'soubor' => 'css/blocks/pribeh-pizzy.css',
+      'nazev' => 'Příběh pizzy (Magazín)',
+      'popis' => 'Magazínové zig-zag rozložení surovin: střídání velkých fotografií s textovými příběhy, nutriční karty faktů a tlačítka na zobrazení pizz, které danou surovinu obsahují.',
+      'prvky' => '.pribeh-pizzy-sekce, .pribeh-pizzy-radek, .pribeh-pizzy-fakta-grid, .tlacitko-pizzy-surovina',
+      'vyskyt' => 'nase-pizza.php',
+      'nahled' => '
+        <div style="display: grid; grid-template-columns: 60px 1fr; gap: 10px; background: #141418; border: 1px solid #282830; border-radius: 6px; padding: 8px; align-items: center;">
+          <div style="height: 50px; background: #222; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; color: #777;">FOTO</div>
+          <div>
+            <strong style="color: #fff; font-size: 0.78rem; text-transform: uppercase; display: block;">Tradiční pečení</strong>
+            <p style="color: #999; font-size: 0.7rem; margin: 2px 0 0 0;">Pečení při 450 °C v peci na dřevo.</p>
+          </div>
+        </div>'
+    ]
   ],
   'responsive' => [
-    ['soubor' => 'css/responsive/mobile.css', 'nazev' => 'Mobilní responzivita', 'popis' => 'Kompletní mobilní pravidla importovaná na samém konci kaskády. Obsahuje hardware optimalizaci (vypnutí těžkého GPU blur na mobilech), adaptaci písma, mřížek a nákupního seznamu pro displeje pod 768px, 640px a 480px.', 'prvky' => '@media (max-width: 768px), @media (max-width: 480px), .horni-kontakty-lista.horni-lista-index', 'vyskyt' => 'Celý web na mobilních zařízeních']
+    [
+      'soubor' => 'css/responsive/mobile.css',
+      'nazev' => 'Mobilní responzivita',
+      'popis' => 'Kompletní mobilní pravidla importovaná na samém konci kaskády. Obsahuje hardware optimalizaci (vypnutí těžkého GPU blur na mobilech), adaptaci písma, mřížek a nákupního seznamu pro displeje pod 768px, 640px a 480px.',
+      'prvky' => '@media (max-width: 768px), @media (max-width: 480px), .horni-kontakty-lista.horni-lista-index',
+      'vyskyt' => 'Celý web na mobilních zařízeních',
+      'nahled' => '
+        <div style="border: 2px solid #333; border-radius: 10px; padding: 8px; background: #000; width: 120px; margin: 0 auto; text-align: center;">
+          <div style="width: 24px; height: 2px; background: #444; border-radius: 2px; margin: 0 auto 6px auto;"></div>
+          <div style="background: #e50914; height: 14px; border-radius: 2px; margin-bottom: 4px;"></div>
+          <div style="background: #222; height: 10px; border-radius: 2px; margin-bottom: 4px;"></div>
+          <div style="background: #222; height: 10px; border-radius: 2px;"></div>
+          <div style="font-size: 0.6rem; color: #888; margin-top: 6px;">Do 768px / 480px</div>
+        </div>'
+    ]
   ]
 ];
 
@@ -351,6 +613,27 @@ $strukturaSouboru = [
       flex-grow: 1;
     }
 
+    /* NÁHLED PRVKU */
+    .nahled-prvku-obal {
+      background: #0d0d10;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 14px;
+      margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nahled-prvku-popisek {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 2px;
+    }
+
     .komponenta-meta {
       display: flex;
       flex-direction: column;
@@ -555,6 +838,13 @@ $strukturaSouboru = [
               </div>
               <span class="kod-soubor"><?php echo htmlspecialchars($modul['soubor']); ?></span>
               <p class="komponenta-popis"><?php echo htmlspecialchars($modul['popis']); ?></p>
+
+              <!-- NÁHLED PRVKU -->
+              <div class="nahled-prvku-obal">
+                <span class="nahled-prvku-popisek">Náhled prvku</span>
+                <?php echo $modul['nahled']; ?>
+              </div>
+
               <div class="komponenta-meta">
                 <div class="meta-radek">
                   <span class="meta-label">Prvky:</span>
@@ -584,6 +874,13 @@ $strukturaSouboru = [
               </div>
               <span class="kod-soubor"><?php echo htmlspecialchars($modul['soubor']); ?></span>
               <p class="komponenta-popis"><?php echo htmlspecialchars($modul['popis']); ?></p>
+
+              <!-- NÁHLED PRVKU -->
+              <div class="nahled-prvku-obal">
+                <span class="nahled-prvku-popisek">Náhled prvku</span>
+                <?php echo $modul['nahled']; ?>
+              </div>
+
               <div class="komponenta-meta">
                 <div class="meta-radek">
                   <span class="meta-label">Prvky:</span>
@@ -613,6 +910,13 @@ $strukturaSouboru = [
               </div>
               <span class="kod-soubor"><?php echo htmlspecialchars($modul['soubor']); ?></span>
               <p class="komponenta-popis"><?php echo htmlspecialchars($modul['popis']); ?></p>
+
+              <!-- NÁHLED PRVKU -->
+              <div class="nahled-prvku-obal">
+                <span class="nahled-prvku-popisek">Náhled prvku</span>
+                <?php echo $modul['nahled']; ?>
+              </div>
+
               <div class="komponenta-meta">
                 <div class="meta-radek">
                   <span class="meta-label">Prvky:</span>
@@ -642,6 +946,13 @@ $strukturaSouboru = [
               </div>
               <span class="kod-soubor"><?php echo htmlspecialchars($modul['soubor']); ?></span>
               <p class="komponenta-popis"><?php echo htmlspecialchars($modul['popis']); ?></p>
+
+              <!-- NÁHLED PRVKU -->
+              <div class="nahled-prvku-obal">
+                <span class="nahled-prvku-popisek">Náhled prvku</span>
+                <?php echo $modul['nahled']; ?>
+              </div>
+
               <div class="komponenta-meta">
                 <div class="meta-radek">
                   <span class="meta-label">Prvky:</span>
