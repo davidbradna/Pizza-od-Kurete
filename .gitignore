@@ -7,3 +7,6 @@ Thumbs.db
 
 # Složka s automatickými zálohami databáze (zůstává na lokálu / serveru)
 zalohy/
+
+# Dočasné soubory Google Drive
+.tmp.driveupload/

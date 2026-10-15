@@ -71,6 +71,17 @@ function nactiPizzy() {
 function nactiDatabaziPizz() { return nactiPizzy(); }
 function ziskatPizzy() { return nactiPizzy(); }
 
+// Získání pizz pro veřejné menu (neaktivní pizza týdne se nepropisuje do menu, smí zde být pouze aktivní pizza týdne)
+function ziskatPizzyProVerejnost() {
+  $pizzy = nactiPizzy();
+  return array_values(array_filter($pizzy, function($p) {
+    if (!empty($p['pizzaTydne']) && empty($p['aktivniPizzaTydne'])) {
+      return false;
+    }
+    return true;
+  }));
+}
+
 function uloziPizzy($pizzy, $vytvoritZalohu = false) {
   global $cestaPizzy;
   $adresarData = dirname($cestaPizzy);
@@ -97,24 +108,90 @@ function uloziPizzy($pizzy, $vytvoritZalohu = false) {
 // 2. ODDĚLENÁ DATABÁZE INGREDIENCÍ (data/ingredience.json)
 // --------------------------------------------------------------------------
 
-function nactiIngredience() {
-  global $cestaIngredience, $cestaKDatabazi;
-  if (file_exists($cestaIngredience)) {
-    $obsah = file_get_contents($cestaIngredience);
-    $data = json_decode($obsah, true);
-    if (is_array($data)) return $data;
+// Pomocná funkce pro doplnění vlajky k zemi původu, pokud chybí
+function zformatovatPuvodSVlajkou($puvod) {
+  if (empty($puvod) || !is_string($puvod)) return '';
+  $puvod = trim($puvod);
+  if ($puvod === '') return '';
+
+  // Pokud již obsahuje jakoukoliv vlajku nebo emoji
+  if (preg_match('/[\x{1F1E6}-\x{1F1FF}]/u', $puvod) || preg_match('/[\x{1F300}-\x{1F9FF}]/u', $puvod)) {
+    return $puvod;
   }
 
-  // Fallback z původní sloučené databáze
-  if (file_exists($cestaKDatabazi)) {
+  // Odstranění diakritiky pro spolehlivé porovnání
+  $bezDiakritiky = mb_strtolower($puvod, 'UTF-8');
+  $prevodniTabulka = [
+    'á'=>'a', 'č'=>'c', 'ď'=>'d', 'é'=>'e', 'ě'=>'e', 'í'=>'i', 'ň'=>'n',
+    'ó'=>'o', 'ř'=>'r', 'š'=>'s', 'ť'=>'t', 'ú'=>'u', 'ů'=>'u', 'ý'=>'y', 'ž'=>'z'
+  ];
+  $norm = strtr($bezDiakritiky, $prevodniTabulka);
+
+  if (strpos($norm, 'ital') !== false || strpos($norm, 'neapol') !== false || strpos($norm, 'kampan') !== false || strpos($norm, 'parma') !== false || strpos($norm, 'sicil') !== false || strpos($norm, 'rim') !== false) {
+    return '🇮🇹 ' . $puvod;
+  }
+  if (strpos($norm, 'cesk') !== false || strpos($norm, 'morav') !== false || strpos($norm, 'lokal') !== false || strpos($norm, 'cr') !== false || strpos($norm, 'czech') !== false) {
+    return '🇨🇿 ' . $puvod;
+  }
+  if (strpos($norm, 'spanel') !== false || strpos($norm, 'esp') !== false) {
+    return '🇪🇸 ' . $puvod;
+  }
+  if (strpos($norm, 'franc') !== false) {
+    return '🇫🇷 ' . $puvod;
+  }
+  if (strpos($norm, 'reck') !== false) {
+    return '🇬🇷 ' . $puvod;
+  }
+  if (strpos($norm, 'nemec') !== false || strpos($norm, 'germ') !== false) {
+    return '🇩🇪 ' . $puvod;
+  }
+  if (strpos($norm, 'rakous') !== false) {
+    return '🇦🇹 ' . $puvod;
+  }
+  if (strpos($norm, 'sloven') !== false) {
+    return '🇸🇰 ' . $puvod;
+  }
+  if (strpos($norm, 'polsk') !== false) {
+    return '🇵🇱 ' . $puvod;
+  }
+  if (strpos($norm, 'angli') !== false || strpos($norm, 'brit') !== false) {
+    return '🇬🇧 ' . $puvod;
+  }
+  if (strpos($norm, 'usa') !== false || strpos($norm, 'americ') !== false) {
+    return '🇺🇸 ' . $puvod;
+  }
+
+  // Výchozí pro pizzerii je italská vlajka
+  return '🇮🇹 ' . $puvod;
+}
+
+function nactiIngredience() {
+  global $cestaIngredience, $cestaKDatabazi;
+  $data = [];
+  if (file_exists($cestaIngredience)) {
+    $obsah = file_get_contents($cestaIngredience);
+    $dec = json_decode($obsah, true);
+    if (is_array($dec) && !empty($dec)) $data = $dec;
+  } elseif (file_exists($cestaKDatabazi)) {
+    // Fallback z původní sloučené databáze
     $staraDb = json_decode(file_get_contents($cestaKDatabazi), true);
-    if (isset($staraDb['suroviny']) && is_array($staraDb['suroviny'])) {
-      uloziIngredience($staraDb['suroviny'], false);
-      return $staraDb['suroviny'];
+    if (isset($staraDb['suroviny']) && is_array($staraDb['suroviny']) && !empty($staraDb['suroviny'])) {
+      $data = $staraDb['suroviny'];
+      uloziIngredience($data, false);
     }
   }
 
-  return [];
+  // Všude na webu zajistíme zobrazení země původu zároveň s vlajkou
+  if (!empty($data)) {
+    foreach ($data as &$sur) {
+      if (!empty($sur['puvod'])) {
+        $sur['puvod'] = zformatovatPuvodSVlajkou($sur['puvod']);
+      }
+    }
+    unset($sur);
+  }
+
+  return $data;
 }
 function nactiDatabaziIngredienci() { return nactiIngredience(); }
 function ziskatSuroviny() { return nactiIngredience(); }
@@ -309,7 +386,7 @@ function obnovitZalohu($nazevSouboru) {
 // --------------------------------------------------------------------------
 
 function ziskatPizzyProSurovinu($idSuroviny) {
-  $pizzy = ziskatPizzy();
+  $pizzy = ziskatPizzyProVerejnost();
   $vysledek = [];
   foreach ($pizzy as $pizza) {
     if (isset($pizza['ingredience']) && is_array($pizza['ingredience']) && in_array($idSuroviny, $pizza['ingredience'])) {
@@ -324,12 +401,32 @@ function aktualizovatSlozeniVsechPizz(&$db) {
     return;
   }
 
+  // Mapa pořadí surovin podle ID
+  $poradiMap = [];
+  foreach ($db['suroviny'] as $idx => $sur) {
+    if (isset($sur['id'])) {
+      $poradiMap[$sur['id']] = $idx;
+    }
+  }
+
   foreach ($db['pizzy'] as &$pizza) {
     if (isset($pizza['ingredience']) && is_array($pizza['ingredience'])) {
+      // 1. Seřadit pizza['ingredience'] přesně podle pořadí v db['suroviny']
+      usort($pizza['ingredience'], function($a, $b) use ($poradiMap) {
+        $posA = $poradiMap[$a] ?? 9999;
+        $posB = $poradiMap[$b] ?? 9999;
+        return $posA - $posB;
+      });
+      $pizza['ingredience'] = array_values($pizza['ingredience']);
+
+      // 2. Sestavit slovní složení v přesném pořadí ze surovin
       $nazvySurovin = [];
-      foreach ($db['suroviny'] as $sur) {
-        if (in_array($sur['id'], $pizza['ingredience'])) {
-          $nazvySurovin[] = $sur['nazev'];
+      foreach ($pizza['ingredience'] as $ingId) {
+        foreach ($db['suroviny'] as $sur) {
+          if ($sur['id'] === $ingId) {
+            $nazvySurovin[] = $sur['nazev'];
+            break;
+          }
         }
       }
       if (!empty($nazvySurovin)) {

@@ -351,6 +351,7 @@ document.addEventListener('DOMContentLoaded', function() {
     ulozenyPohledSurovin = localStorage.getItem('admin_pohled_surovin') || 'dlazdice';
   } catch (e) {}
   prepnoutPohledSurovin(ulozenyPohledSurovin);
+  inicializovatDragAndDropSurovin();
 });
 
 // 12. CHYTRÁ DETEKCE VLASTNOSTÍ PIZZY PODLE VYBRANÝCH INGREDIENCÍ
@@ -465,7 +466,7 @@ async function rychlePrepnoutVlastnost(event, btn, idPizzy, vlastnost) {
 }
 window.rychlePrepnoutVlastnost = rychlePrepnoutVlastnost;
 
-// 14. RYCHLÁ AKTIVACE PIZZY TÝDNE (HVĚZDIČKA) BEZ PROBLIKNUTÍ STRÁNKY
+// 14. RYCHLÁ AKTIVACE / ZNEAKTIVNĚNÍ PIZZY TÝDNE (HVĚZDIČKA) BEZ PROBLIKNUTÍ STRÁNKY
 async function rychleAktivovatPizzuTydne(event, btn, idPizzy) {
   if (event) {
     event.preventDefault();
@@ -473,33 +474,55 @@ async function rychleAktivovatPizzuTydne(event, btn, idPizzy) {
   }
   if (!btn) return;
 
-  // Vizuálně vypneme všechny ostatní hvězdičky a zapneme tuto
-  document.querySelectorAll('.tlacitko-ikona-aktivni').forEach(b => {
-    b.classList.remove('aktivni');
-    const svg = b.querySelector('svg');
+  const jeUzAktivni = btn.classList.contains('aktivni');
+
+  if (jeUzAktivni) {
+    // 1. ZNEAKTIVNĚNÍ: kliknuto na již aktivní hvězdičku
+    btn.classList.remove('aktivni');
+    const svg = btn.querySelector('svg');
     if (svg) svg.setAttribute('fill', 'none');
-  });
+    btn.setAttribute('title', 'Kliknutím aktivovat jako Pizzu týdne');
 
-  btn.classList.add('aktivni');
-  const svg = btn.querySelector('svg');
-  if (svg) svg.setAttribute('fill', 'currentColor');
-
-  // Aktualizujeme štítky na fotce
-  document.querySelectorAll('.pizza-dlazdice').forEach(card => {
-    const stitek = card.querySelector('.stitek-pizza-tydne-karta');
-    if (stitek) {
-      const btnInCard = card.querySelector(`.tlacitko-ikona-aktivni[data-id="${idPizzy}"]`);
-      if (btnInCard) {
-        stitek.style.background = '#f59e0b';
-        stitek.style.color = '#000000';
-        stitek.innerText = '★ AKTIVNÍ PIZZA TÝDNE';
-      } else {
+    // Aktualizujeme štítky na fotkách - žádná pizza není aktivní Pizza týdne
+    document.querySelectorAll('.pizza-dlazdice').forEach(card => {
+      const stitek = card.querySelector('.stitek-pizza-tydne-karta');
+      if (stitek) {
         stitek.style.background = 'linear-gradient(135deg, #d97706, #b45309)';
         stitek.style.color = '#ffffff';
         stitek.innerText = 'PIZZA TÝDNE';
       }
-    }
-  });
+    });
+  } else {
+    // 2. AKTIVACE: vizuálně vypneme všechny ostatní hvězdičky a zapneme tuto
+    document.querySelectorAll('.tlacitko-ikona-aktivni').forEach(b => {
+      b.classList.remove('aktivni');
+      const svg = b.querySelector('svg');
+      if (svg) svg.setAttribute('fill', 'none');
+      b.setAttribute('title', 'Kliknutím aktivovat jako Pizzu týdne');
+    });
+
+    btn.classList.add('aktivni');
+    const svg = btn.querySelector('svg');
+    if (svg) svg.setAttribute('fill', 'currentColor');
+    btn.setAttribute('title', 'Tato pizza je právě aktivní Pizza týdne (kliknutím zneaktivnit)');
+
+    // Aktualizujeme štítky na fotce
+    document.querySelectorAll('.pizza-dlazdice').forEach(card => {
+      const stitek = card.querySelector('.stitek-pizza-tydne-karta');
+      if (stitek) {
+        const btnInCard = card.querySelector(`.tlacitko-ikona-aktivni[data-id="${idPizzy}"]`);
+        if (btnInCard) {
+          stitek.style.background = '#f59e0b';
+          stitek.style.color = '#000000';
+          stitek.innerText = '★ AKTIVNÍ PIZZA TÝDNE';
+        } else {
+          stitek.style.background = 'linear-gradient(135deg, #d97706, #b45309)';
+          stitek.style.color = '#ffffff';
+          stitek.innerText = 'PIZZA TÝDNE';
+        }
+      }
+    });
+  }
 
   // Odeslání požadavku na pozadí přes AJAX
   try {
@@ -513,7 +536,7 @@ async function rychleAktivovatPizzuTydne(event, btn, idPizzy) {
       body: formData
     });
   } catch (err) {
-    console.error('Chyba při aktivaci pizzy týdne:', err);
+    console.error('Chyba při změně aktivace pizzy týdne:', err);
   }
 }
 window.rychleAktivovatPizzuTydne = rychleAktivovatPizzuTydne;
@@ -564,3 +587,198 @@ window.rychleAktivovatPizzuTydne = rychleAktivovatPizzuTydne;
     }
   }, { passive: true });
 })();
+
+// 13. DRAG & DROP ŘAZENÍ INGREDIENCÍ V ADMINISTRACI
+let adminToastTimeout = null;
+function zobrazitAdminToast(zprava, typ = 'uspech') {
+  let toast = document.getElementById('admin-toast-box');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'admin-toast-box';
+    document.body.appendChild(toast);
+  }
+  toast.className = 'admin-toast-oznameni ' + typ;
+  toast.innerHTML = '<span>' + zprava + '</span>';
+
+  void toast.offsetWidth; // Force reflow
+  toast.classList.add('zobrazeno');
+
+  if (adminToastTimeout) clearTimeout(adminToastTimeout);
+  adminToastTimeout = setTimeout(() => {
+    toast.classList.remove('zobrazeno');
+  }, 2800);
+}
+window.zobrazitAdminToast = zobrazitAdminToast;
+
+function inicializovatDragAndDropSurovin() {
+  const kontejner = document.getElementById('tabulka-suroviny-telo');
+  if (!kontejner) return;
+
+  let pretahovanaPolozka = null;
+  let puvodniPoradiId = [];
+
+  function ziskatAktualniPoradiId() {
+    const polozky = kontejner.querySelectorAll('.surovina-karta-polozka');
+    return Array.from(polozky)
+      .map(el => el.getAttribute('data-id'))
+      .filter(Boolean);
+  }
+
+  function jeFiltrovano() {
+    const input = document.getElementById('vstup-hledat-surovinu');
+    const query = input ? input.value.trim() : '';
+    return (typeof aktivniKatSurovin !== 'undefined' && aktivniKatSurovin !== 'vse') || query !== '';
+  }
+
+  async function ulozitNovePoradiSurovin(novePoradiId) {
+    try {
+      const formData = new FormData();
+      formData.append('ajax', '1');
+      formData.append('akce', 'ulozit_poradi_ingredienci');
+      formData.append('poradi_id', JSON.stringify(novePoradiId));
+
+      const odpoved = await fetch('administrace.php', {
+        method: 'POST',
+        body: formData
+      });
+      const vysledek = await odpoved.json();
+      if (vysledek && vysledek.success) {
+        zobrazitAdminToast('✓ Pořadí ingrediencí bylo uloženo', 'uspech');
+      } else {
+        zobrazitAdminToast('Chyba při ukládání pořadí.', 'chyba');
+      }
+    } catch (e) {
+      console.error('Chyba při ukládání pořadí ingrediencí:', e);
+      zobrazitAdminToast('Nepodařilo se uložit nové pořadí.', 'chyba');
+    }
+  }
+
+  // Příprava jednotlivých karet surovin
+  const karty = kontejner.querySelectorAll('.surovina-karta-polozka');
+  karty.forEach(karta => {
+    const uchyt = karta.querySelector('.surovina-uchyt-razeni');
+    if (!uchyt) return;
+
+    // Draggable povolujeme pouze při interakci s úchytem
+    uchyt.addEventListener('mouseenter', () => {
+      karta.draggable = true;
+    });
+    uchyt.addEventListener('mouseleave', () => {
+      if (!pretahovanaPolozka) {
+        karta.draggable = false;
+      }
+    });
+
+    // MOUSE: DRAGSTART
+    karta.addEventListener('dragstart', (e) => {
+      if (jeFiltrovano()) {
+        e.preventDefault();
+        karta.draggable = false;
+        zobrazitAdminToast('Pro změnu pořadí přepněte filtr na „Všechny“ bez vyhledávání.', 'upozorneni');
+        return;
+      }
+
+      pretahovanaPolozka = karta;
+      puvodniPoradiId = ziskatAktualniPoradiId();
+      karta.classList.add('je-pretahovana');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', karta.getAttribute('data-id') || '');
+    });
+
+    // MOUSE: DRAGEND
+    karta.addEventListener('dragend', () => {
+      karta.classList.remove('je-pretahovana');
+      karta.draggable = false;
+      if (pretahovanaPolozka) {
+        const novePoradiId = ziskatAktualniPoradiId();
+        if (JSON.stringify(puvodniPoradiId) !== JSON.stringify(novePoradiId)) {
+          ulozitNovePoradiSurovin(novePoradiId);
+        }
+        pretahovanaPolozka = null;
+      }
+    });
+
+    // TOUCH (mobily / tablety): přetahování prstem za úchyt
+    uchyt.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) return;
+      if (jeFiltrovano()) {
+        zobrazitAdminToast('Pro změnu pořadí přepněte filtr na „Všechny“ bez vyhledávání.', 'upozorneni');
+        return;
+      }
+      pretahovanaPolozka = karta;
+      puvodniPoradiId = ziskatAktualniPoradiId();
+      karta.classList.add('je-pretahovana');
+    }, { passive: true });
+
+    uchyt.addEventListener('touchmove', (e) => {
+      if (!pretahovanaPolozka || e.touches.length !== 1) return;
+      e.preventDefault(); // Zamezení scrollování stránky během tažení úchytu
+
+      const dotyk = e.touches[0];
+      const prvekPodPrstem = document.elementFromPoint(dotyk.clientX, dotyk.clientY);
+      const cilovaKarta = prvekPodPrstem?.closest('.surovina-karta-polozka');
+
+      if (cilovaKarta && cilovaKarta !== pretahovanaPolozka && cilovaKarta.parentNode === kontejner) {
+        const rect = cilovaKarta.getBoundingClientRect();
+        const jeSeznam = kontejner.classList.contains('pohled-seznam');
+        let vlozitZa = false;
+
+        if (jeSeznam) {
+          vlozitZa = (dotyk.clientY > rect.top + rect.height / 2);
+        } else {
+          vlozitZa = (dotyk.clientY > rect.top + rect.height * 0.6) || (dotyk.clientX > rect.left + rect.width / 2);
+        }
+
+        if (vlozitZa) {
+          cilovaKarta.parentNode.insertBefore(pretahovanaPolozka, cilovaKarta.nextSibling);
+        } else {
+          cilovaKarta.parentNode.insertBefore(pretahovanaPolozka, cilovaKarta);
+        }
+      }
+    }, { passive: false });
+
+    uchyt.addEventListener('touchend', () => {
+      if (!pretahovanaPolozka) return;
+      pretahovanaPolozka.classList.remove('je-pretahovana');
+      const novePoradiId = ziskatAktualniPoradiId();
+      if (JSON.stringify(puvodniPoradiId) !== JSON.stringify(novePoradiId)) {
+        ulozitNovePoradiSurovin(novePoradiId);
+      }
+      pretahovanaPolozka = null;
+    });
+
+    uchyt.addEventListener('touchcancel', () => {
+      if (pretahovanaPolozka) {
+        pretahovanaPolozka.classList.remove('je-pretahovana');
+        pretahovanaPolozka = null;
+      }
+    });
+  });
+
+  // DRAGOVER na kontejneru pro plynulý posun položek při tažení myší
+  kontejner.addEventListener('dragover', (e) => {
+    if (!pretahovanaPolozka) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+
+    const cilovaKarta = e.target.closest('.surovina-karta-polozka');
+    if (cilovaKarta && cilovaKarta !== pretahovanaPolozka && cilovaKarta.parentNode === kontejner) {
+      const rect = cilovaKarta.getBoundingClientRect();
+      const jeSeznam = kontejner.classList.contains('pohled-seznam');
+      let vlozitZa = false;
+
+      if (jeSeznam) {
+        vlozitZa = (e.clientY > rect.top + rect.height / 2);
+      } else {
+        vlozitZa = (e.clientY > rect.top + rect.height * 0.6) || (e.clientX > rect.left + rect.width / 2);
+      }
+
+      if (vlozitZa) {
+        cilovaKarta.parentNode.insertBefore(pretahovanaPolozka, cilovaKarta.nextSibling);
+      } else {
+        cilovaKarta.parentNode.insertBefore(pretahovanaPolozka, cilovaKarta);
+      }
+    }
+  });
+}
+window.inicializovatDragAndDropSurovin = inicializovatDragAndDropSurovin;

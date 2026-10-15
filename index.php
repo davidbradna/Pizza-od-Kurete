@@ -7,7 +7,7 @@
 require_once __DIR__ . '/nastaveni.php';
 require_once __DIR__ . '/databaze.php';
 
-$pizzy = ziskatPizzy();
+$pizzy = ziskatPizzyProVerejnost();
 $suroviny = ziskatSuroviny();
 ?>
 <!DOCTYPE html>
@@ -21,7 +21,7 @@ $suroviny = ziskatSuroviny();
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styl.css?v=<?php echo time(); ?>">
+  <link rel="stylesheet" href="styl.css?v=<?php echo filemtime(__DIR__ . '/styl.css'); ?>">
   
   <script>
     // Predani databazovych pizz a surovin z PHP do JavaScriptu
@@ -29,16 +29,16 @@ $suroviny = ziskatSuroviny();
     window.seznamSurovinZDatabaze = <?php echo json_encode($suroviny, JSON_UNESCAPED_UNICODE); ?>;
   </script>
 </head>
-<body>
+<body class="stranka-index">
 
   <!-- 1. UNIVERZÁLNÍ PLNOHODNOTNÁ NAVIGAČNÍ LIŠTA -->
-  <header class="horni-kontakty-lista">
+  <header class="horni-kontakty-lista horni-lista-index">
     <div class="navigace-podstranka-obsah">
       
       <!-- BRAND & LOGO (VLEVO: KUŘE + GRAFICKÝ NÁPIS PIZZA OD KUŘETE) -->
       <a href="index.php" class="navigace-brand-obal" title="Pizza od Kuřete">
-        <img src="media/logo/logo-pizza.png" alt="Kuře Pizza od Kuřete" class="navigace-brand-logo" style="height: 50px; width: auto; max-width: 55px; object-fit: contain; display: block;">
-        <img src="media/logo/napis-pizza-od-kurete.png" alt="PIZZA OD KUŘETE" class="navigace-brand-napis-img" style="height: 40px; width: auto; display: block; object-fit: contain;">
+        <img src="media/logo/logo-pizza.png" alt="Kuře Pizza od Kuřete" class="navigace-brand-logo" style="height: 50px; width: auto; max-width: 55px; object-fit: contain;">
+        <img src="media/logo/napis-pizza-od-kurete.png" alt="PIZZA OD KUŘETE" class="navigace-brand-napis-img" style="height: 40px; width: auto; object-fit: contain;">
       </a>
 
       <!-- PRAVÁ ČÁST: MENU POLOŽKY (ZAROVNANÉ DOPRAVA) + IKONA TELEFONU + HAMBURGER -->
@@ -47,7 +47,7 @@ $suroviny = ziskatSuroviny();
         <!-- HLAVNÍ NAVIGAČNÍ MENU (NA MOBILU SE SKRÝVÁ DO HAMBURGERU) -->
         <ul class="navigace-odkazy-menu" id="navigace-odkazy-menu">
           <li><a href="#jidelni-listek" class="navigace-odkaz-polozka">Jídelní lístek</a></li>
-          <li><a href="ingredience.php" class="navigace-odkaz-polozka">Ingredience</a></li>
+          <li><a href="nase-pizza.php" class="navigace-odkaz-polozka">Naše pizza</a></li>
           <li><a href="#provozovny" class="navigace-odkaz-polozka">Pizzerie</a></li>
           <li><a href="#rozvoz" class="navigace-odkaz-polozka">Rozvoz</a></li>
         </ul>
@@ -103,7 +103,7 @@ $suroviny = ziskatSuroviny();
       
       <!-- Logo Kuřete na Pizze (Odkaz do administrace) -->
       <a href="administrace.php" class="logo-kure-ikona" title="Správa menu (Administrace)">
-        <img src="media/logo/logo-pizza.png?v=<?php echo time(); ?>" alt="PIZZA OD KUŘETE Logo">
+        <img src="media/logo/logo-pizza.png?v=<?php echo filemtime(__DIR__ . '/media/logo/logo-pizza.png'); ?>" alt="PIZZA OD KUŘETE Logo">
       </a>
 
       <h1 class="nadpis-hlavni">PIZZA OD KUŘETE</h1>
@@ -114,31 +114,104 @@ $suroviny = ziskatSuroviny();
       </div>
 
       <div class="tlacitka-hlavicka-skupina">
-        <a href="#jidelni-listek" class="tlacitko tlacitko-cervene">JÍDELNÍ LÍSTEK</a>
-        <a href="#provozovny" class="tlacitko tlacitko-cervene-tmave">PIZZERIE</a>
-        <a href="#rozvoz" class="tlacitko tlacitko-sede">ROZVOZ PIZZY</a>
+        <!-- 1. ŘADA: Pizzerie, Rozvoz, Jídelní lístek -->
+        <div class="appky-rada appky-rada-1">
+          <!-- Appka 1: Pizzerie -->
+          <a href="#provozovny" class="tlacitko-app-polozka appka-pizzerie" title="Pizzerie a pobočky">
+            <div class="appka-ikona-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+            </div>
+            <span class="appka-popisek">Pizzerie</span>
+          </a>
+
+          <!-- Appka 2: Rozvoz (ikona: osobní auto) -->
+          <a href="#rozvoz" class="tlacitko-app-polozka appka-rozvoz" title="Rozvoz pizzy">
+            <div class="appka-ikona-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2.1 10.7 2 11 2 11.4V16c0 .6.4 1 1 1h2"></path>
+                <circle cx="7" cy="17" r="2"></circle>
+                <path d="M9 17h6"></path>
+                <circle cx="17" cy="17" r="2"></circle>
+              </svg>
+            </div>
+            <span class="appka-popisek">Rozvoz<span class="desktop-text-jen"> pizzy</span></span>
+          </a>
+
+          <!-- Appka 3: Jídelní lístek (ikona: otevřené menu) -->
+          <a href="#jidelni-listek" class="tlacitko-app-polozka appka-listek" title="Jídelní lístek">
+            <div class="appka-ikona-box">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+              </svg>
+            </div>
+            <span class="appka-popisek">Jídelní lístek</span>
+          </a>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- 3. SEKCE: ROZDIL V CHUTI -->
   <section class="sekce-rozdil-v-chuti">
-    <div class="kontejner mrizka-rozdil">
-      <div class="textova-cast">
-        <h2 class="nadpis-sekce">ROZDÍL POZNÁTE<br><span style="white-space: nowrap;">NA PRVNÍ ZOBNUTÍ</span></h2>
-        <p class="text-popis">
-          Jmenuji se Kuře a za každou pizzou z mé pece si stojím.<br>
-          Používám italské sýry a uzeniny, pravé španělské chorizo a čerstvé suroviny od místních dodavatelů. Těsto dělám z mouky s vysokou hydratací, takže zůstává vláčné a křupavé.
-        </p>
-        <a href="ingredience.php" class="tlacitko tlacitko-ingredience-cta">
-          <span>Proč moje pizza chutná jinak</span>
-          <svg class="ikona-sipka-v" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </a>
+    <!-- 1. HLAVNÍ BANNER: PŘEDSTAVENÍ ŠÉFPIZZAŘE A MAJITELE KUŘETE -->
+    <div class="kure-predstaveni-banner">
+      <div class="kure-predstaveni-kontejner">
+        <div class="kure-predstaveni-foto-box">
+          <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?q=80&w=800&auto=format&fit=crop" alt="Šéfpizzař a majitel Kuře" class="kure-predstaveni-foto" loading="lazy">
+        </div>
+        <div class="kure-predstaveni-obsah">
+          <span class="kure-predstaveni-stitek">MAJITEL &amp; HLAVNÍ PIZZAŘ</span>
+          <h2 class="kure-predstaveni-nadpis">ROZDÍL POZNÁTE NA PRVNÍ ZOBNUTÍ</h2>
+          <p class="kure-predstaveni-text">Kuře má největší štěstí na kamarády, hlavně na Krtka, kterého považuje za genia srovnatelného jen Járou Cimrmanem... a to ještě ztěží</p>
+          <a href="nase-pizza.php" class="tlacitko tlacitko-cervene kure-predstaveni-tlacitko">
+            <span>Příběh naší pizzy</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+        </div>
       </div>
-      <div class="obale-fotky-picer">
-        <img src="https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?q=80&w=800&auto=format&fit=crop" alt="Pizzaiolo házející těsto">
+    </div>
+
+    <!-- 2. SUROVINY POD BANNEREM (na desktopu 3 v řadě, na mobilu touch-carousel) -->
+    <div class="rozdil-suroviny-obal">
+      <div class="rozdil-suroviny-pas">
+        
+        <!-- Položka 1: Těsto -->
+        <a href="nase-pizza.php#pribeh-pizzy-sekce" class="rozdil-surovina-karta" title="Přejít na detail o těstě">
+          <div class="rozdil-surovina-foto">
+            <img src="https://images.unsplash.com/photo-1579684947550-22e945225d9a?q=80&w=600&auto=format&fit=crop" alt="Těsto je alfa a omega" loading="lazy">
+            <span class="rozdil-surovina-cislo">01</span>
+          </div>
+          <div class="rozdil-surovina-obsah">
+            <div class="rozdil-surovina-nadpis">TĚSTO JE ALFA A OMEGA</div>
+          </div>
+        </a>
+
+        <!-- Položka 2: Pec -->
+        <a href="nase-pizza.php#pribeh-pizzy-sekce" class="rozdil-surovina-karta" title="Přejít na detail o peci">
+          <div class="rozdil-surovina-foto">
+            <img src="https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?q=80&w=600&auto=format&fit=crop" alt="Pizza nesmí v peci klepat kosu" loading="lazy">
+            <span class="rozdil-surovina-cislo">02</span>
+          </div>
+          <div class="rozdil-surovina-obsah">
+            <div class="rozdil-surovina-nadpis">PIZZA NESMÍ V PECI KLEPAT KOSU</div>
+          </div>
+        </a>
+
+        <!-- Položka 3: Suroviny -->
+        <a href="nase-pizza.php#pribeh-pizzy-sekce" class="rozdil-surovina-karta" title="Přejít na detail o surovinách">
+          <div class="rozdil-surovina-foto">
+            <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=600&auto=format&fit=crop" alt="Suroviny pro vybíravé" loading="lazy">
+            <span class="rozdil-surovina-cislo">03</span>
+          </div>
+          <div class="rozdil-surovina-obsah">
+            <div class="rozdil-surovina-nadpis">SUROVINY PRO VYBÍRAVÉ</div>
+          </div>
+        </a>
+
       </div>
     </div>
   </section>
@@ -174,11 +247,6 @@ $suroviny = ziskatSuroviny();
             <button type="button" class="mini-kapsle-tlacitko" data-hodnota="bily" onclick="nastavitPrepinac('sw-zaklad', 'bily')">Bílý základ</button>
           </div>
 
-          <!-- Switch 4: Misto / Rozvoz -->
-          <div class="mini-kapsle-prepinac" id="sw-misto">
-            <button type="button" class="mini-kapsle-tlacitko" data-hodnota="v_pizzerii" onclick="nastavitPrepinac('sw-misto', 'v_pizzerii')">V pizzerii</button>
-            <button type="button" class="mini-kapsle-tlacitko" data-hodnota="rozvoz" onclick="nastavitPrepinac('sw-misto', 'rozvoz')">Rozvoz</button>
-          </div>
         </div>
 
         <div class="skupina-kategorii">
@@ -187,11 +255,6 @@ $suroviny = ziskatSuroviny();
         </div>
 
       </div>
-
-      <!-- TEXT NAPOVEDY POD FILTREM -->
-      <p class="text-napoveda-kosiku" style="text-align: center; color: #f59e0b; font-size: 1.05rem; font-weight: 600; margin-top: 25px; margin-bottom: 35px; max-width: 750px; margin-left: auto; margin-right: auto; line-height: 1.5;">
-        Přidej si pizzy do seznamu nákupu, spočítáme celkovou cenu a připomeneme, co jste si vybrali, aby jste si nemusel nic pamatovat.
-      </p>
 
       <!-- Mrizka Karty Pizz -->
       <div class="mrizka-pizz" id="mrizka-pizz-kontejner">
@@ -213,9 +276,9 @@ $suroviny = ziskatSuroviny();
           <p class="hodnota-karty-rozvoz">Po městě: <strong>+ 10 Kč</strong></p>
           <p class="popis-karty-rozvoz">Mimo město: <strong>+ 7 Kč / 1 km</strong></p>
 
-          <!-- Vyhledávací pole obcí zobrazené POUZE na mobilu přímo uvnitř této karty -->
-          <div class="rozvoz-vyhledavani-mobil-obal">
-            <input type="text" id="vstup-hledat-obec-mobil" class="vstup-vyhledat-obec vstup-vyhledat-mobil" placeholder="Jméno obce pro cenu" oninput="filtrovatAktivniRozvozObce(this.value, true)">
+          <!-- Vyhledávací pole obcí pro zjištění ceny dopravy přímo uvnitř této karty -->
+          <div class="rozvoz-vyhledavani-mobil-obal rozvoz-vyhledavani-karta-obal">
+            <input type="text" id="vstup-hledat-obec-mobil" class="vstup-vyhledat-obec vstup-vyhledat-mobil" placeholder="vložte jméno obce" oninput="filtrovatAktivniRozvozObce(this.value, true)">
             
             <div class="mrizka-stiku-obci mrizka-vyhledavani-vysledky-mobil" id="vysledky-obci-mobil" style="display: none;">
               <!-- Rychnov obce -->
@@ -261,24 +324,29 @@ $suroviny = ziskatSuroviny();
               <span class="stitek-obec-polozka skryto" data-obec="Vamberk"><strong>Vamberk</strong> <span class="stitek-vzdalenost">7 km</span> <span class="cena-obce-stitek">49 Kč</span></span>
               <span class="stitek-obec-polozka skryto" data-obec="Záměl"><strong>Záměl</strong> <span class="stitek-vzdalenost">10 km</span> <span class="cena-obce-stitek">70 Kč</span></span>
               <!-- Ústí obce -->
-              <span class="stitek-obec-polozka skryto" data-obec="Brandýs nad Orlicí"><strong>Brandýs n. O.</strong> <span class="stitek-vzdalenost">10 km</span> <span class="cena-obce-stitek">70 Kč</span></span>
-              <span class="stitek-obec-polozka skryto" data-obec="Česká Třebová"><strong>Česká Třebová</strong> <span class="stitek-vzdalenost">10 km</span> <span class="cena-obce-stitek">70 Kč</span></span>
-              <span class="stitek-obec-polozka skryto" data-obec="České Libchavy"><strong>České Libchavy</strong> <span class="stitek-vzdalenost">7 km</span> <span class="cena-obce-stitek">49 Kč</span></span>
-              <span class="stitek-obec-polozka skryto" data-obec="Dlouhá Třebová"><strong>Dlouhá Třebová</strong> <span class="stitek-vzdalenost">6 km</span> <span class="cena-obce-stitek">42 Kč</span></span>
-              <span class="stitek-obec-polozka skryto" data-obec="Dolní Dobrouč"><strong>Dolní Dobrouč</strong> <span class="stitek-vzdalenost">8 km</span> <span class="cena-obce-stitek">56 Kč</span></span>
-              <span class="stitek-obec-polozka skryto" data-obec="Hnátnice"><strong>Hnátnice</strong> <span class="stitek-vzdalenost">6 km</span> <span class="cena-obce-stitek">42 Kč</span></span>
-              <span class="stitek-obec-polozka skryto" data-obec="Horní Dobrouč"><strong>Horní Dobrouč</strong> <span class="stitek-vzdalenost">10 km</span> <span class="cena-obce-stitek">70 Kč</span></span>
-              <span class="stitek-obec-polozka skryto" data-obec="Lanšperk"><strong>Lanšperk</strong> <span class="stitek-vzdalenost">7 km</span> <span class="cena-obce-stitek">49 Kč</span></span>
-              <span class="stitek-obec-polozka skryto" data-obec="Libchavy"><strong>Libchavy</strong> <span class="stitek-vzdalenost">5 km</span> <span class="cena-obce-stitek">35 Kč</span></span>
-              <span class="stitek-obec-polozka skryto" data-obec="Mostek"><strong>Mostek</strong> <span class="stitek-vzdalenost">10 km</span> <span class="cena-obce-stitek">70 Kč</span></span>
-              <span class="stitek-obec-polozka skryto" data-obec="Přívrat"><strong>Přívrat</strong> <span class="stitek-vzdalenost">8 km</span> <span class="cena-obce-stitek">56 Kč</span></span>
-              <span class="stitek-obec-polozka skryto" data-obec="Řetová"><strong>Řetová</strong> <span class="stitek-vzdalenost">7 km</span> <span class="cena-obce-stitek">49 Kč</span></span>
-              <span class="stitek-obec-polozka skryto" data-obec="Řetůvka"><strong>Řetůvka</strong> <span class="stitek-vzdalenost">5 km</span> <span class="cena-obce-stitek">35 Kč</span></span>
-              <span class="stitek-obec-polozka skryto" data-obec="Rybník"><strong>Rybník</strong> <span class="stitek-vzdalenost">10 km</span> <span class="cena-obce-stitek">70 Kč</span></span>
-              <span class="stitek-obec-polozka skryto" data-obec="Sloupnice"><strong>Sloupnice</strong> <span class="stitek-vzdalenost">10 km</span> <span class="cena-obce-stitek">70 Kč</span></span>
-              <span class="stitek-obec-polozka skryto" data-obec="Sopotnice"><strong>Sopotnice</strong> <span class="stitek-vzdalenost">9 km</span> <span class="cena-obce-stitek">63 Kč</span></span>
-              <span class="stitek-obec-polozka skryto" data-obec="Sudislav"><strong>Sudislav</strong> <span class="stitek-vzdalenost">8 km</span> <span class="cena-obce-stitek">56 Kč</span></span>
-              <span class="stitek-obec-polozka skryto" data-obec="Velká Skrovnice"><strong>Velká Skrovnice</strong> <span class="stitek-vzdalenost">7 km</span> <span class="cena-obce-stitek">49 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Černovír"><strong>Černovír</strong> <span class="stitek-vzdalenost">Zóna 2</span> <span class="cena-obce-stitek">50 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Česká Třebová"><strong>Česká Třebová</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="České Libchavy"><strong>České Libchavy</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Dlouhá Třebová"><strong>Dlouhá Třebová</strong> <span class="stitek-vzdalenost">Zóna 2</span> <span class="cena-obce-stitek">50 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Dolní Dobrouč"><strong>Dolní Dobrouč</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Dolní Houžovec"><strong>Dolní Houžovec</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Dolní Libchavy"><strong>Dolní Libchavy</strong> <span class="stitek-vzdalenost">Zóna 2</span> <span class="cena-obce-stitek">50 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Džbánov"><strong>Džbánov</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Horní Houžovec"><strong>Horní Houžovec</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Horní Libchavy"><strong>Horní Libchavy</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Hrádek"><strong>Hrádek</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Jehnědí"><strong>Jehnědí</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Kerhartice"><strong>Kerhartice</strong> <span class="stitek-vzdalenost">Zóna 2</span> <span class="cena-obce-stitek">50 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Knapovec"><strong>Knapovec</strong> <span class="stitek-vzdalenost">Zóna 2</span> <span class="cena-obce-stitek">50 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Lanšperk"><strong>Lanšperk</strong> <span class="stitek-vzdalenost">Zóna 2</span> <span class="cena-obce-stitek">50 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Orlické Podhůří"><strong>Orlické Podhůří</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Přívrat"><strong>Přívrat</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Rozsocha"><strong>Rozsocha</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Rviště"><strong>Rviště</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Říčky"><strong>Říčky</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Skuhrov"><strong>Skuhrov</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Sloupnice"><strong>Sloupnice</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+              <span class="stitek-obec-polozka skryto" data-obec="Sudislav nad Orlicí"><strong>Sudislav nad Orlicí</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
             </div>
           </div>
         </div>
@@ -325,8 +393,8 @@ $suroviny = ziskatSuroviny();
           </div>
         </div>
 
-        <!-- Tlačítko pro rozbalení/sbalení celé sekce mapy -->
-        <div style="margin-top: 22px; text-align: center;">
+        <!-- Tlačítko pro rozbalení/sbalení celé sekce mapy (dočasně zneaktivněno) -->
+        <div style="margin-top: 22px; text-align: center; display: none;">
           <button type="button" class="tlacitko-mapa-rozbalit" id="btn-toggle-rozvoz-mapa" onclick="prepnoutRozbaleniRozvozoveMapy()">
             <span>Cena rozvozu mimo město</span>
             <svg class="ikona-sipka-rozbaleni" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -353,8 +421,8 @@ $suroviny = ziskatSuroviny();
       <div class="rozvoz-switch-obal">
             <div class="kapsle-prepinac-pobocky" id="prepinac-rozvoz-mapa" data-aktivni="rychnov">
               <div class="kapsle-slajdr-bily"></div>
-              <button type="button" class="kapsle-polozka aktivni" onclick="prepnoutPobockuRozvozMapy('rychnov')">Rychnov n. K.</button>
-              <button type="button" class="kapsle-polozka" onclick="prepnoutPobockuRozvozMapy('usti')">Ústí nad Orlicí</button>
+              <button type="button" class="kapsle-polozka aktivni" data-pobocka-kod="rychnov" onclick="prepnoutPobockuRozvozMapy('rychnov')">Rychnov n. K.</button>
+              <button type="button" class="kapsle-polozka" data-pobocka-kod="usti" onclick="prepnoutPobockuRozvozMapy('usti')">Ústí nad Orlicí</button>
             </div>
           </div>
 
@@ -409,24 +477,29 @@ $suroviny = ziskatSuroviny();
           </div>
 
           <div class="mrizka-stiku-obci mrizka-vyhledavani-vysledky" id="vysledky-obci-usti" style="display: none;">
-            <span class="stitek-obec-polozka skryto" data-obec="Brandýs nad Orlicí"><strong>Brandýs n. O.</strong> <span class="stitek-vzdalenost">10 km</span> <span class="cena-obce-stitek">70 Kč</span></span>
-            <span class="stitek-obec-polozka skryto" data-obec="Česká Třebová"><strong>Česká Třebová</strong> <span class="stitek-vzdalenost">10 km</span> <span class="cena-obce-stitek">70 Kč</span></span>
-            <span class="stitek-obec-polozka skryto" data-obec="České Libchavy"><strong>České Libchavy</strong> <span class="stitek-vzdalenost">7 km</span> <span class="cena-obce-stitek">49 Kč</span></span>
-            <span class="stitek-obec-polozka skryto" data-obec="Dlouhá Třebová"><strong>Dlouhá Třebová</strong> <span class="stitek-vzdalenost">6 km</span> <span class="cena-obce-stitek">42 Kč</span></span>
-            <span class="stitek-obec-polozka skryto" data-obec="Dolní Dobrouč"><strong>Dolní Dobrouč</strong> <span class="stitek-vzdalenost">8 km</span> <span class="cena-obce-stitek">56 Kč</span></span>
-            <span class="stitek-obec-polozka skryto" data-obec="Hnátnice"><strong>Hnátnice</strong> <span class="stitek-vzdalenost">6 km</span> <span class="cena-obce-stitek">42 Kč</span></span>
-            <span class="stitek-obec-polozka skryto" data-obec="Horní Dobrouč"><strong>Horní Dobrouč</strong> <span class="stitek-vzdalenost">10 km</span> <span class="cena-obce-stitek">70 Kč</span></span>
-            <span class="stitek-obec-polozka skryto" data-obec="Lanšperk"><strong>Lanšperk</strong> <span class="stitek-vzdalenost">7 km</span> <span class="cena-obce-stitek">49 Kč</span></span>
-            <span class="stitek-obec-polozka skryto" data-obec="Libchavy"><strong>Libchavy</strong> <span class="stitek-vzdalenost">5 km</span> <span class="cena-obce-stitek">35 Kč</span></span>
-            <span class="stitek-obec-polozka skryto" data-obec="Mostek"><strong>Mostek</strong> <span class="stitek-vzdalenost">10 km</span> <span class="cena-obce-stitek">70 Kč</span></span>
-            <span class="stitek-obec-polozka skryto" data-obec="Přívrat"><strong>Přívrat</strong> <span class="stitek-vzdalenost">8 km</span> <span class="cena-obce-stitek">56 Kč</span></span>
-            <span class="stitek-obec-polozka skryto" data-obec="Řetová"><strong>Řetová</strong> <span class="stitek-vzdalenost">7 km</span> <span class="cena-obce-stitek">49 Kč</span></span>
-            <span class="stitek-obec-polozka skryto" data-obec="Řetůvka"><strong>Řetůvka</strong> <span class="stitek-vzdalenost">5 km</span> <span class="cena-obce-stitek">35 Kč</span></span>
-            <span class="stitek-obec-polozka skryto" data-obec="Rybník"><strong>Rybník</strong> <span class="stitek-vzdalenost">10 km</span> <span class="cena-obce-stitek">70 Kč</span></span>
-            <span class="stitek-obec-polozka skryto" data-obec="Sloupnice"><strong>Sloupnice</strong> <span class="stitek-vzdalenost">10 km</span> <span class="cena-obce-stitek">70 Kč</span></span>
-            <span class="stitek-obec-polozka skryto" data-obec="Sopotnice"><strong>Sopotnice</strong> <span class="stitek-vzdalenost">9 km</span> <span class="cena-obce-stitek">63 Kč</span></span>
-            <span class="stitek-obec-polozka skryto" data-obec="Sudislav"><strong>Sudislav</strong> <span class="stitek-vzdalenost">8 km</span> <span class="cena-obce-stitek">56 Kč</span></span>
-            <span class="stitek-obec-polozka skryto" data-obec="Velká Skrovnice"><strong>Velká Skrovnice</strong> <span class="stitek-vzdalenost">7 km</span> <span class="cena-obce-stitek">49 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Černovír"><strong>Černovír</strong> <span class="stitek-vzdalenost">Zóna 2</span> <span class="cena-obce-stitek">50 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Česká Třebová"><strong>Česká Třebová</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="České Libchavy"><strong>České Libchavy</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Dlouhá Třebová"><strong>Dlouhá Třebová</strong> <span class="stitek-vzdalenost">Zóna 2</span> <span class="cena-obce-stitek">50 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Dolní Dobrouč"><strong>Dolní Dobrouč</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Dolní Houžovec"><strong>Dolní Houžovec</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Dolní Libchavy"><strong>Dolní Libchavy</strong> <span class="stitek-vzdalenost">Zóna 2</span> <span class="cena-obce-stitek">50 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Džbánov"><strong>Džbánov</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Horní Houžovec"><strong>Horní Houžovec</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Horní Libchavy"><strong>Horní Libchavy</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Hrádek"><strong>Hrádek</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Jehnědí"><strong>Jehnědí</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Kerhartice"><strong>Kerhartice</strong> <span class="stitek-vzdalenost">Zóna 2</span> <span class="cena-obce-stitek">50 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Knapovec"><strong>Knapovec</strong> <span class="stitek-vzdalenost">Zóna 2</span> <span class="cena-obce-stitek">50 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Lanšperk"><strong>Lanšperk</strong> <span class="stitek-vzdalenost">Zóna 2</span> <span class="cena-obce-stitek">50 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Orlické Podhůří"><strong>Orlické Podhůří</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Přívrat"><strong>Přívrat</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Rozsocha"><strong>Rozsocha</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Rviště"><strong>Rviště</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Říčky"><strong>Říčky</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Skuhrov"><strong>Skuhrov</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Sloupnice"><strong>Sloupnice</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
+            <span class="stitek-obec-polozka skryto" data-obec="Sudislav nad Orlicí"><strong>Sudislav nad Orlicí</strong> <span class="stitek-vzdalenost">Zóna 3</span> <span class="cena-obce-stitek">80 Kč</span></span>
           </div>
 
           <!-- Radarová mapa Rychnov (Velká bezešvá mapa se všemi 41 obcemi) -->
@@ -577,12 +650,15 @@ $suroviny = ziskatSuroviny();
             </svg>
           </div>
 
-          <!-- Radarová mapa Ústí nad Orlicí (Velká bezešvá mapa se všemi 18 obcemi) -->
+          <!-- Radarová mapa Ústí nad Orlicí (Velká bezešvá mapa se všemi 23 obcemi) -->
           <div id="rozvoz-mapa-svg-usti" class="rozvoz-mapa-svg-platno" style="display: none;">
             <svg viewBox="0 0 880 620" class="vektor-mapa-svg">
-              <!-- Zóna do 10 km (+7 Kč / 1 km) -->
+              <!-- Zóna 3 (80 Kč) -->
               <circle cx="440" cy="310" r="270" class="mapa-kruh-zona zona-okoli-10km" />
-              <text x="440" y="32" class="mapa-popisek-zony">OKRUH ROZVOZU DO 10 KM (+7 Kč / 1 km)</text>
+              <text x="440" y="32" class="mapa-popisek-zony">OKRUH ROZVOZU (ZÓNA 2: 50 KČ | ZÓNA 3: 80 KČ)</text>
+
+              <!-- Zóna 2 (50 Kč) -->
+              <circle cx="440" cy="310" r="160" class="mapa-kruh-zona" style="stroke: rgba(245, 158, 11, 0.45); stroke-width: 1.5; stroke-dasharray: 6 6; fill: rgba(245, 158, 11, 0.03);" />
 
               <!-- Zóna Město Ústí (+10 Kč) -->
               <circle cx="440" cy="310" r="54" class="mapa-kruh-zona zona-mesto-stred" />
@@ -591,67 +667,78 @@ $suroviny = ziskatSuroviny();
               <circle cx="440" cy="310" r="8" class="mapa-bod-stred" />
               <text x="440" y="286" class="mapa-popisek-mesto">Ústí n.O.</text>
 
-
-
               <!-- Sever / Severovýchod -->
-              <circle cx="451" cy="182" r="4.5" class="mapa-bod-obec" />
-              <text x="459" y="186" class="mapa-text-obec">Libchavy</text>
+              <circle cx="440" cy="225" r="4.5" class="mapa-bod-obec" />
+              <text x="448" y="229" class="mapa-text-obec">Dolní Libchavy</text>
 
-              <circle cx="424" cy="132" r="4.5" class="mapa-bod-obec" />
-              <text x="416" y="136" text-anchor="end" class="mapa-text-obec">České Libchavy</text>
+              <circle cx="440" cy="175" r="4.5" class="mapa-bod-obec" />
+              <text x="448" y="179" class="mapa-text-obec">Horní Libchavy</text>
 
-              <circle cx="325" cy="111" r="4.5" class="mapa-bod-obec" />
-              <text x="317" y="115" text-anchor="end" class="mapa-text-obec">Sopotnice</text>
+              <circle cx="430" cy="125" r="4.5" class="mapa-bod-obec" />
+              <text x="422" y="129" text-anchor="end" class="mapa-text-obec">České Libchavy</text>
 
-              <circle cx="548" cy="202" r="4.5" class="mapa-bod-obec" />
-              <text x="556" y="206" class="mapa-text-obec">Hnátnice</text>
+              <circle cx="610" cy="215" r="4.5" class="mapa-bod-obec" />
+              <text x="618" y="219" class="mapa-text-obec">Dolní Dobrouč</text>
 
-              <circle cx="626" cy="223" r="4.5" class="mapa-bod-obec" />
-              <text x="634" y="227" class="mapa-text-obec">Dolní Dobrouč</text>
+              <circle cx="530" cy="240" r="4.5" class="mapa-bod-obec" />
+              <text x="538" y="244" class="mapa-text-obec">Lanšperk</text>
 
-              <circle cx="656" cy="175" r="4.5" class="mapa-bod-obec" />
-              <text x="664" y="179" class="mapa-text-obec">Horní Dobrouč</text>
+              <circle cx="480" cy="265" r="4.5" class="mapa-bod-obec" />
+              <text x="488" y="269" class="mapa-text-obec">Černovír</text>
 
               <!-- Východ / Jihovýchod -->
-              <circle cx="618" cy="294" r="4.5" class="mapa-bod-obec" />
-              <text x="626" y="298" class="mapa-text-obec">Lanšperk</text>
+              <circle cx="535" cy="375" r="4.5" class="mapa-bod-obec" />
+              <text x="543" y="379" class="mapa-text-obec">Dlouhá Třebová</text>
 
-              <circle cx="572" cy="386" r="4.5" class="mapa-bod-obec" />
-              <text x="580" y="390" class="mapa-text-obec">Dlouhá Třebová</text>
+              <circle cx="600" cy="460" r="4.5" class="mapa-bod-obec" />
+              <text x="608" y="464" class="mapa-text-obec">Česká Třebová</text>
 
-              <circle cx="680" cy="397" r="4.5" class="mapa-bod-obec" />
-              <text x="688" y="401" class="mapa-text-obec">Rybník</text>
+              <circle cx="555" cy="330" r="4.5" class="mapa-bod-obec" />
+              <text x="563" y="334" class="mapa-text-obec">Dolní Houžovec</text>
 
-              <circle cx="611" cy="500" r="4.5" class="mapa-bod-obec" />
-              <text x="619" y="504" class="mapa-text-obec">Česká Třebová</text>
+              <circle cx="615" cy="340" r="4.5" class="mapa-bod-obec" />
+              <text x="623" y="344" class="mapa-text-obec">Horní Houžovec</text>
 
-              <circle cx="503" cy="505" r="4.5" class="mapa-bod-obec" />
-              <text x="511" y="509" class="mapa-text-obec">Přívrat</text>
+              <circle cx="505" cy="355" r="4.5" class="mapa-bod-obec" />
+              <text x="513" y="359" class="mapa-text-obec">Říčky</text>
+
+              <circle cx="550" cy="425" r="4.5" class="mapa-bod-obec" />
+              <text x="558" y="429" class="mapa-text-obec">Skuhrov</text>
+
+              <circle cx="455" cy="385" r="4.5" class="mapa-bod-obec" />
+              <text x="463" y="389" class="mapa-text-obec">Knapovec</text>
+
+              <circle cx="485" cy="470" r="4.5" class="mapa-bod-obec" />
+              <text x="493" y="474" class="mapa-text-obec">Přívrat</text>
 
               <!-- Jih / Jihozápad -->
-              <circle cx="340" cy="458" r="4.5" class="mapa-bod-obec" />
-              <text x="332" y="462" text-anchor="end" class="mapa-text-obec">Řetová</text>
+              <circle cx="310" cy="375" r="4.5" class="mapa-bod-obec" />
+              <text x="302" y="379" text-anchor="end" class="mapa-text-obec">Džbánov</text>
 
-              <circle cx="335" cy="383" r="4.5" class="mapa-bod-obec" />
-              <text x="327" y="387" text-anchor="end" class="mapa-text-obec">Řetůvka</text>
-
-              <circle cx="209" cy="418" r="4.5" class="mapa-bod-obec" />
-              <text x="201" y="422" text-anchor="end" class="mapa-text-obec">Sloupnice</text>
+              <circle cx="260" cy="420" r="4.5" class="mapa-bod-obec" />
+              <text x="252" y="424" text-anchor="end" class="mapa-text-obec">Sloupnice</text>
 
               <!-- Západ / Severozápad -->
-              <circle cx="185" cy="310" r="4.5" class="mapa-bod-obec" />
-              <text x="177" y="314" text-anchor="end" class="mapa-text-obec">Mostek</text>
+              <circle cx="370" cy="310" r="4.5" class="mapa-bod-obec" />
+              <text x="362" y="314" text-anchor="end" class="mapa-text-obec">Kerhartice</text>
 
-              <circle cx="240" cy="267" r="4.5" class="mapa-bod-obec" />
-              <text x="232" y="271" text-anchor="end" class="mapa-text-obec">Sudislav</text>
+              <circle cx="340" cy="250" r="4.5" class="mapa-bod-obec" />
+              <text x="332" y="254" text-anchor="end" class="mapa-text-obec">Hrádek</text>
 
-              <circle cx="203" cy="214" r="4.5" class="mapa-bod-obec" />
-              <text x="195" y="218" text-anchor="end" class="mapa-text-obec">Brandýs n. O.</text>
+              <circle cx="330" cy="210" r="4.5" class="mapa-bod-obec" />
+              <text x="322" y="214" text-anchor="end" class="mapa-text-obec">Jehnědí</text>
 
-              <circle cx="307" cy="190" r="4.5" class="mapa-bod-obec" />
-              <text x="299" y="194" text-anchor="end" class="mapa-text-obec">Velká Skrovnice</text>
+              <circle cx="370" cy="180" r="4.5" class="mapa-bod-obec" />
+              <text x="362" y="184" text-anchor="end" class="mapa-text-obec">Orlické Podhůří</text>
 
+              <circle cx="350" cy="140" r="4.5" class="mapa-bod-obec" />
+              <text x="342" y="144" text-anchor="end" class="mapa-text-obec">Rozsocha</text>
 
+              <circle cx="385" cy="145" r="4.5" class="mapa-bod-obec" />
+              <text x="377" y="149" text-anchor="end" class="mapa-text-obec">Rviště</text>
+
+              <circle cx="280" cy="260" r="4.5" class="mapa-bod-obec" />
+              <text x="272" y="264" text-anchor="end" class="mapa-text-obec">Sudislav nad Orlicí</text>
             </svg>
           </div>
 
@@ -661,7 +748,16 @@ $suroviny = ziskatSuroviny();
   <!-- 6. SEKCE: PROVOZOVNY -->
   <section class="sekce-provozovny" id="provozovny">
     <div class="kontejner">
-      <h2 class="nadpis-sekce" style="text-align: center; margin-bottom: 40px;">Provozovny</h2>
+      <h2 class="nadpis-sekce" style="text-align: center; margin-bottom: 24px;">Provozovny</h2>
+
+      <!-- Decentní černobílý switch mezi městy (Rychnov n.K. a Ústí n.O.) -->
+      <div class="provozovny-switch-obal">
+        <div class="kapsle-prepinac-cernobily" id="prepinac-provozovny" data-aktivni="rychnov">
+          <div class="kapsle-slajdr-bily-cb"></div>
+          <button type="button" class="kapsle-polozka-cb aktivni" data-pobocka-kod="rychnov" onclick="prepnoutPobocku('rychnov')">Rychnov n.K.</button>
+          <button type="button" class="kapsle-polozka-cb" data-pobocka-kod="usti" onclick="prepnoutPobocku('usti')">Ústí n.O.</button>
+        </div>
+      </div>
 
       <div class="mrizka-provozovny" style="grid-template-columns: 1fr; max-width: 800px; margin: 0 auto;">
         
@@ -681,32 +777,33 @@ $suroviny = ziskatSuroviny();
               <p class="cas-hodin">pondělí - sobota: 11:00 ~ 14:00, 15:00~19:00</p>
             </div>
 
-            <button type="button" class="tlacitko tlacitko-sede" style="margin-top: 15px;" onclick="ukazatNaMapeProvozovnu('rychnov')">UKÁZAT NA MAPĚ</button>
+            <a href="https://mapy.com/s/hecazafoju" target="_blank" rel="noopener noreferrer" class="tlacitko tlacitko-sede" style="margin-top: 15px;">UKÁZAT NA MAPĚ</a>
           </div>
           
           <div class="karusel-provozovny-obal" id="karusel-rychnov">
             <div class="karusel-snimky-pas">
               <div class="karusel-snimek">
-                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=800&auto=format&fit=crop" alt="Pizzerie Rychnov - Priprava pizzy">
-                <div class="karusel-popisek">Kuchyně a příprava čerstvých pizz</div>
+                <img src="media/obrazky/provozovny/provozovna_usti1.jpg" alt="Pizzerie Rychnov nad Kněžnou - Provozovna" loading="lazy" decoding="async">
               </div>
               <div class="karusel-snimek">
-                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=800&auto=format&fit=crop" alt="Pizzerie Rychnov - Pec">
-                <div class="karusel-popisek">Tradiční pec na pizzu</div>
-              </div>
-              <div class="karusel-snimek">
-                <img src="https://images.unsplash.com/photo-1579751626657-72bc17010498?q=80&w=800&auto=format&fit=crop" alt="Pizzerie Rychnov - Interier">
-                <div class="karusel-popisek">Příjemné prostředí pro hosty</div>
+                <img src="media/obrazky/provozovny/provozovna_usti2.jpg" alt="Pizzerie Rychnov nad Kněžnou - Interiér" loading="lazy" decoding="async">
               </div>
             </div>
             
-            <button class="karusel-sipka karusel-sipka-vlevo" onclick="posunoutKarusel('karusel-rychnov', -1)">&lsaquo;</button>
-            <button class="karusel-sipka karusel-sipka-vpravo" onclick="posunoutKarusel('karusel-rychnov', 1)">&rsaquo;</button>
+            <button type="button" class="karusel-sipka karusel-sipka-vlevo" onclick="posunoutKarusel('karusel-rychnov', -1)" aria-label="Předchozí snímek">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <button type="button" class="karusel-sipka karusel-sipka-vpravo" onclick="posunoutKarusel('karusel-rychnov', 1)" aria-label="Další snímek">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
             
             <div class="karusel-tecky-obalo">
-              <button class="karusel-tecka aktivni" onclick="nastavitSnimekKaruselu('karusel-rychnov', 0)"></button>
-              <button class="karusel-tecka" onclick="nastavitSnimekKaruselu('karusel-rychnov', 1)"></button>
-              <button class="karusel-tecka" onclick="nastavitSnimekKaruselu('karusel-rychnov', 2)"></button>
+              <button class="karusel-tecka aktivni" onclick="nastavitSnimekKaruselu('karusel-rychnov', 0)" aria-label="Snímek 1"></button>
+              <button class="karusel-tecka" onclick="nastavitSnimekKaruselu('karusel-rychnov', 1)" aria-label="Snímek 2"></button>
             </div>
           </div>
         </div>
@@ -727,32 +824,33 @@ $suroviny = ziskatSuroviny();
               <p class="cas-hodin">pondělí - sobota: 11:00 ~ 14:00, 15:00~19:00</p>
             </div>
 
-            <button type="button" class="tlacitko tlacitko-sede" style="margin-top: 15px;" onclick="ukazatNaMapeProvozovnu('usti')">UKÁZAT NA MAPĚ</button>
+            <a href="https://mapy.com/s/jomatotube" target="_blank" rel="noopener noreferrer" class="tlacitko tlacitko-sede" style="margin-top: 15px;">UKÁZAT NA MAPĚ</a>
           </div>
           
           <div class="karusel-provozovny-obal" id="karusel-usti">
             <div class="karusel-snimky-pas">
               <div class="karusel-snimek">
-                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800&auto=format&fit=crop" alt="Pizzerie Ústí - Interiér">
-                <div class="karusel-popisek">Stoly a posezení pro zákazníky</div>
+                <img src="media/obrazky/provozovny/provozovna_usti1.jpg" alt="Pizzerie Ústí nad Orlicí - Provozovna" loading="lazy" decoding="async">
               </div>
               <div class="karusel-snimek">
-                <img src="https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?q=80&w=800&auto=format&fit=crop" alt="Pizzerie Ústí - Bar">
-                <div class="karusel-popisek">Moderní bar a výdej rozvozů</div>
-              </div>
-              <div class="karusel-snimek">
-                <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=800&auto=format&fit=crop" alt="Pizzerie Ústí - Atmosféra">
-                <div class="karusel-popisek">Večerní atmosféra pizzerie</div>
+                <img src="media/obrazky/provozovny/provozovna_usti2.jpg" alt="Pizzerie Ústí nad Orlicí - Interiér a výdej" loading="lazy" decoding="async">
               </div>
             </div>
             
-            <button class="karusel-sipka karusel-sipka-vlevo" onclick="posunoutKarusel('karusel-usti', -1)">&lsaquo;</button>
-            <button class="karusel-sipka karusel-sipka-vpravo" onclick="posunoutKarusel('karusel-usti', 1)">&rsaquo;</button>
+            <button type="button" class="karusel-sipka karusel-sipka-vlevo" onclick="posunoutKarusel('karusel-usti', -1)" aria-label="Předchozí snímek">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <button type="button" class="karusel-sipka karusel-sipka-vpravo" onclick="posunoutKarusel('karusel-usti', 1)" aria-label="Další snímek">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
             
             <div class="karusel-tecky-obalo">
-              <button class="karusel-tecka aktivni" onclick="nastavitSnimekKaruselu('karusel-usti', 0)"></button>
-              <button class="karusel-tecka" onclick="nastavitSnimekKaruselu('karusel-usti', 1)"></button>
-              <button class="karusel-tecka" onclick="nastavitSnimekKaruselu('karusel-usti', 2)"></button>
+              <button class="karusel-tecka aktivni" onclick="nastavitSnimekKaruselu('karusel-usti', 0)" aria-label="Snímek 1"></button>
+              <button class="karusel-tecka" onclick="nastavitSnimekKaruselu('karusel-usti', 1)" aria-label="Snímek 2"></button>
             </div>
           </div>
         </div>
@@ -763,32 +861,66 @@ $suroviny = ziskatSuroviny();
 
   <!-- 7. MODALNI OKNA -->
 
-  <!-- MODALNI OKNO DETAILU PIZZY -->
-  <div class="modalni-okno-pozadi" id="modal-detail-pizzy">
-    <div class="modalni-okno-obsah" style="max-width: 650px;">
-      <button class="zavrit-modal" onclick="zavritModal('modal-detail-pizzy')">&times;</button>
-      <div id="obsah-detailu-pizzy-modal"></div>
-    </div>
-  </div>
-
-  <div class="modalni-okno-pozadi" id="modal-kosiku">
+  <!-- MODÁLNÍ OKNO NÁKUPNÍHO SEZNAMU -->
+  <div class="modalni-okno-pozadi" id="modal-kosiku" onclick="if(event.target === this) zavritModal('modal-kosiku')">
     <div class="modalni-okno-obsah">
       <button class="zavrit-modal" onclick="zavritModal('modal-kosiku')">&times;</button>
-      <h2 class="nadpis-sekce" style="font-size: 1.8rem; margin-bottom: 15px;">VÁŠ NÁKUPNÍ KOŠÍK</h2>
+      <h2 class="nadpis-sekce" style="font-size: 1.8rem; margin-bottom: 15px;">NÁKUPNÍ SEZNAM</h2>
+      
+      <!-- Seznam položek v nákupním seznamu -->
       <div id="seznam-polozek-kosik-modal" class="seznam-polozek-kosiku"></div>
-      <div id="celkova-cena-kosik-modal" class="celkova-cena-kosiku">Celkem: 0 Kč</div>
 
-      <div style="margin-top: 25px; text-align: center;">
-        <p style="color: #ccc; font-size: 0.9rem; margin-bottom: 15px;">Pro dokončení objednávky zavolejte na vybranou provozovnu:</p>
-        <div id="kosik-volat-tlacitko-kontejner">
-          <a href="tel:739149142" class="tlacitko tlacitko-cervene">Volat pro objednávku Rychnov (739 149 142)</a>
+      <!-- Blok ceny rozvozu pod seznamem pizz -->
+      <div id="kosik-rozvoz-blok" class="kosik-rozvoz-sekce" style="margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.12);">
+        <label for="kosik-vyhledat-obec" style="display: flex; align-items: center; justify-content: space-between; font-size: 0.92rem; color: #ccc; margin-bottom: 8px; font-weight: 700;">
+          <span>Cena rozvozu:</span>
+          <span id="kosik-rozvoz-vybrana-cena-badge" style="display: none; color: #f59e0b; font-weight: 800;"></span>
+        </label>
+        <div style="position: relative;">
+          <input type="text" id="kosik-vyhledat-obec" class="vstup-vyhledat-obec" placeholder="Vyhledejte obec pro zjištění ceny rozvozu..." oninput="hledatRozvozVKosiku(this.value)" autocomplete="off" style="padding-right: 36px;">
+          <button type="button" id="kosik-smazat-rozvoz" onclick="vymazatRozvozVKosiku()" style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #aaa; font-size: 1.3rem; line-height: 1; cursor: pointer; padding: 4px;" title="Zrušit vybraný rozvoz">&times;</button>
+        </div>
+        <div id="kosik-vysledky-obci" class="mrizka-stiku-obci mrizka-vyhledavani-vysledky-mobil" style="display: none; max-height: 160px; overflow-y: auto; margin-top: 8px;"></div>
+      </div>
+
+      <!-- Celková cena -->
+      <div id="celkova-cena-kosik-modal" class="celkova-cena-kosiku" style="margin-top: 18px;">Celkem: 0 Kč</div>
+
+      <!-- Telefonická objednávka: Ikona telefonu s vyskakovacím oknem výběru pobočky -->
+      <div class="kosik-volani-sekce" id="kosik-volani-sekce-obal" style="margin-top: 25px; text-align: center; position: relative;">
+        <p style="color: #ccc; font-size: 0.9rem; margin-bottom: 12px;">Objednávku dokončíte telefonicky:</p>
+        <div style="display: inline-block; position: relative;">
+          <button type="button" class="tlacitko-telefon-ikona tlacitko-telefon-kosik" id="btn-otevrit-volani-kosik" onclick="prepnoutPodoknoVolaniKosik(event)" title="Zavolat na provozovnu" aria-label="Zavolat na provozovnu" style="width: 56px; height: 56px; border-radius: 50%; background-color: var(--barva-cervena-hlavni, #e50914); color: #ffffff; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 4px 18px rgba(229, 9, 20, 0.45); transition: all 0.25s ease;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1.003 1.003 0 011.02-.24c1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+            </svg>
+          </button>
+
+          <!-- Vyskakovací podokno s výběrem provozovny -->
+          <div class="podokno-volani-pobocky podokno-volani-kosik" id="podokno-volani-kosik-box">
+            <div class="podokno-volani-zahlavi">Zavolejte nám pro objednávku:</div>
+            <a href="tel:739149142" class="podokno-polozka-volani">
+              <div>
+                <span class="podokno-polozka-nazev">Rychnov nad Kněžnou</span>
+                <span class="podokno-polozka-cislo">739 149 142</span>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color: #f59e0b;"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1.003 1.003 0 011.02-.24c1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+            </a>
+            <a href="tel:774741818" class="podokno-polozka-volani">
+              <div>
+                <span class="podokno-polozka-nazev">Ústí nad Orlicí</span>
+                <span class="podokno-polozka-cislo">774 741 818</span>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color: #f59e0b;"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1.003 1.003 0 011.02-.24c1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+            </a>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- MODALNI OKNO PREHLEDU ALERGENU -->
-  <div class="modalni-okno-pozadi" id="modal-prehled-alergenu">
+  <div class="modalni-okno-pozadi" id="modal-prehled-alergenu" onclick="if(event.target === this) zavritModal('modal-prehled-alergenu')">
     <div class="modalni-okno-obsah" style="max-width: 650px;">
       <button class="zavrit-modal" onclick="zavritModal('modal-prehled-alergenu')">&times;</button>
       <h2 class="nadpis-sekce" style="font-size: 1.8rem; color: #e53e3e; margin-bottom: 15px;">SEZNAM ALERGENŮ EU</h2>
@@ -855,11 +987,36 @@ $suroviny = ziskatSuroviny();
     </div>
   </div>
 
-  <button class="plovuci-kosik-tlacitko" onclick="otvoritModal('modal-kosiku')">
-    <span>🛒 Košík</span>
+  <!-- MODALNI OKNO VELKEHO NAHLEDU INGREDIENCE (FOTKA, NAZEV A POPIS DOLE) -->
+  <div class="modalni-okno-pozadi" id="modal-obrazek-ingredience" onclick="if(event.target === this) zavritModal('modal-obrazek-ingredience')">
+    <div class="modalni-okno-obsah modal-nahled-ingredience-obsah">
+      <button class="zavrit-modal" onclick="zavritModal('modal-obrazek-ingredience')" title="Zavřít náhled">&times;</button>
+      <div id="modal-nahled-ingredience-telo">
+        <!-- Obsah plni JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- MODÁLNÍ OKNO PRO ZVĚTŠENÝ NÁHLED FOTKY PIZZY (DESKTOP) -->
+  <div class="modalni-okno-pozadi" id="modal-obrazek-pizza" onclick="if(event.target === this) zavritModal('modal-obrazek-pizza')">
+    <div class="modalni-okno-obsah modal-nahled-pizza-obsah">
+      <button class="zavrit-modal" onclick="zavritModal('modal-obrazek-pizza')" title="Zavřít náhled">&times;</button>
+      <div id="modal-nahled-pizza-telo">
+        <!-- Vkládá JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- PLOVOUCÍ SEZNAM (TLACÍTKO VPRAVO DOLE) -->
+  <button class="plovuci-kosik-tlacitko" id="plovuci-seznam-tlacitko" onclick="otvoritModal('modal-kosiku')" style="display: none;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+    </svg>
+    <span>Seznam</span>
     <span class="pocitadlo-kosiku" id="pocitadlo-kosiku-cislo">0</span>
   </button>
 
-  <script src="js/aplikace.js?v=<?php echo time(); ?>"></script>
+  <script src="js/aplikace.js?v=<?php echo filemtime(__DIR__ . '/js/aplikace.js'); ?>"></script>
 </body>
 </html>

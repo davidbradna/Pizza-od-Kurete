@@ -109,14 +109,202 @@ const seznamPizz = window.seznamPizzZDatabaze || [
   }
 ];
 
-// Stav kosiku
+// Stav kosiku a rozvozu
 let kosik = [];
+let vybranyRozvoz = null;
 let aktivniKategorieFiltru = 'vse';
 
-// Po nacteni dokumentu
-document.addEventListener('DOMContentLoaded', () => {
+// Seznam všech obcí a lokalit pro rozvoz (propojeno s cenou dopravy)
+const SEZNAM_ROZVOZOVYCH_OBCI = [
+  // Rychnov nad Kněžnou a okolí
+  { obec: 'Rychnov nad Kněžnou', vzdalenost: 'Město', cena: 10, pobocka: 'rychnov' },
+  { obec: 'Lipovka', vzdalenost: '3 km', cena: 21, pobocka: 'rychnov' },
+  { obec: 'Lokot', vzdalenost: '3 km', cena: 21, pobocka: 'rychnov' },
+  { obec: 'Dlouhá Ves', vzdalenost: '4 km', cena: 28, pobocka: 'rychnov' },
+  { obec: 'Litohrady', vzdalenost: '4 km', cena: 28, pobocka: 'rychnov' },
+  { obec: 'Panská Habrová', vzdalenost: '4 km', cena: 28, pobocka: 'rychnov' },
+  { obec: 'Domašín', vzdalenost: '5 km', cena: 35, pobocka: 'rychnov' },
+  { obec: 'Lupenice', vzdalenost: '5 km', cena: 35, pobocka: 'rychnov' },
+  { obec: 'Roveň', vzdalenost: '5 km', cena: 35, pobocka: 'rychnov' },
+  { obec: 'Slemeno', vzdalenost: '5 km', cena: 35, pobocka: 'rychnov' },
+  { obec: 'Solnice', vzdalenost: '5 km', cena: 35, pobocka: 'rychnov' },
+  { obec: 'Jahodov', vzdalenost: '6 km', cena: 42, pobocka: 'rychnov' },
+  { obec: 'Jaroslav', vzdalenost: '6 km', cena: 42, pobocka: 'rychnov' },
+  { obec: 'Peklo nad Zdobnicí', vzdalenost: '6 km', cena: 42, pobocka: 'rychnov' },
+  { obec: 'Třebešov', vzdalenost: '6 km', cena: 42, pobocka: 'rychnov' },
+  { obec: 'Javornice', vzdalenost: '7 km', cena: 49, pobocka: 'rychnov' },
+  { obec: 'Javornice - Betlém', vzdalenost: '7 km', cena: 49, pobocka: 'rychnov' },
+  { obec: 'Libel', vzdalenost: '7 km', cena: 49, pobocka: 'rychnov' },
+  { obec: 'Lukavice', vzdalenost: '7 km', cena: 49, pobocka: 'rychnov' },
+  { obec: 'Synkov', vzdalenost: '7 km', cena: 49, pobocka: 'rychnov' },
+  { obec: 'Vamberk', vzdalenost: '7 km', cena: 49, pobocka: 'rychnov' },
+  { obec: 'Černíkovice', vzdalenost: '8 km', cena: 56, pobocka: 'rychnov' },
+  { obec: 'Doudleby nad Orlicí', vzdalenost: '8 km', cena: 56, pobocka: 'rychnov' },
+  { obec: 'Ještětice', vzdalenost: '8 km', cena: 56, pobocka: 'rychnov' },
+  { obec: 'Kvasiny', vzdalenost: '8 km', cena: 56, pobocka: 'rychnov' },
+  { obec: 'Liberk', vzdalenost: '8 km', cena: 56, pobocka: 'rychnov' },
+  { obec: 'Tutleky', vzdalenost: '8 km', cena: 56, pobocka: 'rychnov' },
+  { obec: 'Hláska', vzdalenost: '9 km', cena: 63, pobocka: 'rychnov' },
+  { obec: 'Lično', vzdalenost: '9 km', cena: 63, pobocka: 'rychnov' },
+  { obec: 'Merklovice', vzdalenost: '9 km', cena: 63, pobocka: 'rychnov' },
+  { obec: 'Bílý Újezd', vzdalenost: '10 km', cena: 70, pobocka: 'rychnov' },
+  { obec: 'Brocná', vzdalenost: '10 km', cena: 70, pobocka: 'rychnov' },
+  { obec: 'Byzhradec', vzdalenost: '10 km', cena: 70, pobocka: 'rychnov' },
+  { obec: 'Častolovice', vzdalenost: '10 km', cena: 70, pobocka: 'rychnov' },
+  { obec: 'Debřece', vzdalenost: '10 km', cena: 70, pobocka: 'rychnov' },
+  { obec: 'Hroška', vzdalenost: '10 km', cena: 70, pobocka: 'rychnov' },
+  { obec: 'Kostelec nad Orlicí', vzdalenost: '10 km', cena: 70, pobocka: 'rychnov' },
+  { obec: 'Ledská', vzdalenost: '10 km', cena: 70, pobocka: 'rychnov' },
+  { obec: 'Malá Ledská', vzdalenost: '10 km', cena: 70, pobocka: 'rychnov' },
+  { obec: 'Přím', vzdalenost: '10 km', cena: 70, pobocka: 'rychnov' },
+  { obec: 'Skuhrov nad Bělou', vzdalenost: '10 km', cena: 70, pobocka: 'rychnov' },
+  { obec: 'Záměl', vzdalenost: '10 km', cena: 70, pobocka: 'rychnov' },
+
+  // Ústí nad Orlicí a okolí
+  { obec: 'Ústí nad Orlicí', vzdalenost: 'Město', cena: 10, pobocka: 'usti' },
+  { obec: 'Černovír', vzdalenost: 'Zóna 2', cena: 50, pobocka: 'usti' },
+  { obec: 'Dlouhá Třebová', vzdalenost: 'Zóna 2', cena: 50, pobocka: 'usti' },
+  { obec: 'Dolní Libchavy', vzdalenost: 'Zóna 2', cena: 50, pobocka: 'usti' },
+  { obec: 'Kerhartice', vzdalenost: 'Zóna 2', cena: 50, pobocka: 'usti' },
+  { obec: 'Knapovec', vzdalenost: 'Zóna 2', cena: 50, pobocka: 'usti' },
+  { obec: 'Lanšperk', vzdalenost: 'Zóna 2', cena: 50, pobocka: 'usti' },
+  { obec: 'Česká Třebová', vzdalenost: 'Zóna 3', cena: 80, pobocka: 'usti' },
+  { obec: 'České Libchavy', vzdalenost: 'Zóna 3', cena: 80, pobocka: 'usti' },
+  { obec: 'Dolní Dobrouč', vzdalenost: 'Zóna 3', cena: 80, pobocka: 'usti' },
+  { obec: 'Dolní Houžovec', vzdalenost: 'Zóna 3', cena: 80, pobocka: 'usti' },
+  { obec: 'Džbánov', vzdalenost: 'Zóna 3', cena: 80, pobocka: 'usti' },
+  { obec: 'Horní Houžovec', vzdalenost: 'Zóna 3', cena: 80, pobocka: 'usti' },
+  { obec: 'Horní Libchavy', vzdalenost: 'Zóna 3', cena: 80, pobocka: 'usti' },
+  { obec: 'Hrádek', vzdalenost: 'Zóna 3', cena: 80, pobocka: 'usti' },
+  { obec: 'Jehnědí', vzdalenost: 'Zóna 3', cena: 80, pobocka: 'usti' },
+  { obec: 'Orlické Podhůří', vzdalenost: 'Zóna 3', cena: 80, pobocka: 'usti' },
+  { obec: 'Přívrat', vzdalenost: 'Zóna 3', cena: 80, pobocka: 'usti' },
+  { obec: 'Rozsocha', vzdalenost: 'Zóna 3', cena: 80, pobocka: 'usti' },
+  { obec: 'Rviště', vzdalenost: 'Zóna 3', cena: 80, pobocka: 'usti' },
+  { obec: 'Říčky', vzdalenost: 'Zóna 3', cena: 80, pobocka: 'usti' },
+  { obec: 'Skuhrov', vzdalenost: 'Zóna 3', cena: 80, pobocka: 'usti' },
+  { obec: 'Sloupnice', vzdalenost: 'Zóna 3', cena: 80, pobocka: 'usti' },
+  { obec: 'Sudislav nad Orlicí', vzdalenost: 'Zóna 3', cena: 80, pobocka: 'usti' }
+];
+
+function nacistKosikZeStorage() {
+  try {
+    const data = localStorage.getItem('pizza_kosik');
+    if (data) {
+      const parsed = JSON.parse(data);
+      if (Array.isArray(parsed)) {
+        const aktualniPizzy = window.seznamPizzZDatabaze || (typeof seznamPizz !== 'undefined' ? seznamPizz : []) || [];
+        kosik = parsed.map(item => {
+          if (!item || !item.pizza) return null;
+          const cerstvaPizza = aktualniPizzy.find(p => String(p.id) === String(item.pizza.id));
+          return {
+            pizza: cerstvaPizza || item.pizza,
+            pocet: parseInt(item.pocet, 10) || 1
+          };
+        }).filter(Boolean);
+      }
+    }
+  } catch (e) {
+    console.error('Chyba při načítání košíku z localStorage:', e);
+    kosik = [];
+  }
+}
+
+function ulozitKosikDoStorage() {
+  try {
+    localStorage.setItem('pizza_kosik', JSON.stringify(kosik));
+  } catch (e) {
+    console.error('Chyba při ukládání košíku do localStorage:', e);
+  }
+}
+
+function nacistRozvozZeStorage() {
+  try {
+    const data = localStorage.getItem('pizza_rozvoz');
+    if (data) {
+      const parsed = JSON.parse(data);
+      if (parsed && parsed.obec && typeof parsed.cena !== 'undefined') {
+        vybranyRozvoz = parsed;
+      }
+    }
+  } catch (e) {
+    vybranyRozvoz = null;
+  }
+}
+
+function ulozitRozvozDoStorage() {
+  try {
+    if (vybranyRozvoz) {
+      localStorage.setItem('pizza_rozvoz', JSON.stringify(vybranyRozvoz));
+    } else {
+      localStorage.removeItem('pizza_rozvoz');
+    }
+  } catch (e) {
+    console.error('Chyba při ukládání rozvozu do localStorage:', e);
+  }
+}
+
+// Inicializace košíku a rozvozu při načtení skriptu
+nacistKosikZeStorage();
+nacistRozvozZeStorage();
+
+function inicializovatAplikaci() {
+  nacistKosikZeStorage();
+  nacistRozvozZeStorage();
   renderovatJidelniListek();
   nastavitPosluchaceUdalosti();
+  aktualizovatVzhledKosiku();
+}
+
+// Spuštění po načtení DOM nebo ihned, pokud je již DOM připraven
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', inicializovatAplikaci);
+} else {
+  inicializovatAplikaci();
+}
+
+window.addEventListener('pageshow', () => {
+  nacistKosikZeStorage();
+  nacistRozvozZeStorage();
+  if (typeof renderovatJidelniListek === 'function') {
+    renderovatJidelniListek();
+  }
+  aktualizovatVzhledKosiku();
+  renderovatObsahKosiku();
+});
+
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) {
+    nacistKosikZeStorage();
+    nacistRozvozZeStorage();
+    if (typeof renderovatJidelniListek === 'function') {
+      renderovatJidelniListek();
+    }
+    aktualizovatVzhledKosiku();
+    renderovatObsahKosiku();
+  }
+});
+
+window.addEventListener('focus', () => {
+  nacistKosikZeStorage();
+  nacistRozvozZeStorage();
+  if (typeof renderovatJidelniListek === 'function') {
+    renderovatJidelniListek();
+  }
+  aktualizovatVzhledKosiku();
+  renderovatObsahKosiku();
+});
+
+window.addEventListener('storage', (e) => {
+  if (e.key === 'pizza_kosik' || e.key === 'pizza_rozvoz') {
+    nacistKosikZeStorage();
+    nacistRozvozZeStorage();
+    if (typeof renderovatJidelniListek === 'function') {
+      renderovatJidelniListek();
+    }
+    aktualizovatVzhledKosiku();
+    renderovatObsahKosiku();
+  }
 });
 
 // Stav preklopnych switchu
@@ -219,6 +407,114 @@ function ziskatPalivostPizzy(pizza) {
   return maxPalivost;
 }
 
+// Pomocná funkce pro vyhledání suroviny podle názvu nebo ID
+function najitSurovinuProNazev(nazevPolozky, pizza) {
+  const suroviny = (window.seznamSurovinZDatabaze && window.seznamSurovinZDatabaze.length > 0)
+    ? window.seznamSurovinZDatabaze
+    : [];
+  if (suroviny.length === 0 || !nazevPolozky) return null;
+
+  const normalizovat = (text) => {
+    return (text || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
+  };
+
+  const hledanyText = normalizovat(nazevPolozky);
+  if (!hledanyText) return null;
+
+  // 1. Přesná shoda podle názvu suroviny
+  let nalezena = suroviny.find(s => normalizovat(s.nazev) === hledanyText);
+  if (nalezena) return nalezena;
+
+  // 2. Přesná shoda podle ID
+  nalezena = suroviny.find(s => normalizovat(s.id) === hledanyText);
+  if (nalezena) return nalezena;
+
+  // 3. Shoda v rámci ingrediencí přiřazených dané pizze
+  if (pizza && Array.isArray(pizza.ingredience) && pizza.ingredience.length > 0) {
+    const surovinyPizzy = suroviny.filter(s => pizza.ingredience.includes(s.id));
+    if (hledanyText.length >= 4) {
+      nalezena = surovinyPizzy.find(s => {
+        const sNazev = normalizovat(s.nazev);
+        const sId = normalizovat(s.id);
+        return sNazev.includes(hledanyText) || hledanyText.includes(sNazev) || sId.includes(hledanyText) || hledanyText.includes(sId);
+      });
+      if (nalezena) return nalezena;
+    }
+
+    const stopSlova = new Set(['italska', 'italske', 'italsky', 'cerstva', 'cerstve', 'cerstvy', 'special', 'original', 'prave', 'pravy', 'prava', 'd.o.p', 'dop']);
+    const slova = hledanyText.split(/[\s,.-]+/).filter(w => w.length >= 4 && !stopSlova.has(w));
+    for (const slovo of slova) {
+      nalezena = surovinyPizzy.find(s => {
+        const sNazev = normalizovat(s.nazev);
+        const sId = normalizovat(s.id);
+        return sNazev.includes(slovo) || sId.includes(slovo);
+      });
+      if (nalezena) return nalezena;
+    }
+  }
+
+  // 4. Obecná shoda v celém seznamu surovin
+  if (hledanyText.length >= 4) {
+    nalezena = suroviny.find(s => {
+      const sNazev = normalizovat(s.nazev);
+      const sId = normalizovat(s.id);
+      return sNazev.includes(hledanyText) || hledanyText.includes(sNazev) || sId.includes(hledanyText) || hledanyText.includes(sId);
+    });
+    if (nalezena) return nalezena;
+  }
+
+  const stopSlova = new Set(['italska', 'italske', 'italsky', 'cerstva', 'cerstve', 'cerstvy', 'special', 'original', 'prave', 'pravy', 'prava', 'd.o.p', 'dop']);
+  const slova = hledanyText.split(/[\s,.-]+/).filter(w => w.length >= 4 && !stopSlova.has(w));
+  for (const slovo of slova) {
+    nalezena = suroviny.find(s => {
+      const sNazev = normalizovat(s.nazev);
+      const sId = normalizovat(s.id);
+      return sNazev.includes(slovo) || sId.includes(slovo);
+    });
+    if (nalezena) return nalezena;
+  }
+
+  return null;
+}
+
+// Pomocná funkce pro formátování složení pizzy s proklikem na velký náhled ingredience (seřazeno podle administrace)
+function formatovatSlozeniPizzy(pizza) {
+  if (!pizza) return '';
+  const textSlozeni = pizza.slozeni || '';
+  if (!textSlozeni.trim()) return '';
+
+  const vsechnySuroviny = window.seznamSurovinZDatabaze || [];
+  const indexMap = new Map();
+  vsechnySuroviny.forEach((s, idx) => indexMap.set(s.id, idx));
+
+  const casti = textSlozeni.split(',').map(cast => cast.trim()).filter(Boolean);
+  
+  // Namapujeme každou surovinu a určíme její pozici podle pořadí v administraci
+  const polozky = casti.map(cast => {
+    const surovina = najitSurovinuProNazev(cast, pizza);
+    const poradi = (surovina && indexMap.has(surovina.id)) ? indexMap.get(surovina.id) : 9999;
+    return {
+      text: cast,
+      surovina: surovina,
+      poradi: poradi
+    };
+  });
+
+  // Seřadíme přesně podle pořadí v administraci
+  polozky.sort((a, b) => a.poradi - b.poradi);
+
+  return polozky.map(p => {
+    if (p.surovina && p.surovina.id) {
+      return `<a href="javascript:void(0)" class="odkaz-ingredience-karta" onclick="otevritNahledIngredience('${encodeURIComponent(p.surovina.id)}', event, ${pizza.id})" title="Zobrazit detail ingredience">${p.text}</a>`;
+    }
+    return p.text;
+  }).join(', ');
+}
+
 // Funkce pro vykresleni pizz v mrizce
 function renderovatJidelniListek() {
   const mrizkaPrvek = document.getElementById('mrizka-pizz-kontejner');
@@ -236,6 +532,13 @@ function renderovatJidelniListek() {
   });
 
   const filtrovanePizzy = serazenePizzy.filter(pizza => {
+    // 0. Neaktivní pizza týdne se nesmí propisovat do menu (v menu smí být pouze aktivní pizza týdne)
+    const jePizzaTydne = Boolean(pizza.pizzaTydne);
+    const jeAktivniTydne = Boolean(pizza.aktivniPizzaTydne);
+    if (jePizzaTydne && !jeAktivniTydne) {
+      return false;
+    }
+
     // 1. Maso / bez masa
     const jeMasita = pizza.masite === true || (pizza.bezmase === false);
     const jeBezmasna = pizza.bezmase === true || (pizza.masite === false);
@@ -293,159 +596,55 @@ function renderovatJidelniListek() {
     const palivostUroven = ziskatPalivostPizzy(pizza);
     const palivostHtml = vytvoritChilliIkony(palivostUroven, 19);
     const jeAktivniTydne = Boolean(pizza.aktivniPizzaTydne);
+    const pocetVKosiku = ziskatPocetPizzyVKosiku(pizza.id);
 
     return `
       <div class="karta-pizzy ${jeAktivniTydne ? 'karta-pizza-tydne' : ''}">
         ${!jeAktivniTydne ? `<div class="ciselny-odznak">${pizza.cislo}</div>` : ''}
         ${jeAktivniTydne ? `<span class="stitek-pizza-tydne-roh"><span class="hvezda-ikona-tydne">★</span> PIZZA TÝDNE</span>` : ''}
-        <div class="obrazek-pizzy-obal" onclick="otvoritDetailPizzy(${pizza.id})" style="cursor: pointer;" title="Zobrazit detail pizzy">
-          <img src="${pizza.obrazek}" alt="${pizza.nazev}" loading="lazy">
+        ${(pizza.nejprodavanejsi || pizza.doporucujeme) ? `
+          <div class="karta-pizzy-odznaky-vpravo">
+            ${pizza.nejprodavanejsi ? `
+              <span class="odznak-pizza-vlastnost odznak-nejprodavanejsi" title="Nejprodávanější pizza">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+                </svg>
+              </span>
+            ` : ''}
+            ${pizza.doporucujeme ? `
+              <span class="odznak-pizza-vlastnost odznak-doporucujeme" title="Doporučujeme">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              </span>
+            ` : ''}
+          </div>
+        ` : ''}
+        <div class="obrazek-pizzy-obal">
+          <img src="${pizza.obrazek}" alt="${pizza.nazev}" loading="lazy" decoding="async">
         </div>
-        <h3 class="nazev-pizzy" onclick="otvoritDetailPizzy(${pizza.id})" style="cursor: pointer;">${pizza.nazev}${palivostHtml}</h3>
-        <p class="slozeni-pizzy">${pizza.slozeni}</p>
+        <h3 class="nazev-pizzy">${pizza.nazev}${palivostHtml}</h3>
+        <p class="slozeni-pizzy">${formatovatSlozeniPizzy(pizza)}</p>
         
-        ${alergenyVypis ? `<div class="alergeny-klikaci-stitek" onclick="otvoritAlergenyPizzy(${pizza.id}); event.stopPropagation();" title="Zobrazit alergeny pizzy">${alergenyVypis}</div>` : ''}
+        ${alergenyVypis ? `<div class="alergeny-klikaci-stitek">${alergenyVypis}</div>` : ''}
 
         <div class="patka-karty-pizzy">
           <span class="cena-pizzy">${pizza.cena},- Kč</span>
-          <button class="tlacitko-pridat-plus" onclick="pridatDoKosiku(${pizza.id})" title="Přidat do nákupního seznamu">+</button>
+          ${(pizza.naMiste && !pizza.sSebou) ? `
+            <span class="stitek-pouze-na-miste-patka">POUZE NA MÍSTĚ</span>
+          ` : `
+            <div class="obal-pridani-karta">
+              <span class="pocet-v-kosiku-odznak ${pocetVKosiku > 0 ? 'viditelny' : ''}" data-id="${pizza.id}" onclick="odebratJednuPizzu(${pizza.id}, event)" title="Odebrat z košíku">
+                <span class="pocet-cislo-text">${pocetVKosiku > 0 ? pocetVKosiku : ''}</span>
+                <span class="pocet-minus-ikona">−</span>
+              </span>
+              <button class="tlacitko-pridat-plus" onclick="pridatDoKosiku(${pizza.id})" title="Přidat do nákupního seznamu">+</button>
+            </div>
+          `}
         </div>
       </div>
     `;
   }).join('');
-}
-
-// Funkce pro zobrazeni vyskakovaciho okna alergenu (JENOM obrazek pizzy, seznam alergenu a tlacitko pridat do seznamu)
-function otvoritAlergenyPizzy(idPizzy) {
-  const vsechnyPizzy = window.seznamPizzZDatabaze || seznamPizz;
-  const pizza = vsechnyPizzy.find(p => p.id == idPizzy);
-  if (!pizza) return;
-
-  const kontejner = document.getElementById('obsah-detailu-pizzy-modal');
-  if (!kontejner) return;
-
-  // Vyhledani EU alergenu
-  const alergenyCisla = ziskatAlergenyCisla(pizza);
-  let alergenyHtml = '';
-  if (alergenyCisla.length > 0) {
-    alergenyHtml = alergenyCisla.map(num => `
-      <span style="display: inline-flex; align-items: center; gap: 8px; background: #7f1d1d; color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 700; border: 1px solid #991b1b;">
-        <span style="background: #e53e3e; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800;">${num}</span>
-        ${MAPA_EU_ALERGENY[num] || 'Alergen ' + num}
-      </span>
-    `).join(' ');
-  } else {
-    alergenyHtml = `<span style="color: #aaa;">Bez specifikovaných alergenů.</span>`;
-  }
-
-  kontejner.innerHTML = `
-    <div style="width: 100%; max-height: 220px; overflow: hidden; border-radius: 12px; margin-bottom: 20px; border: 1px solid #333;">
-      <img src="${pizza.obrazek}" style="width: 100%; height: 100%; object-fit: cover;" alt="${pizza.nazev}">
-    </div>
-
-    <div style="margin-bottom: 25px;">
-      <h3 style="color: #fff; font-size: 1.1rem; margin-bottom: 12px; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 6px;">Obsažené alergeny:</h3>
-      <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-        ${alergenyHtml}
-      </div>
-    </div>
-
-    <div style="text-align: center; padding-top: 15px; border-top: 1px solid #333;">
-      <button class="tlacitko tlacitko-cervene" style="width: 100%; padding: 12px 20px; font-size: 1rem;" onclick="pridatDoKosiku(${pizza.id}); zavritModal('modal-detail-pizzy');">
-        + Přidat do seznamu
-      </button>
-    </div>
-  `;
-
-  otvoritModal('modal-detail-pizzy');
-}
-
-// Funkce pro zobrazeni detailniho okna pizzy s ingrediencemi a alergeny
-function otvoritDetailPizzy(idPizzy) {
-  const vsechnyPizzy = window.seznamPizzZDatabaze || seznamPizz;
-  const surovinyDb = window.seznamSurovinZDatabaze || [];
-  const pizza = vsechnyPizzy.find(p => p.id == idPizzy);
-  if (!pizza) return;
-
-  const kontejner = document.getElementById('obsah-detailu-pizzy-modal');
-  if (!kontejner) return;
-
-  // Vyhledani ingredienci
-  let ingredienceSeznamHtml = '';
-  if (pizza.ingredience && pizza.ingredience.length > 0) {
-    const obsazeneSuroviny = surovinyDb.filter(s => pizza.ingredience.includes(s.id));
-    if (obsazeneSuroviny.length > 0) {
-      ingredienceSeznamHtml = obsazeneSuroviny.map(s => {
-        const surP = parseInt(s.palivost || 0, 10);
-        const surPapricky = vytvoritChilliIkony(surP, 16);
-        return `
-        <div style="background: #222; padding: 10px 14px; border-radius: 8px; border: 1px solid #333; display: flex; align-items: center; justify-content: space-between;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="${s.obrazek}" style="width: 35px; height: 35px; object-fit: cover; border-radius: 50%;" alt="">
-            <strong style="color: #fff; font-size: 0.95rem;">${s.nazev}${surPapricky}</strong>
-          </div>
-          <span style="font-size: 0.8rem; color: #f59e0b; font-weight: bold;">${s.puvod || ''}</span>
-        </div>
-      `;
-      }).join('');
-    }
-  }
-
-  // Vyhledani EU alergenu
-  const alergenyCisla = ziskatAlergenyCisla(pizza);
-  let alergenyHtml = '';
-  if (alergenyCisla.length > 0) {
-    alergenyHtml = alergenyCisla.map(num => `
-      <span style="display: inline-flex; align-items: center; gap: 6px; background: #7f1d1d; color: #fff; padding: 4px 10px; border-radius: 15px; font-size: 0.85rem; font-weight: 700;">
-        <span style="background: #e53e3e; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem;">${num}</span>
-        ${MAPA_EU_ALERGENY[num] || 'Alergen ' + num}
-      </span>
-    `).join(' ');
-  } else {
-    alergenyHtml = `<span style="color: #aaa;">Bez specifikovaných alergenů</span>`;
-  }
-
-  // Palivost ikona pro modal
-  const palivostUroven = ziskatPalivostPizzy(pizza);
-  const palivostModalHtml = vytvoritChilliIkony(palivostUroven, 22);
-
-  kontejner.innerHTML = `
-    <div style="text-align: center; margin-bottom: 20px;">
-      <div style="font-size: 0.9rem; color: #f59e0b; font-weight: 800; letter-spacing: 1px; margin-bottom: 5px;">PIZZA Č. ${pizza.cislo}</div>
-      <h2 class="nadpis-sekce" style="font-size: 2rem; margin: 0; display: inline-flex; align-items: center; justify-content: center;">${pizza.nazev}${palivostModalHtml}</h2>
-      <p style="color: #aaa; font-size: 1.05rem; margin-top: 8px;">${pizza.slozeni}</p>
-    </div>
-
-    <div style="width: 100%; max-height: 220px; overflow: hidden; border-radius: 12px; margin-bottom: 25px; border: 1px solid #333;">
-      <img src="${pizza.obrazek}" style="width: 100%; height: 100%; object-fit: cover;" alt="${pizza.nazev}">
-    </div>
-
-    <div style="margin-bottom: 20px;">
-      <h4 style="color: #fff; font-size: 1.05rem; margin-bottom: 10px; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 5px;">Pravé ingredience na pizze:</h4>
-      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px;">
-        ${ingredienceSeznamHtml || `<p style="color: #888;">${pizza.slozeni}</p>`}
-      </div>
-    </div>
-
-    <div style="margin-bottom: 25px;">
-      <h4 style="color: #fff; font-size: 1.05rem; margin-bottom: 10px; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 5px;">Obsažené EU Alergeny:</h4>
-      <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-        ${alergenyHtml}
-      </div>
-    </div>
-
-    <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 20px; border-top: 1px solid #333;">
-      <div>
-        <span style="font-size: 1.8rem; font-weight: 800; color: #f59e0b;">${pizza.cena} Kč</span>
-        ${pizza.cenaRozvoz ? `<small style="color: #888; display: block;">Rozvoz: ${pizza.cenaRozvoz} Kč</small>` : ''}
-      </div>
-      <button class="tlacitko tlacitko-cervene" onclick="pridatDoKosiku(${pizza.id}); zavritModal('modal-detail-pizzy');">
-        + Přidat do košíku
-      </button>
-    </div>
-  `;
-
-  otvoritModal('modal-detail-pizzy');
 }
 
 
@@ -457,7 +656,7 @@ function nastavitPosluchaceUdalosti() {
   document.getElementById('filtr-nepaliva')?.addEventListener('change', renderovatJidelniListek);
 
   // Tlacitka kategorii (Pizza tydne, nejprodavanejsi, doporucujeme)
-  const tlacitkaKategorii = document.querySelectorAll('.tlacitko-kategorie');
+  const tlacitkaKategorii = document.querySelectorAll('#jidelni-listek .tlacitko-kategorie');
   tlacitkaKategorii.forEach(tlacitko => {
     tlacitko.addEventListener('click', (e) => {
       const kategorie = e.target.getAttribute('data-kategorie');
@@ -475,74 +674,483 @@ function nastavitPosluchaceUdalosti() {
   });
 }
 
+// Funkce pro toast oznámení
+let oznameniToastTimeout = null;
+function zobrazitOznameni(zprava, typ = 'uspech') {
+  if (typ === 'uspech') return; // Zelené hlášky úspěchu nebudeme zobrazovat
+  let toast = document.getElementById('aplikace-toast-box');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'aplikace-toast-box';
+    toast.style.cssText = 'position: fixed; bottom: 85px; right: 25px; background: #181818; border: 1px solid var(--barva-zelena-hlavni, #2ed573); color: #ffffff; padding: 12px 20px; border-radius: 12px; font-size: 0.95rem; font-weight: 600; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7); z-index: 99999; display: flex; align-items: center; gap: 10px; opacity: 0; transform: translateY(15px); transition: opacity 0.25s ease, transform 0.25s ease; pointer-events: none;';
+    document.body.appendChild(toast);
+  }
+
+  if (typ === 'chyba') {
+    toast.style.borderColor = '#ef4444';
+  } else if (typ === 'upozorneni') {
+    toast.style.borderColor = '#f59e0b';
+  } else {
+    toast.style.borderColor = 'var(--barva-zelena-hlavni, #2ed573)';
+  }
+
+  toast.innerHTML = `<span>🍕 ${zprava}</span>`;
+  void toast.offsetWidth;
+  toast.style.opacity = '1';
+  toast.style.transform = 'translateY(0)';
+
+  if (oznameniToastTimeout) clearTimeout(oznameniToastTimeout);
+  oznameniToastTimeout = setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(15px)';
+  }, 2500);
+}
+window.zobrazitOznameni = zobrazitOznameni;
+
 // Funkce pro pridani pizzy do kosiku
 function pridatDoKosiku(idPizzy) {
-  const vybranaPizza = seznamPizz.find(p => p.id === idPizzy);
+  const vsechnyPizzy = window.seznamPizzZDatabaze || (typeof seznamPizz !== 'undefined' ? seznamPizz : []) || [];
+  const vybranaPizza = vsechnyPizzy.find(p => String(p.id) === String(idPizzy));
   if (!vybranaPizza) return;
 
-  const stavajiciPolozka = kosik.find(item => item.pizza.id === idPizzy);
+  const stavajiciPolozka = kosik.find(item => item && item.pizza && String(item.pizza.id) === String(idPizzy));
   if (stavajiciPolozka) {
-    stavajiciPolozka.pocet += 1;
+    stavajiciPolozka.pocet = (parseInt(stavajiciPolozka.pocet, 10) || 0) + 1;
   } else {
     kosik.push({ pizza: vybranaPizza, pocet: 1 });
   }
 
-  aktualizovatVzhledKosiku();
-  zobrazitOznameni(`Pizza ${vybranaPizza.nazev} byla pridana do kosiku!`);
-}
+  ulozitKosikDoStorage();
+  aktualizovatVzhledKosiku(idPizzy);
+  renderovatObsahKosiku();
 
-// Funkce pro odebrani z kosiku
-function odebratZKosiku(index) {
+  if (typeof zobrazitOznameni === 'function') {
+    zobrazitOznameni(`Pizza ${vybranaPizza.nazev} byla přidána do nákupního seznamu!`);
+  }
+}
+window.pridatDoKosiku = pridatDoKosiku;
+
+// Funkce pro přidání do košíku ze seznamu pizz v modálu suroviny
+function pridatDoKosikuZeSuroviny(idPizzy, btn) {
+  pridatDoKosiku(idPizzy);
+
+  if (btn) {
+    const puvodniText = btn.getAttribute('data-puvodni-text') || 'Přidat do seznamu';
+    if (!btn.getAttribute('data-puvodni-text')) {
+      btn.setAttribute('data-puvodni-text', puvodniText);
+    }
+    const pocet = ziskatPocetPizzyVKosiku(idPizzy);
+    btn.innerHTML = `✓ Přidáno (${pocet} ks)`;
+    btn.style.backgroundColor = 'var(--barva-zelena-hlavni, #2ed573)';
+    btn.style.borderColor = 'var(--barva-zelena-hlavni, #2ed573)';
+    btn.style.color = '#ffffff';
+
+    clearTimeout(btn._resetTimeout);
+    btn._resetTimeout = setTimeout(() => {
+      btn.innerHTML = puvodniText;
+      btn.style.backgroundColor = '';
+      btn.style.borderColor = '';
+      btn.style.color = '';
+    }, 1800);
+  }
+}
+window.pridatDoKosikuZeSuroviny = pridatDoKosikuZeSuroviny;
+
+// Funkce pro odebrani jednoho kusu pizzy z karty (kliknuti na odznak s minusem)
+function odebratJednuPizzu(idPizzy, event = null) {
+  if (event) {
+    event.stopPropagation();
+  }
+  const index = kosik.findIndex(item => item && item.pizza && String(item.pizza.id) === String(idPizzy));
+  if (index === -1) return;
+
   if (kosik[index].pocet > 1) {
     kosik[index].pocet -= 1;
   } else {
     kosik.splice(index, 1);
   }
-  aktualizovatVzhledKosiku();
+
+  ulozitKosikDoStorage();
+  aktualizovatVzhledKosiku(idPizzy);
   renderovatObsahKosiku();
 }
+window.odebratJednuPizzu = odebratJednuPizzu;
 
-// Aktualizace pocitadla kosiku
-function aktualizovatVzhledKosiku() {
+// Funkce pro pridani jednoho kusu polozky v modalu kosiku
+function pridatJedenKusVKosiku(index) {
+  if (!kosik[index]) return;
+  kosik[index].pocet += 1;
+  const idPizzy = kosik[index].pizza ? kosik[index].pizza.id : null;
+  ulozitKosikDoStorage();
+  aktualizovatVzhledKosiku(idPizzy);
+  renderovatObsahKosiku();
+}
+window.pridatJedenKusVKosiku = pridatJedenKusVKosiku;
+
+// Funkce pro odebrani z kosiku v modalu
+function odebratZKosiku(index) {
+  if (!kosik[index]) return;
+  const idPizzy = kosik[index].pizza ? kosik[index].pizza.id : null;
+  if (kosik[index].pocet > 1) {
+    kosik[index].pocet -= 1;
+  } else {
+    kosik.splice(index, 1);
+  }
+  ulozitKosikDoStorage();
+  aktualizovatVzhledKosiku(idPizzy);
+  renderovatObsahKosiku();
+}
+window.odebratZKosiku = odebratZKosiku;
+
+// Zjištění počtu dané pizzy v košíku
+function ziskatPocetPizzyVKosiku(idPizzy) {
+  if (!Array.isArray(kosik)) return 0;
+  const polozka = kosik.find(item => item && item.pizza && String(item.pizza.id) === String(idPizzy));
+  return polozka ? (parseInt(polozka.pocet, 10) || 0) : 0;
+}
+window.ziskatPocetPizzyVKosiku = ziskatPocetPizzyVKosiku;
+
+// Aktualizace čísla s počtem kusů v košíku u tlačítek plus na kartách pizz
+function aktualizovatPocitadlaPizzNaKartach(zvyraznitId = null) {
+  const odznaky = document.querySelectorAll('.pocet-v-kosiku-odznak');
+  odznaky.forEach(odznak => {
+    const idPizzy = odznak.getAttribute('data-id');
+    if (!idPizzy) return;
+    const pocet = ziskatPocetPizzyVKosiku(idPizzy);
+    let cisloPrvek = odznak.querySelector('.pocet-cislo-text');
+
+    if (!cisloPrvek) {
+      odznak.innerHTML = `<span class="pocet-cislo-text"></span><span class="pocet-minus-ikona">−</span>`;
+      cisloPrvek = odznak.querySelector('.pocet-cislo-text');
+    }
+
+    if (pocet > 0) {
+      cisloPrvek.textContent = pocet;
+      odznak.classList.add('viditelny');
+      if (zvyraznitId && String(idPizzy) === String(zvyraznitId)) {
+        odznak.classList.remove('pocet-pop');
+        void odznak.offsetWidth;
+        odznak.classList.add('pocet-pop');
+      }
+    } else {
+      cisloPrvek.textContent = '';
+      odznak.classList.remove('viditelny', 'pocet-pop');
+    }
+  });
+}
+
+// Aktualizace pocitadla kosiku (zobrazí se teprve po přidání první položky)
+function aktualizovatVzhledKosiku(zvyraznitId = null) {
   const celkovyPocet = kosik.reduce((sum, item) => sum + item.pocet, 0);
   const pocitadlo = document.getElementById('pocitadlo-kosiku-cislo');
+  const plovouciKosik = document.querySelector('.plovuci-kosik-tlacitko');
   if (pocitadlo) {
     pocitadlo.textContent = celkovyPocet;
   }
+  if (plovouciKosik) {
+    if (celkovyPocet > 0) {
+      plovouciKosik.classList.add('viditelny');
+      plovouciKosik.style.display = 'flex';
+      plovouciKosik.classList.add('kosik-poskoceni');
+      setTimeout(() => {
+        plovouciKosik.classList.remove('kosik-poskoceni');
+      }, 400);
+    } else {
+      plovouciKosik.classList.remove('viditelny');
+      plovouciKosik.style.display = 'none';
+    }
+  }
+  aktualizovatPocitadlaPizzNaKartach(zvyraznitId);
 }
 
-// Renderovani polozek v modalnim okne kosiku
-function renderovatObsahKosiku() {
-  const kontejner = document.getElementById('seznam-polozek-kosik-modal');
-  const celkovaCenaPrvek = document.getElementById('celkova-cena-kosik-modal');
+// Funkce pro živé vyhledávání obcí pro rozvoz v nákupním seznamu
+function hledatRozvozVKosiku(dotaz) {
+  const kontejner = document.getElementById('kosik-vysledky-obci');
   if (!kontejner) return;
 
-  if (kosik.length === 0) {
-    kontejner.innerHTML = '<p style="color: #888; text-align: center;">Váš košík je zatím prázdný.</p>';
-    if (celkovaCenaPrvek) celkovaCenaPrvek.textContent = 'Celkem: 0 Kč';
+  const cisty = (dotaz || '').toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  if (!cisty) {
+    kontejner.style.display = 'none';
+    kontejner.innerHTML = '';
     return;
   }
 
-  let celkovaCena = 0;
+  const nalezene = SEZNAM_ROZVOZOVYCH_OBCI.filter(item => {
+    const obecNorm = item.obec.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    return obecNorm.includes(cisty);
+  });
+
+  if (nalezene.length === 0) {
+    kontejner.innerHTML = '<span style="color: #888; font-size: 0.85rem; padding: 6px 0; grid-column: 1/-1; text-align: center;">Žádná obec neodpovídá zadání.</span>';
+    kontejner.style.display = 'flex';
+    return;
+  }
+
+  kontejner.innerHTML = nalezene.map(item => `
+    <span class="stitek-obec-polozka shoda" onclick="vybratRozvozVKosiku('${item.obec.replace(/'/g, "\\'")}', '${item.vzdalenost}', ${item.cena})" style="cursor: pointer; margin: 3px;" title="Zvolit ${item.obec} pro rozvoz">
+      <strong>${item.obec}</strong>
+      <span class="stitek-vzdalenost">${item.vzdalenost}</span>
+      <span class="cena-obce-stitek">+${item.cena} Kč</span>
+    </span>
+  `).join('');
+  kontejner.style.display = 'flex';
+  posunoutRozvozKosikuNahoru();
+}
+window.hledatRozvozVKosiku = hledatRozvozVKosiku;
+
+// --- Mobil: aby klávesnice nezakrývala výsledky vyhledávání obce v nákupním seznamu ---
+function jeMobilniKlavesniceKosik() {
+  const vstup = document.getElementById('kosik-vyhledat-obec');
+  return Boolean(vstup && document.activeElement === vstup && window.innerWidth <= 768 && window.visualViewport);
+}
+
+// Přizpůsobí okno nákupního seznamu viditelné ploše nad klávesnicí
+function prizpusobitKosikKlavesnici() {
+  const pozadi = document.getElementById('modal-kosiku');
+  const obsah = pozadi ? pozadi.querySelector('.modalni-okno-obsah') : null;
+  if (!pozadi || !obsah) return;
+
+  if (!jeMobilniKlavesniceKosik()) {
+    pozadi.style.top = '';
+    pozadi.style.height = '';
+    pozadi.style.alignItems = '';
+    pozadi.style.paddingTop = '';
+    obsah.style.maxHeight = '';
+    return;
+  }
+
+  const vv = window.visualViewport;
+  pozadi.style.top = vv.offsetTop + 'px';
+  pozadi.style.height = vv.height + 'px';
+  pozadi.style.alignItems = 'flex-start';
+  pozadi.style.paddingTop = '10px';
+  obsah.style.maxHeight = Math.max(200, vv.height - 20) + 'px';
+}
+
+// Posune blok rozvozu k hornímu okraji okna, aby výsledky pod polem byly vidět
+function posunoutRozvozKosikuNahoru() {
+  if (!jeMobilniKlavesniceKosik()) return;
+  prizpusobitKosikKlavesnici();
+  const pozadi = document.getElementById('modal-kosiku');
+  const obsah = pozadi ? pozadi.querySelector('.modalni-okno-obsah') : null;
+  const blok = document.getElementById('kosik-rozvoz-blok');
+  if (!obsah || !blok) return;
+  const posun = blok.getBoundingClientRect().top - obsah.getBoundingClientRect().top + obsah.scrollTop - 8;
+  obsah.scrollTop = Math.max(0, posun);
+}
+
+document.addEventListener('focusin', (e) => {
+  if (e.target && e.target.id === 'kosik-vyhledat-obec') {
+    // Počkáme, až se klávesnice vysune
+    setTimeout(posunoutRozvozKosikuNahoru, 300);
+  }
+});
+
+document.addEventListener('focusout', (e) => {
+  if (e.target && e.target.id === 'kosik-vyhledat-obec') {
+    // Zpoždění, aby se stihl zpracovat klik na vybranou obec
+    setTimeout(prizpusobitKosikKlavesnici, 250);
+  }
+});
+
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', () => {
+    if (jeMobilniKlavesniceKosik()) {
+      posunoutRozvozKosikuNahoru();
+    } else {
+      prizpusobitKosikKlavesnici();
+    }
+  });
+  window.visualViewport.addEventListener('scroll', () => {
+    if (jeMobilniKlavesniceKosik()) {
+      prizpusobitKosikKlavesnici();
+    }
+  });
+}
+
+// Výběr konkrétní obce pro rozvoz v košíku
+function vybratRozvozVKosiku(obec, vzdalenost, cena) {
+  vybranyRozvoz = { obec, vzdalenost, cena: Number(cena) };
+  ulozitRozvozDoStorage();
+
+  const vstup = document.getElementById('kosik-vyhledat-obec');
+  if (vstup) {
+    vstup.value = `${obec} (${vzdalenost}) - ${cena} Kč`;
+  }
+  const vysledky = document.getElementById('kosik-vysledky-obci');
+  if (vysledky) {
+    vysledky.style.display = 'none';
+  }
+  const smazatBtn = document.getElementById('kosik-smazat-rozvoz');
+  if (smazatBtn) {
+    smazatBtn.style.display = 'block';
+  }
+
+  renderovatObsahKosiku();
+}
+window.vybratRozvozVKosiku = vybratRozvozVKosiku;
+
+// Zrušení vybraného rozvozu
+function vymazatRozvozVKosiku() {
+  vybranyRozvoz = null;
+  ulozitRozvozDoStorage();
+
+  const vstup = document.getElementById('kosik-vyhledat-obec');
+  if (vstup) {
+    vstup.value = '';
+  }
+  const vysledky = document.getElementById('kosik-vysledky-obci');
+  if (vysledky) {
+    vysledky.style.display = 'none';
+  }
+  const smazatBtn = document.getElementById('kosik-smazat-rozvoz');
+  if (smazatBtn) {
+    smazatBtn.style.display = 'none';
+  }
+
+  renderovatObsahKosiku();
+}
+window.vymazatRozvozVKosiku = vymazatRozvozVKosiku;
+
+// Telefonní čísla poboček pro přímé volání z nákupního seznamu
+const TELEFONY_POBOCEK_KOSIK = {
+  rychnov: '739149142',
+  usti: '774741818'
+};
+
+// Zjištění pobočky, která obsluhuje vybranou obec rozvozu
+function ziskatPobockuVybranehoRozvozu() {
+  if (!vybranyRozvoz) return null;
+  const nalez = SEZNAM_ROZVOZOVYCH_OBCI.find(item => item.obec === vybranyRozvoz.obec);
+  return nalez ? nalez.pobocka : null;
+}
+
+// Přepnutí vyskakovacího okna s výběrem provozovny pro volání v nákupním seznamu
+// (při vybrané obci se rovnou volá pobočka, která obec obsluhuje)
+function prepnoutPodoknoVolaniKosik(event) {
+  if (event) {
+    event.stopPropagation();
+  }
+
+  const pobocka = ziskatPobockuVybranehoRozvozu();
+  if (pobocka && TELEFONY_POBOCEK_KOSIK[pobocka]) {
+    window.location.href = 'tel:' + TELEFONY_POBOCEK_KOSIK[pobocka];
+    return;
+  }
+
+  const box = document.getElementById('podokno-volani-kosik-box');
+  if (box) {
+    const jeZobrazen = box.classList.contains('zobrazit') || box.style.display === 'flex';
+    if (jeZobrazen) {
+      box.classList.remove('zobrazit');
+      box.style.display = 'none';
+    } else {
+      box.classList.add('zobrazit');
+      box.style.display = 'flex';
+    }
+  }
+}
+window.prepnoutPodoknoVolaniKosik = prepnoutPodoknoVolaniKosik;
+
+// Renderování položek v modálním okně nákupního seznamu (včetně rozvozu a volání)
+function renderovatObsahKosiku() {
+  const kontejner = document.getElementById('seznam-polozek-kosik-modal');
+  const celkovaCenaPrvek = document.getElementById('celkova-cena-kosik-modal');
+  const rozvozBlok = document.getElementById('kosik-rozvoz-blok');
+  const volaniSekce = document.getElementById('kosik-volani-sekce-obal');
+  const vstupRozvoz = document.getElementById('kosik-vyhledat-obec');
+  const smazatRozvozBtn = document.getElementById('kosik-smazat-rozvoz');
+  const rozvozBadge = document.getElementById('kosik-rozvoz-vybrana-cena-badge');
+  if (!kontejner) return;
+
+  if (kosik.length === 0) {
+    kontejner.innerHTML = '<p style="color: #888; text-align: center; padding: 25px 0;">Váš nákupní seznam je zatím prázdný.</p>';
+    if (celkovaCenaPrvek) celkovaCenaPrvek.textContent = 'Celkem: 0 Kč';
+    if (rozvozBlok) rozvozBlok.style.display = 'none';
+    if (volaniSekce) volaniSekce.style.display = 'none';
+    return;
+  }
+
+  if (rozvozBlok) rozvozBlok.style.display = 'block';
+  if (volaniSekce) volaniSekce.style.display = 'block';
+
+  let cenaPizz = 0;
+  let celkovyPocetKs = 0;
   kontejner.innerHTML = kosik.map((item, index) => {
     const cenaPolozky = item.pizza.cena * item.pocet;
-    celkovaCena += cenaPolozky;
+    cenaPizz += cenaPolozky;
+    celkovyPocetKs += item.pocet;
     return `
       <div class="polozka-kosiku">
-        <div>
-          <strong>${item.pizza.nazev}</strong> (${item.pizza.cena} Kč / ks)
+        <div class="polozka-kosiku-info">
+          <strong class="polozka-kosiku-nazev">${item.pizza.nazev}</strong>
+          <span class="polozka-kosiku-jednotka">(${item.pizza.cena} Kč / ks)</span>
         </div>
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <span>${item.pocet} ks</span>
-          <strong>${cenaPolozky} Kč</strong>
-          <button onclick="odebratZKosiku(${index})" style="background:#e50914; color:#fff; border:none; border-radius:4px; padding:3px 8px; cursor:pointer;">-</button>
+        <div class="polozka-kosiku-ovladani">
+          <div class="polozka-kosiku-pocitadlo">
+            <button type="button" class="tlacitko-kosik-mnozstvi" onclick="odebratZKosiku(${index})" title="Odebrat 1 ks">-</button>
+            <span class="polozka-kosiku-pocet-text">${item.pocet} ks</span>
+            <button type="button" class="tlacitko-kosik-mnozstvi" onclick="pridatJedenKusVKosiku(${index})" title="Přidat 1 ks">+</button>
+          </div>
+          <strong class="polozka-kosiku-cena-celkem">${cenaPolozky} Kč</strong>
         </div>
       </div>
     `;
   }).join('');
 
+  // Synchronizace vstupního pole a tlačítek rozvozu
+  if (vstupRozvoz && !document.activeElement.isSameNode(vstupRozvoz)) {
+    if (vybranyRozvoz) {
+      vstupRozvoz.value = `${vybranyRozvoz.obec} (${vybranyRozvoz.vzdalenost}) - ${vybranyRozvoz.cena} Kč`;
+    } else {
+      vstupRozvoz.value = '';
+    }
+  }
+  if (smazatRozvozBtn) {
+    smazatRozvozBtn.style.display = vybranyRozvoz ? 'block' : 'none';
+  }
+  if (rozvozBadge) {
+    if (vybranyRozvoz) {
+      rozvozBadge.textContent = `+${vybranyRozvoz.cena} Kč`;
+      rozvozBadge.style.display = 'inline-block';
+    } else {
+      rozvozBadge.style.display = 'none';
+    }
+  }
+
+  const cenaRozvozu = vybranyRozvoz ? (Number(vybranyRozvoz.cena) || 0) : 0;
+  const CENA_KRABICE = 10;
+  const cenaKrabic = vybranyRozvoz ? celkovyPocetKs * CENA_KRABICE : 0;
+  const celkovaKonecnaCena = cenaPizz + cenaKrabic + cenaRozvozu;
+
   if (celkovaCenaPrvek) {
-    celkovaCenaPrvek.textContent = `Celkem: ${celkovaCena} Kč`;
+    if (vybranyRozvoz) {
+      celkovaCenaPrvek.innerHTML = `
+        <div class="kosik-rozpis-ceny">
+          <div class="kosik-rozpis-polozka">
+            <span>Pizzy (${celkovyPocetKs} ks):</span>
+            <strong style="color: #ffffff;">${cenaPizz} Kč</strong>
+          </div>
+          <div class="kosik-rozpis-polozka">
+            <span>Krabice (${celkovyPocetKs} × ${CENA_KRABICE} Kč):</span>
+            <strong style="color: #10b981;">+${cenaKrabic} Kč</strong>
+          </div>
+          <div class="kosik-rozpis-polozka">
+            <span>Rozvoz (${vybranyRozvoz.obec}):</span>
+            <strong style="color: #10b981;">+${cenaRozvozu} Kč</strong>
+          </div>
+        </div>
+        <div class="kosik-celkovy-soucet">
+          Celkem: ${celkovaKonecnaCena} Kč
+        </div>
+      `;
+    } else {
+      celkovaCenaPrvek.innerHTML = `
+        <div class="kosik-celkovy-soucet">
+          Celkem: ${celkovaKonecnaCena} Kč
+        </div>
+      `;
+    }
   }
 }
 
@@ -561,18 +1169,342 @@ function zavritModal(idModalu) {
   const okno = document.getElementById(idModalu);
   if (okno) {
     okno.classList.remove('zobrazeno');
+    if (idModalu === 'modal-kosiku') {
+      const box = document.getElementById('podokno-volani-kosik-box');
+      if (box) {
+        box.classList.remove('zobrazit');
+        box.style.display = 'none';
+      }
+    }
   }
 }
+window.otvoritModal = otvoritModal;
+window.zavritModal = zavritModal;
+
+// Zavírání libovolného modálního okna prostým kliknutím na pozadí (overlay) a zavření podokna volání
+document.addEventListener('click', (e) => {
+  if (e.target && e.target.classList && e.target.classList.contains('modalni-okno-pozadi')) {
+    e.target.classList.remove('zobrazeno');
+  }
+  const box = document.getElementById('podokno-volani-kosik-box');
+  const btn = e.target ? e.target.closest('#btn-otevrit-volani-kosik') : null;
+  if (box && !btn && !e.target.closest('#podokno-volani-kosik-box')) {
+    box.classList.remove('zobrazit');
+    box.style.display = 'none';
+  }
+});
+
+// Stav karuselu ingrediencí v modálním okně
+let aktivniKaruselIngredienci = {
+  suroviny: [],
+  aktivniIndex: 0,
+  nazevPizzy: ''
+};
+
+// Pomocná funkce pro získání všech surovin konkrétní pizzy
+function ziskatSurovinyPizzy(pizza) {
+  if (!pizza) return [];
+  const vsechnySuroviny = window.seznamSurovinZDatabaze || [];
+  const nalezene = [];
+  const nalezenaId = new Set();
+
+  // 1. Z pole pizza.ingredience
+  if (Array.isArray(pizza.ingredience)) {
+    pizza.ingredience.forEach(id => {
+      const s = vsechnySuroviny.find(sur => sur.id === id);
+      if (s && !nalezenaId.has(s.id)) {
+        nalezene.push(s);
+        nalezenaId.add(s.id);
+      }
+    });
+  }
+
+    // 2. Ze slovního popisu pizza.slozeni (propojí i suroviny, které v poli ingredience chyběly)
+  if (pizza.slozeni) {
+    const casti = pizza.slozeni.split(',');
+    casti.forEach(cast => {
+      const trimmed = cast.trim();
+      if (!trimmed) return;
+      const s = najitSurovinuProNazev(trimmed, pizza);
+      if (s && !nalezenaId.has(s.id)) {
+        nalezene.push(s);
+        nalezenaId.add(s.id);
+      }
+    });
+  }
+
+  // Seřadíme nalezené suroviny přesně podle pořadí v administraci
+  const indexMap = new Map();
+  vsechnySuroviny.forEach((s, idx) => indexMap.set(s.id, idx));
+  nalezene.sort((a, b) => {
+    const posA = indexMap.has(a.id) ? indexMap.get(a.id) : 9999;
+    const posB = indexMap.has(b.id) ? indexMap.get(b.id) : 9999;
+    return posA - posB;
+  });
+
+  return nalezene;
+}
+
+// Pomocná funkce pro doplnění vlajky k zemi původu, pokud chybí
+function zformatovatPuvodSVlajkou(puvod) {
+  if (!puvod || typeof puvod !== 'string') return '';
+  puvod = puvod.trim();
+  if (!puvod) return '';
+
+  if (/\uD83C[\uDDE6-\uDDFF]/.test(puvod) || /\p{Extended_Pictographic}/u.test(puvod)) {
+    return puvod;
+  }
+
+  const norm = puvod.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+  if (norm.includes('ital') || norm.includes('neapol') || norm.includes('kampan') || norm.includes('parma') || norm.includes('sicil') || norm.includes('rim')) {
+    return '🇮🇹 ' + puvod;
+  }
+  if (norm.includes('cesk') || norm.includes('morav') || norm.includes('lokal') || norm.includes('cr') || norm.includes('czech')) {
+    return '🇨🇿 ' + puvod;
+  }
+  if (norm.includes('spanel') || norm.includes('esp')) {
+    return '🇪🇸 ' + puvod;
+  }
+  if (norm.includes('franc')) {
+    return '🇫🇷 ' + puvod;
+  }
+  if (norm.includes('reck')) {
+    return '🇬🇷 ' + puvod;
+  }
+  if (norm.includes('nemec') || norm.includes('germ')) {
+    return '🇩🇪 ' + puvod;
+  }
+  if (norm.includes('rakous')) {
+    return '🇦🇹 ' + puvod;
+  }
+  if (norm.includes('sloven')) {
+    return '🇸🇰 ' + puvod;
+  }
+  if (norm.includes('polsk')) {
+    return '🇵🇱 ' + puvod;
+  }
+  if (norm.includes('angli') || norm.includes('brit') || norm.includes('uk')) {
+    return '🇬🇧 ' + puvod;
+  }
+  if (norm.includes('usa') || norm.includes('americ')) {
+    return '🇺🇸 ' + puvod;
+  }
+
+  return '🇮🇹 ' + puvod;
+}
+
+// Vykreslení obsahu modálního okna náhledu ingredience (karusel)
+function vykreslitObsahNahleduIngredience(sAnimaci) {
+  const telo = document.getElementById('modal-nahled-ingredience-telo');
+  if (!telo) return;
+
+  const celkem = aktivniKaruselIngredienci.suroviny.length;
+  if (celkem === 0) return;
+
+  if (aktivniKaruselIngredienci.aktivniIndex >= celkem) aktivniKaruselIngredienci.aktivniIndex = 0;
+  if (aktivniKaruselIngredienci.aktivniIndex < 0) aktivniKaruselIngredienci.aktivniIndex = celkem - 1;
+
+  const surovina = aktivniKaruselIngredienci.suroviny[aktivniKaruselIngredienci.aktivniIndex];
+  if (!surovina) return;
+
+  const index = aktivniKaruselIngredienci.aktivniIndex;
+  const nazevPizzy = aktivniKaruselIngredienci.nazevPizzy;
+
+  // Šipky se zobrazí pouze pokud má pizza více než 1 surovinu
+  const sipkyHtml = celkem > 1 ? `
+    <button type="button" class="nahled-karusel-sipka nahled-karusel-vlevo" onclick="posunoutKaruselIngredienci(-1, event)" aria-label="Předchozí surovina" title="Předchozí surovina (šipka vlevo)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    <button type="button" class="nahled-karusel-sipka nahled-karusel-vpravo" onclick="posunoutKaruselIngredienci(1, event)" aria-label="Další surovina" title="Další surovina (šipka vpravo)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  ` : '';
+
+  // Tečky / indikátor
+  const teckyHtml = celkem > 1 ? `
+    <div class="nahled-karusel-tecky-obal">
+      ${aktivniKaruselIngredienci.suroviny.map((s, i) => `
+        <button type="button" class="nahled-karusel-tecka ${i === index ? 'aktivni' : ''}" onclick="nastavitIndexKaruseluIngredienci(${i}, event)" title="${s.nazev}"></button>
+      `).join('')}
+    </div>
+  ` : '';
+
+  // Info lišta pizzy
+  const pizzaInfoHtml = nazevPizzy ? `
+    <div class="nahled-ingredience-meta-lista">
+      <span class="nahled-pizza-nazev-odznak">🍕 ${nazevPizzy}</span>
+      ${celkem > 1 ? `<span class="nahled-pocitadlo-text">${index + 1} z ${celkem}</span>` : ''}
+    </div>
+  ` : (celkem > 1 ? `
+    <div class="nahled-ingredience-meta-lista">
+      <span class="nahled-pocitadlo-text">${index + 1} z ${celkem}</span>
+    </div>
+  ` : '');
+
+  telo.innerHTML = `
+    <div class="nahled-ingredience-obal ${sAnimaci ? 'animace-prepnuti' : ''}">
+      <div class="nahled-ingredience-foto-obal">
+        <img src="${surovina.obrazek}" alt="${surovina.nazev}" class="nahled-ingredience-velka-fotka">
+        ${surovina.puvod ? `<span class="odznak-puvodu nahled-puvod">${zformatovatPuvodSVlajkou(surovina.puvod)}</span>` : ''}
+        ${sipkyHtml}
+        ${teckyHtml}
+      </div>
+      <div class="nahled-ingredience-popis-blok">
+        ${pizzaInfoHtml}
+        <h2 class="nahled-ingredience-nazev">${surovina.nazev}</h2>
+        <p class="nahled-ingredience-popis">${surovina.popis || ''}</p>
+      </div>
+    </div>
+  `;
+}
+
+// Otevření velkého náhledu obrázku ingredience s fotkou, názvem a popisem dole (karusel pro konkrétní pizzu)
+function otevritNahledIngredience(idSuroviny, e, pizzaId) {
+  if (e && e.preventDefault) e.preventDefault();
+  if (e && e.stopPropagation) e.stopPropagation();
+
+  const cistyId = decodeURIComponent(idSuroviny);
+  const suroviny = window.seznamSurovinZDatabaze || [];
+  const pizzy = window.seznamPizzZDatabaze || seznamPizz || [];
+
+  let vybranaPizza = null;
+  let seznamSurovinKaruselu = [];
+
+  if (pizzaId) {
+    vybranaPizza = pizzy.find(p => p.id == pizzaId);
+  }
+
+  if (vybranaPizza) {
+    seznamSurovinKaruselu = ziskatSurovinyPizzy(vybranaPizza);
+  }
+
+  // Pokud nebyla nalezena pizza nebo suroviny, použijeme všechny suroviny
+  if (!seznamSurovinKaruselu || seznamSurovinKaruselu.length === 0) {
+    seznamSurovinKaruselu = [...suroviny];
+  }
+
+  // Hledání indexu kliknuté suroviny v nalezeném seznamu
+  let index = seznamSurovinKaruselu.findIndex(s => s.id === cistyId || (s.id && s.id.toLowerCase() === cistyId.toLowerCase()));
+  if (index === -1) {
+    const globalniSurovina = suroviny.find(s => s.id === cistyId || (s.id && s.id.toLowerCase() === cistyId.toLowerCase()));
+    if (globalniSurovina) {
+      seznamSurovinKaruselu.unshift(globalniSurovina);
+      index = 0;
+    } else {
+      index = 0;
+    }
+  }
+
+  aktivniKaruselIngredienci = {
+    suroviny: seznamSurovinKaruselu,
+    aktivniIndex: index,
+    nazevPizzy: vybranaPizza ? vybranaPizza.nazev : ''
+  };
+
+  vykreslitObsahNahleduIngredience(false);
+  inicializovatSwipeNahledIngredience();
+  otvoritModal('modal-obrazek-ingredience');
+}
+window.otevritNahledIngredience = otevritNahledIngredience;
+
+function posunoutKaruselIngredienci(smer, e) {
+  if (e && e.preventDefault) e.preventDefault();
+  if (e && e.stopPropagation) e.stopPropagation();
+
+  const celkem = aktivniKaruselIngredienci.suroviny.length;
+  if (celkem <= 1) return;
+
+  aktivniKaruselIngredienci.aktivniIndex = (aktivniKaruselIngredienci.aktivniIndex + smer + celkem) % celkem;
+  vykreslitObsahNahleduIngredience(true);
+}
+window.posunoutKaruselIngredienci = posunoutKaruselIngredienci;
+
+function nastavitIndexKaruseluIngredienci(novyIndex, e) {
+  if (e && e.preventDefault) e.preventDefault();
+  if (e && e.stopPropagation) e.stopPropagation();
+
+  const celkem = aktivniKaruselIngredienci.suroviny.length;
+  if (novyIndex < 0 || novyIndex >= celkem) return;
+
+  aktivniKaruselIngredienci.aktivniIndex = novyIndex;
+  vykreslitObsahNahleduIngredience(true);
+}
+window.nastavitIndexKaruseluIngredienci = nastavitIndexKaruseluIngredienci;
+
+// Inicializace touch swipe pro mobilní zařízení
+let touchStartXIngredience = 0;
+let touchStartYIngredience = 0;
+
+function inicializovatSwipeNahledIngredience() {
+  const modalOkno = document.getElementById('modal-obrazek-ingredience');
+  if (!modalOkno || modalOkno.dataset.swipeAktivni) return;
+  modalOkno.dataset.swipeAktivni = 'true';
+
+  modalOkno.addEventListener('touchstart', (e) => {
+    if (e.touches && e.touches.length === 1) {
+      touchStartXIngredience = e.touches[0].clientX;
+      touchStartYIngredience = e.touches[0].clientY;
+    }
+  }, { passive: true });
+
+  modalOkno.addEventListener('touchend', (e) => {
+    if (e.changedTouches && e.changedTouches.length === 1) {
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
+      const diffX = touchEndX - touchStartXIngredience;
+      const diffY = touchEndY - touchStartYIngredience;
+
+      // Horizontální swipe (více než 35px a znatelně vodorovnější než svislý pohyb)
+      if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY) * 1.3) {
+        if (diffX < 0) {
+          // Swipe vlevo -> další surovina
+          posunoutKaruselIngredienci(1);
+        } else {
+          // Swipe vpravo -> předchozí surovina
+          posunoutKaruselIngredienci(-1);
+        }
+      }
+    }
+  }, { passive: true });
+}
+
+// Klávesová navigace: Escape zavírá, šipky vlevo/vpravo listují karuselem
+window.addEventListener('keydown', (e) => {
+  const modal = document.getElementById('modal-obrazek-ingredience');
+  const jeOtevren = modal && modal.classList.contains('zobrazeno');
+
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modalni-okno-pozadi.zobrazeno').forEach(m => m.classList.remove('zobrazeno'));
+  } else if (jeOtevren && (e.key === 'ArrowLeft' || e.key === 'ArrowUp')) {
+    e.preventDefault();
+    posunoutKaruselIngredienci(-1);
+  } else if (jeOtevren && (e.key === 'ArrowRight' || e.key === 'ArrowDown')) {
+    e.preventDefault();
+    posunoutKaruselIngredienci(1);
+  }
+});
 
 // Stav karuselu pro provozovny
 const stavKaruselu = {
-  'karusel-rychnov': { aktualniIndex: 0, celkem: 3 },
-  'karusel-usti': { aktualniIndex: 0, celkem: 3 }
+  'karusel-rychnov': { aktualniIndex: 0, celkem: 2 },
+  'karusel-usti': { aktualniIndex: 0, celkem: 2 }
 };
 
 // Funkce pro posun karuselu pomoci sipek
 function posunoutKarusel(idKaruselu, smer) {
-  if (!stavKaruselu[idKaruselu]) return;
+  const container = document.getElementById(idKaruselu);
+  const snimky = container ? container.querySelectorAll('.karusel-snimek') : [];
+  const pocetSnimku = snimky.length || 2;
+
+  if (!stavKaruselu[idKaruselu]) {
+    stavKaruselu[idKaruselu] = { aktualniIndex: 0, celkem: pocetSnimku };
+  }
+  stavKaruselu[idKaruselu].celkem = pocetSnimku;
   
   const karusel = stavKaruselu[idKaruselu];
   karusel.aktualniIndex += smer;
@@ -588,7 +1520,14 @@ function posunoutKarusel(idKaruselu, smer) {
 
 // Funkce pro presny skok na tecku
 function nastavitSnimekKaruselu(idKaruselu, index) {
-  if (!stavKaruselu[idKaruselu]) return;
+  const container = document.getElementById(idKaruselu);
+  const snimky = container ? container.querySelectorAll('.karusel-snimek') : [];
+  const pocetSnimku = snimky.length || 2;
+
+  if (!stavKaruselu[idKaruselu]) {
+    stavKaruselu[idKaruselu] = { aktualniIndex: 0, celkem: pocetSnimku };
+  }
+  stavKaruselu[idKaruselu].celkem = pocetSnimku;
   stavKaruselu[idKaruselu].aktualniIndex = index;
   aktualizovatZobrazenySnimek(idKaruselu);
 }
@@ -623,26 +1562,37 @@ document.addEventListener('DOMContentLoaded', () => {
   // Chytrá plovoucí horní lišta (skrýt při scroll down, zobrazit při scroll up z jakéhokoliv místa)
   let posledniScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
   let ticking = false;
+  let byloZaskrolovano = false;
+  let listaBylaSkryta = false;
   const minimalniPosunProReakci = 6;
+
+  // Kešování elementů pro scroll listener (eliminace zbytečných DOM dotazů při každém ticku)
+  const horniLista = document.querySelector('.horni-kontakty-lista');
+  const menuOdkazy = document.getElementById('navigace-odkazy-menu');
+  const btnMenuMobil = document.getElementById('btn-mobil-menu');
+  const boxVolani = document.getElementById('podokno-volani-box');
+  const btnVolaniOtevrit = document.getElementById('btn-otevrit-volani');
 
   function obslouzitScroll() {
     const soucasnyScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
-    const horniLista = document.querySelector('.horni-kontakty-lista');
 
     if (!horniLista) {
       ticking = false;
       return;
     }
 
-    if (soucasnyScrollY > 80) {
-      horniLista.classList.add('skrolovalo-se');
-    } else {
-      horniLista.classList.remove('skrolovalo-se');
+    const jeZaskrolovano = soucasnyScrollY > 80;
+    if (byloZaskrolovano !== jeZaskrolovano) {
+      byloZaskrolovano = jeZaskrolovano;
+      horniLista.classList.toggle('skrolovalo-se', jeZaskrolovano);
     }
 
     // Jsme-li úplně nahoře, lišta je vždy viditelná
     if (soucasnyScrollY <= 20) {
-      horniLista.classList.remove('lista-skryta');
+      if (listaBylaSkryta) {
+        horniLista.classList.remove('lista-skryta');
+        listaBylaSkryta = false;
+      }
       posledniScrollY = soucasnyScrollY;
       ticking = false;
       return;
@@ -653,25 +1603,27 @@ document.addEventListener('DOMContentLoaded', () => {
     if (Math.abs(rozdil) >= minimalniPosunProReakci) {
       if (rozdil > 0) {
         // Scroll DOWN -> Skrýt lištu
-        horniLista.classList.add('lista-skryta');
+        if (!listaBylaSkryta) {
+          horniLista.classList.add('lista-skryta');
+          listaBylaSkryta = true;
+        }
         
         // Pokud je otevřené mobilní menu nebo telefonní okénko, zavřeme je
-        const menu = document.getElementById('navigace-odkazy-menu');
-        const btnMenu = document.getElementById('btn-mobil-menu');
-        if (menu && menu.classList.contains('mobil-otevreno')) {
-          menu.classList.remove('mobil-otevreno');
-          if (btnMenu) btnMenu.classList.remove('aktivni');
+        if (menuOdkazy && menuOdkazy.classList.contains('mobil-otevreno')) {
+          menuOdkazy.classList.remove('mobil-otevreno');
+          if (btnMenuMobil) btnMenuMobil.classList.remove('aktivni');
         }
 
-        const box = document.getElementById('podokno-volani-box');
-        const btnVolani = document.getElementById('btn-otevrit-volani');
-        if (box && box.classList.contains('zobrazit')) {
-          box.classList.remove('zobrazit');
-          if (btnVolani) btnVolani.classList.remove('aktivni');
+        if (boxVolani && boxVolani.classList.contains('zobrazit')) {
+          boxVolani.classList.remove('zobrazit');
+          if (btnVolaniOtevrit) btnVolaniOtevrit.classList.remove('aktivni');
         }
       } else {
         // Scroll UP -> Zobrazit lištu
-        horniLista.classList.remove('lista-skryta');
+        if (listaBylaSkryta) {
+          horniLista.classList.remove('lista-skryta');
+          listaBylaSkryta = false;
+        }
       }
       posledniScrollY = soucasnyScrollY;
     }
@@ -691,8 +1643,8 @@ function prepnoutPobocku(mesto) {
   vybranaPobocka = mesto;
   localStorage.setItem('vybranaPobocka', mesto);
   aktualizovatZobrazeniPobocky();
-  zobrazitOznameni(mesto === 'rychnov' ? 'Přepnuto na pobočku Rychnov n. K.' : 'Přepnuto na pobočku Ústí n. O.');
 }
+window.prepnoutPobocku = prepnoutPobocku;
 
 function aktualizovatZobrazeniPobocky() {
   // 1. Cerveny i Cernobily Kapslovy prepinac (data-aktivni posouva bily oválek)
@@ -765,6 +1717,10 @@ function aktualizovatZobrazeniPobocky() {
       provozovnaRychnov.style.display = 'none';
       provozovnaUsti.style.display = 'flex';
     }
+    // Aktualizovat i karusel vybrané provozovny
+    if (typeof aktualizovatZobrazenySnimek === 'function') {
+      aktualizovatZobrazenySnimek('karusel-' + vybranaPobocka);
+    }
   }
 
   // 5. Tlacitko v modalnim okne kosiku
@@ -781,6 +1737,7 @@ function aktualizovatZobrazeniPobocky() {
     }
   }
 }
+window.aktualizovatZobrazeniPobocky = aktualizovatZobrazeniPobocky;
 
 // 6. OBSLUHA VYSKAKOVACÍHO PODOKNA VOLÁNÍ V PODSTRÁNKOVÉ HLAVIČCE
 function prepnoutPodoknoVolani(event) {
@@ -789,9 +1746,11 @@ function prepnoutPodoknoVolani(event) {
   }
   const box = document.getElementById('podokno-volani-box');
   const btn = document.getElementById('btn-otevrit-volani');
+  const btnAppka = document.getElementById('btn-appka-volani');
   if (box) {
     box.classList.toggle('zobrazit');
     if (btn) btn.classList.toggle('aktivni', box.classList.contains('zobrazit'));
+    if (btnAppka) btnAppka.classList.toggle('aktivni', box.classList.contains('zobrazit'));
   }
   // Pokud otevřeme volání, zavřeme mobilní menu
   const menu = document.getElementById('navigace-odkazy-menu');
@@ -846,10 +1805,12 @@ window.prepnoutMobilMenu = prepnoutMobilMenu;
 document.addEventListener('click', (e) => {
   const box = document.getElementById('podokno-volani-box');
   const btnVolani = document.getElementById('btn-otevrit-volani');
+  const btnAppka = document.getElementById('btn-appka-volani');
   if (box && box.classList.contains('zobrazit')) {
-    if (!box.contains(e.target) && e.target !== btnVolani && !btnVolani.contains(e.target)) {
+    if (!box.contains(e.target) && e.target !== btnVolani && (!btnVolani || !btnVolani.contains(e.target)) && e.target !== btnAppka && (!btnAppka || !btnAppka.contains(e.target))) {
       box.classList.remove('zobrazit');
       if (btnVolani) btnVolani.classList.remove('aktivni');
+      if (btnAppka) btnAppka.classList.remove('aktivni');
     }
   }
 
@@ -1029,19 +1990,15 @@ function prepnoutRozbaleniRozvozoveMapy() {
 }
 window.prepnoutRozbaleniRozvozoveMapy = prepnoutRozbaleniRozvozoveMapy;
 
-// Tlačítko UKÁZAT NA MAPĚ v sekci Provozovny
+// Tlačítko UKÁZAT NA MAPĚ v sekci Provozovny (otevře mapy.com v novém okně)
 function ukazatNaMapeProvozovnu(pobocka) {
-  const blok = document.getElementById('rozvoz-mapa-velky-blok');
-  const btn = document.getElementById('btn-toggle-rozvoz-mapa');
-  if (blok) {
-    blok.style.display = 'flex';
-    if (btn) btn.classList.add('otevreno');
+  let url = 'https://mapy.com/';
+  if (pobocka === 'rychnov') {
+    url = 'https://mapy.com/s/hecazafoju';
+  } else if (pobocka === 'usti') {
+    url = 'https://mapy.com/s/jomatotube';
   }
-  prepnoutPobockuRozvozMapy(pobocka);
-  const rozvozSekce = document.getElementById('rozvoz');
-  if (rozvozSekce) {
-    rozvozSekce.scrollIntoView({ behavior: 'smooth' });
-  }
+  window.open(url, '_blank', 'noopener,noreferrer');
 }
 window.ukazatNaMapeProvozovnu = ukazatNaMapeProvozovnu;
 

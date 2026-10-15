@@ -194,3 +194,85 @@
   border-color: #ffffff;
   color: #000000;
 }
+
+/* --------------------------------------------------------------------------
+   4. ČERNOBÍLÝ KAPSULOVÝ PŘEPÍNAČ (PRO SEKCI PROVOZOVNY)
+   -------------------------------------------------------------------------- */
+.provozovny-switch-obal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 32px auto;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.kapsle-prepinac-cernobily {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #161616;
+  border: 1px solid #333333;
+  padding: 4px;
+  border-radius: 40px;
+  user-select: none;
+  touch-action: manipulation;
+  width: 320px;
+  max-width: 100%;
+  box-sizing: border-box;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.45);
+}
+
+.kapsle-slajdr-bily-cb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  background-color: #ffffff;
+  border-radius: 35px;
+  transition: transform 0.28s cubic-bezier(0.25, 1, 0.5, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  z-index: 1;
+}
+
+.kapsle-prepinac-cernobily[data-aktivni="usti"] .kapsle-slajdr-bily-cb {
+  transform: translateX(100%);
+}
+
+.kapsle-polozka-cb {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  text-align: center;
+  padding: 9px 18px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #cccccc;
+  cursor: pointer;
+  transition: color 0.25s ease, opacity 0.2s ease;
+  white-space: nowrap;
+  border: none;
+  background: none;
+  font-family: inherit;
+  letter-spacing: 0.02em;
+  outline: none;
+}
+
+.kapsle-polozka-cb:hover {
+  color: #ffffff;
+}
+
+.kapsle-polozka-cb.aktivni,
+.kapsle-prepinac-cernobily[data-aktivni="rychnov"] .kapsle-polozka-cb:first-of-type,
+.kapsle-prepinac-cernobily[data-aktivni="usti"] .kapsle-polozka-cb:last-of-type {
+  color: #000000 !important;
+  font-weight: 800 !important;
+}
+
+.kapsle-prepinac-cernobily[data-aktivni="rychnov"] .kapsle-polozka-cb:last-of-type,
+.kapsle-prepinac-cernobily[data-aktivni="usti"] .kapsle-polozka-cb:first-of-type {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}

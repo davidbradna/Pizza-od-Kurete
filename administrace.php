@@ -47,11 +47,13 @@ if ($jePrihlasen && $_SERVER['REQUEST_METHOD'] === 'POST') {
     // Vybrane ingredience
     $vybraneIngredience = $_POST['ingredience_seznam'] ?? [];
 
-    // Automaticke sestaveni textu slozeni ze zaškrtnutych surovin
+    // Automaticke sestaveni textu slozeni ze zaškrtnutych surovin v poradi ze seznamu administrace
     $nazvySurovin = [];
+    $serazeneIngredience = [];
     foreach ($db['suroviny'] as $sur) {
       if (in_array($sur['id'], $vybraneIngredience)) {
         $nazvySurovin[] = $sur['nazev'];
+        $serazeneIngredience[] = $sur['id'];
       }
     }
     $slozeniPizzy = !empty($nazvySurovin) ? implode(', ', $nazvySurovin) : 'Vlastní výběr surovin';
@@ -112,7 +114,7 @@ if ($jePrihlasen && $_SERVER['REQUEST_METHOD'] === 'POST') {
       'cislo'           => $cisloPizzy,
       'nazev'           => $nazevPizzy,
       'slozeni'         => $slozeniPizzy,
-      'ingredience'     => array_values($vybraneIngredience),
+      'ingredience'     => array_values($serazeneIngredience),
       'alergeny_cisla'  => $alergenyCislaPizzy,
       'cena'            => $cenaPizzy,
       'masite'          => $masite,
@@ -139,6 +141,11 @@ if ($jePrihlasen && $_SERVER['REQUEST_METHOD'] === 'POST') {
       $zpravaOznameni = "Nová pizza {$nazevPizzy} byla přidána do menu!";
     }
 
+    // Seřazení pizz vzestupně podle čísel před uložením
+    usort($db['pizzy'], function($a, $b) {
+      return (int)($a['cislo'] ?? 0) - (int)($b['cislo'] ?? 0);
+    });
+
     uloziDatabazi($db, true);
     $_SESSION['zpravaOznameni'] = $zpravaOznameni;
     $presmerovatFiltr = $pizzaTydne ? 'tydne' : 'stale';
@@ -146,33 +153,66 @@ if ($jePrihlasen && $_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   }
 
-  // Nastaveni aktivni pizzy tydne (vzajemne vylouceni - pouze jedna muze byt aktivni)
+  // Nastaveni aktivni pizzy tydne (vzajemne vylouceni - pouze jedna muze byt aktivni nebo zadna)
   if (isset($_POST['aktivovat_pizzu_tydne_stisknuto'])) {
     $idAktivovat = intval($_POST['id_pizzy_aktivovat_tydne']);
     $nazevAktivovane = '';
+    $bylaUzAktivni = false;
 
-    foreach ($db['pizzy'] as &$pz) {
-      if ($pz['id'] === $idAktivovat) {
-        $pz['pizzaTydne'] = true;
-        $pz['aktivniPizzaTydne'] = true;
-        $nazevAktivovane = $pz['nazev'];
-      } else {
-        $pz['aktivniPizzaTydne'] = false;
+    // Zjistime, zda tato pizza jiz byla aktivni Pizza tydne
+    foreach ($db['pizzy'] as $pz) {
+      if ($pz['id'] === $idAktivovat && !empty($pz['aktivniPizzaTydne'])) {
+        $bylaUzAktivni = true;
+        break;
       }
     }
-    unset($pz);
 
-    uloziDatabazi($db, true);
+    if ($bylaUzAktivni) {
+      // Zneaktivneni: zadna pizza nyni nebude aktivni Pizza tydne
+      foreach ($db['pizzy'] as &$pz) {
+        if ($pz['id'] === $idAktivovat) {
+          $pz['aktivniPizzaTydne'] = false;
+          $nazevAktivovane = $pz['nazev'];
+        }
+      }
+      unset($pz);
 
-    if (!empty($_POST['ajax'])) {
-      header('Content-Type: application/json; charset=utf-8');
-      echo json_encode(['success' => true, 'idAktivovat' => $idAktivovat]);
+      uloziDatabazi($db, true);
+
+      if (!empty($_POST['ajax'])) {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(['success' => true, 'stav' => 'zneaktivneno', 'id' => $idAktivovat]);
+        exit;
+      }
+
+      $_SESSION['zpravaOznameni'] = "Pizza „{$nazevAktivovane}“ byla zneaktivněna (nyní není zvolena žádná Pizza týdne).";
+      header('Location: administrace.php?zalozka=pizzy&filtr_tydne=tydne');
+      exit;
+    } else {
+      // Aktivace teto pizzy a deaktivace ostatnich
+      foreach ($db['pizzy'] as &$pz) {
+        if ($pz['id'] === $idAktivovat) {
+          $pz['pizzaTydne'] = true;
+          $pz['aktivniPizzaTydne'] = true;
+          $nazevAktivovane = $pz['nazev'];
+        } else {
+          $pz['aktivniPizzaTydne'] = false;
+        }
+      }
+      unset($pz);
+
+      uloziDatabazi($db, true);
+
+      if (!empty($_POST['ajax'])) {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(['success' => true, 'stav' => 'aktivovano', 'idAktivovat' => $idAktivovat]);
+        exit;
+      }
+
+      $_SESSION['zpravaOznameni'] = "Pizza „{$nazevAktivovane}“ byla nastavena jako aktivní Pizza týdne!";
+      header('Location: administrace.php?zalozka=pizzy&filtr_tydne=tydne');
       exit;
     }
-
-    $_SESSION['zpravaOznameni'] = "Pizza „{$nazevAktivovane}“ byla nastavena jako aktivní Pizza týdne!";
-    header('Location: administrace.php?zalozka=pizzy&filtr_tydne=tydne');
-    exit;
   }
 
   // Rychle prepinani vlastnosti pizzy (DOPORUCUJEME, NEJPRODAVANEJSI)
@@ -229,6 +269,7 @@ if ($jePrihlasen && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $nazevSuroviny = trim($_POST['nazev_suroviny'] ?? '');
     $kategorieSuroviny = trim($_POST['kategorie_suroviny'] ?? 'syry');
     $puvodSuroviny = trim($_POST['puvod_suroviny'] ?? '🇮🇹 Itálie');
+    $puvodSuroviny = zformatovatPuvodSVlajkou($puvodSuroviny);
     $popisSuroviny = trim($_POST['popis_suroviny'] ?? '');
     $palivostSuroviny = intval($_POST['palivost_suroviny'] ?? 0);
     $alergenyCislaSuroviny = array_map('intval', $_POST['alergeny_cisla_suroviny'] ?? []);
@@ -315,6 +356,42 @@ if ($jePrihlasen && $_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   }
 
+  // Ulozeni poradi ingredienci (Drag & Drop z administrace)
+  if (isset($_POST['akce']) && $_POST['akce'] === 'ulozit_poradi_ingredienci') {
+    $poradiRaw = $_POST['poradi_id'] ?? '[]';
+    $novePoradiId = json_decode($poradiRaw, true);
+
+    if (is_array($novePoradiId) && !empty($novePoradiId) && isset($db['suroviny']) && is_array($db['suroviny'])) {
+      $mapaSurovin = [];
+      foreach ($db['suroviny'] as $s) {
+        $mapaSurovin[$s['id']] = $s;
+      }
+
+      $serazeneSuroviny = [];
+      foreach ($novePoradiId as $id) {
+        if (isset($mapaSurovin[$id])) {
+          $serazeneSuroviny[] = $mapaSurovin[$id];
+          unset($mapaSurovin[$id]);
+        }
+      }
+      foreach ($mapaSurovin as $zbyvajici) {
+        $serazeneSuroviny[] = $zbyvajici;
+      }
+
+      $db['suroviny'] = $serazeneSuroviny;
+      aktualizovatSlozeniVsechPizz($db);
+      uloziDatabazi($db, false);
+
+      header('Content-Type: application/json; charset=utf-8');
+      echo json_encode(['success' => true, 'pocet' => count($serazeneSuroviny)]);
+      exit;
+    }
+
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['success' => false, 'chyba' => 'Neplatná data']);
+    exit;
+  }
+
   // Vytvoreni rucni zalohy (po stisku tlačítka)
   if (isset($_POST['vytvorit_zalohu_stisknuto'])) {
     if (vytvoritRucniZalohu()) {
@@ -386,6 +463,11 @@ $pizzySeznam = $db['pizzy'] ?? [];
 $surovinySeznam = $db['suroviny'] ?? [];
 $seznamZaloh = ziskatSeznamZaloh();
 
+// Seřazení pizz vzestupně podle čísel
+usort($pizzySeznam, function($a, $b) {
+  return (int)($a['cislo'] ?? 0) - (int)($b['cislo'] ?? 0);
+});
+
 // Rozdeleni na Stale pizzy a Pizzy tydne (BOD 2)
 $pizzyStaleSeznam = array_values(array_filter($pizzySeznam, function($p) {
   return empty($p['pizzaTydne']);
@@ -393,6 +475,12 @@ $pizzyStaleSeznam = array_values(array_filter($pizzySeznam, function($p) {
 $pizzyTydneSeznam = array_values(array_filter($pizzySeznam, function($p) {
   return !empty($p['pizzaTydne']);
 }));
+
+// Vlastní nezávislé číslování pizz týdne (od 1...) pouze pro zobrazení v seznamu administrace
+$cislaPizzTydne = [];
+foreach ($pizzyTydneSeznam as $indexTydne => $pTydne) {
+  $cislaPizzTydne[$pTydne['id']] = $indexTydne + 1;
+}
 
 // Automaticky dalsi cislo pizzy (max cislo + 1)
 $maxCisloPizzy = 0;
@@ -500,8 +588,8 @@ function vykreslitIkonyPalivosti($uroven, $velikost = 18) {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styl.css?v=<?php echo time(); ?>">
-  <link rel="stylesheet" href="css/administrace.css?v=<?php echo time(); ?>">
+  <link rel="stylesheet" href="styl.css?v=<?php echo filemtime(__DIR__ . '/styl.css'); ?>">
+  <link rel="stylesheet" href="css/administrace.css?v=<?php echo filemtime(__DIR__ . '/css/administrace.css'); ?>">
   <style>
     body { background-color: #0d0d0d; color: #ffffff; padding-bottom: 80px; }
     .admin-kontejner { max-width: 1240px; margin: 30px auto; padding: 0 20px; }
@@ -1433,7 +1521,7 @@ function vykreslitIkonyPalivosti($uroven, $velikost = 18) {
       padding: 10px 18px;
       box-shadow: none;
       display: grid;
-      grid-template-columns: 44px 1fr auto auto;
+      grid-template-columns: 24px 44px 1fr auto auto;
       align-items: center;
       gap: 20px;
       transition: background-color 0.2s ease, border-color 0.2s ease;
@@ -1514,7 +1602,7 @@ function vykreslitIkonyPalivosti($uroven, $velikost = 18) {
     }
     @media (max-width: 680px) {
       .suroviny-mrizka-kontejner.pohled-seznam .surovina-karta-polozka {
-        grid-template-columns: 40px 1fr;
+        grid-template-columns: 24px 40px 1fr;
         gap: 10px;
         padding: 10px 12px;
       }
@@ -1527,6 +1615,93 @@ function vykreslitIkonyPalivosti($uroven, $velikost = 18) {
         border-top: 1px solid #222222;
         margin-top: 4px;
       }
+    }
+
+    /* ÚCHYT PRO PŘETAŽENÍ SUROVINY (DRAG & DROP) */
+    .surovina-uchyt-razeni {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      color: #555555;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+      transition: color 0.2s ease, background-color 0.2s ease;
+    }
+    .surovina-uchyt-razeni:active {
+      cursor: grabbing !important;
+    }
+    .suroviny-mrizka-kontejner.pohled-seznam .surovina-uchyt-razeni {
+      width: 24px;
+      height: 38px;
+      border-radius: 6px;
+    }
+    .suroviny-mrizka-kontejner.pohled-seznam .surovina-uchyt-razeni:hover {
+      color: #f59e0b;
+      background: rgba(245, 158, 11, 0.12);
+    }
+    .suroviny-mrizka-kontejner.pohled-dlazdice .surovina-uchyt-razeni {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 5;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      width: 32px;
+      height: 32px;
+      color: #aaaaaa;
+    }
+    .suroviny-mrizka-kontejner.pohled-dlazdice .surovina-uchyt-razeni:hover {
+      color: #f59e0b;
+      border-color: #f59e0b;
+      background: rgba(0, 0, 0, 0.9);
+    }
+
+    /* VIZUÁLNÍ STAVY PŘI PŘETAHOVÁNÍ */
+    .surovina-karta-polozka.je-pretahovana {
+      opacity: 0.35 !important;
+      border: 1px dashed #f59e0b !important;
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.3) !important;
+      transition: none !important;
+    }
+
+    /* PLOVOUCÍ TOAST OZNÁMENÍ */
+    .admin-toast-oznameni {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: #181818;
+      border: 1px solid #10b981;
+      color: #10b981;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events: none;
+    }
+    .admin-toast-oznameni.zobrazeno {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .admin-toast-oznameni.chyba {
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+    .admin-toast-oznameni.upozorneni {
+      border-color: #f59e0b;
+      color: #f59e0b;
     }
 
     /* RÁMEČKOVÁ TLAČÍTKA PRO IKONY (UPRAVIT A SMAZAT) */
@@ -2017,15 +2192,19 @@ function vykreslitIkonyPalivosti($uroven, $velikost = 18) {
                 }
               ?>
               <div class="pizza-dlazdice" data-tydne="<?php echo !empty($p['pizzaTydne']) ? '1' : '0'; ?>">
-                
+                <?php
+                  $zobrazovaneCislo = !empty($p['pizzaTydne']) && isset($cislaPizzTydne[$p['id']])
+                    ? $cislaPizzTydne[$p['id']]
+                    : ($p['cislo'] ?? '');
+                ?>
                 <!-- 1. SLOUPEC PRO SEZNAM: ČÍSELNÝ ODZNAK (V DLAŽDICÍCH SKRYT) -->
                 <div class="pizza-seznam-cislo-odznak">
-                  <div class="ciselny-odznak ciselny-odznak-bily"><?php echo $p['cislo']; ?></div>
+                  <div class="ciselny-odznak ciselny-odznak-bily"><?php echo $zobrazovaneCislo; ?></div>
                 </div>
 
                 <!-- FOTO PRO DLAŽDICE (V SEZNAMU SKRYTO) -->
                 <div class="pizza-dlazdice-foto-obal">
-                  <div class="ciselny-odznak ciselny-odznak-bily"><?php echo $p['cislo']; ?></div>
+                  <div class="ciselny-odznak ciselny-odznak-bily"><?php echo $zobrazovaneCislo; ?></div>
 
                   <!-- RYCHLÉ ODZNAKY NA FOTCE (DLAŽDICE: VPRAVO NAHOŘE) -->
                   <div class="pizza-foto-rychle-odznaky">
@@ -2115,7 +2294,7 @@ function vykreslitIkonyPalivosti($uroven, $velikost = 18) {
                         <?php $jeAktivniTydne = !empty($p['aktivniPizzaTydne']); ?>
                         <form method="POST" action="administrace.php" style="margin: 0;">
                           <input type="hidden" name="id_pizzy_aktivovat_tydne" value="<?php echo $p['id']; ?>">
-                          <button type="submit" name="aktivovat_pizzu_tydne_stisknuto" data-id="<?php echo $p['id']; ?>" onclick="rychleAktivovatPizzuTydne(event, this, <?php echo $p['id']; ?>)" class="tlacitko-ikona-ramcek tlacitko-ikona-aktivni <?php echo $jeAktivniTydne ? 'aktivni' : ''; ?>" title="<?php echo $jeAktivniTydne ? 'Tato pizza je právě aktivní Pizza týdne' : 'Kliknutím aktivovat jako Pizzu týdne'; ?>">
+                          <button type="submit" name="aktivovat_pizzu_tydne_stisknuto" data-id="<?php echo $p['id']; ?>" onclick="rychleAktivovatPizzuTydne(event, this, <?php echo $p['id']; ?>)" class="tlacitko-ikona-ramcek tlacitko-ikona-aktivni <?php echo $jeAktivniTydne ? 'aktivni' : ''; ?>" title="<?php echo $jeAktivniTydne ? 'Tato pizza je právě aktivní Pizza týdne (kliknutím zneaktivnit)' : 'Kliknutím aktivovat jako Pizzu týdne'; ?>">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="<?php echo $jeAktivniTydne ? 'currentColor' : 'none'; ?>" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                             </svg>
@@ -2193,7 +2372,7 @@ function vykreslitIkonyPalivosti($uroven, $velikost = 18) {
                 </div>
                 <div class="formular-skupina" style="margin-bottom: 0;">
                   <label style="display:block; margin-bottom: 6px; color: #aaaaaa; font-weight: 600; font-size: 0.92rem;">Původ ingredience:</label>
-                  <input type="text" name="puvod_suroviny" placeholder="Např. Itálie" value="<?php echo htmlspecialchars($upravovanaSurovina['puvod'] ?? 'Itálie'); ?>">
+                  <input type="text" name="puvod_suroviny" placeholder="Např. 🇮🇹 Itálie" value="<?php echo htmlspecialchars(zformatovatPuvodSVlajkou($upravovanaSurovina['puvod'] ?? '🇮🇹 Itálie')); ?>">
                 </div>
               </div>
 
@@ -2322,12 +2501,24 @@ function vykreslitIkonyPalivosti($uroven, $velikost = 18) {
                   $varovaniSmazani = "Opravdu chcete smazat ingredienci {$s['nazev']}?";
                 }
               ?>
-              <div class="surovina-karta-polozka" data-kategorie="<?php echo htmlspecialchars($s['kategorie'] ?? ''); ?>">
+              <div class="surovina-karta-polozka" data-id="<?php echo htmlspecialchars($s['id']); ?>" data-kategorie="<?php echo htmlspecialchars($s['kategorie'] ?? ''); ?>">
                 
+                <!-- 0. ÚCHYT PRO PŘETAŽENÍ (DRAG & DROP) -->
+                <div class="surovina-uchyt-razeni" title="Chytit a přetáhnout pro změnu pořadí" draggable="false">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="9" cy="5" r="1.75"/>
+                    <circle cx="15" cy="5" r="1.75"/>
+                    <circle cx="9" cy="12" r="1.75"/>
+                    <circle cx="15" cy="12" r="1.75"/>
+                    <circle cx="9" cy="19" r="1.75"/>
+                    <circle cx="15" cy="19" r="1.75"/>
+                  </svg>
+                </div>
+
                 <!-- 1. SLOUPEC / FOTO OBRÁZKU -->
                 <div class="surovina-foto-obal">
                   <?php if (!empty($s['puvod'])): ?>
-                    <span class="surovina-puvod-stitek-karta"><?php echo htmlspecialchars($s['puvod']); ?></span>
+                    <span class="surovina-puvod-stitek-karta"><?php echo htmlspecialchars(zformatovatPuvodSVlajkou($s['puvod'])); ?></span>
                   <?php endif; ?>
                   <img src="<?php echo htmlspecialchars($s['obrazek']); ?>" alt="" class="surovina-fotka">
                 </div>
@@ -2342,7 +2533,7 @@ function vykreslitIkonyPalivosti($uroven, $velikost = 18) {
                         <?php echo vykreslitIkonyPalivosti($s['palivost'] ?? 0, 18); ?>
                       </strong>
                       <?php if (!empty($s['puvod'])): ?>
-                        <span class="surovina-puvod-stitek-seznam"><?php echo htmlspecialchars($s['puvod']); ?></span>
+                        <span class="surovina-puvod-stitek-seznam"><?php echo htmlspecialchars(zformatovatPuvodSVlajkou($s['puvod'])); ?></span>
                       <?php endif; ?>
                     </div>
                     <?php if (!empty($s['popis'])): ?>
@@ -2539,6 +2730,6 @@ function vykreslitIkonyPalivosti($uroven, $velikost = 18) {
 
   </div>
 
-  <script src="js/administrace.js"></script>
+  <script src="js/administrace.js?v=<?php echo filemtime(__DIR__ . '/js/administrace.js'); ?>"></script>
 </body>
 </html>

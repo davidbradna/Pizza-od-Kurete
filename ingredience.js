@@ -1,78 +1,45 @@
 /* ==========================================================================
-   LOGIKA PRO STRANKU INGREDIENCE (INGREDIENCE.HTML)
-   Vsechny nazvy promennych, funkci a komentare jsou v cestine bez diakritiky
+   LOGIKA PRO STRÁNKU INGREDIENCE (JS/INGREDIENCE.JS)
+   Všechny názvy proměnných, funkcí a komentáře jsou v češtině bez diakritiky
    ========================================================================== */
 
-// Data surovin a pizz s pribehem, puvodem a propojenim (Nacitaji se z databaze.json)
-const seznamSurovin = window.seznamSurovinZDatabaze || [
-  {
-    id: 'sugomarzano',
-    nazev: 'Rajcata San Marzano D.O.P.',
-    kategorie: 'omacky',
-    puvod: '🇮🇹 Neapol, Italie',
-    popis: 'Pravá italská rajčata pěstovaná na úrodné vulkanické půdě v podhůří Vesuvu. Mají přirozeně sladkou chuť, nízkou kyselost a hustou dužinu, což vytváří dokonalý základ pro naše sugo.',
-    alergeny: 'Bez alergenů',
-    obrazek: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?q=80&w=600&auto=format&fit=crop',
-    pizzy: ['MARGHERITA', 'PROSCIUTTO E FUNGHI', 'DIAVOLA CHILI', 'HAWAI SPECIAL']
-  },
-  {
-    id: 'mozzarella',
-    nazev: 'Mozzarella di Bufala',
-    kategorie: 'syry',
-    puvod: '🇮🇹 Kampánie, Italie',
-    popis: 'Tradiční čerstvý sýr z buvolího mléka s chráněným označením původu (D.O.P.). Je neuvěřitelně krémový, šťavnatý a při pečení v peci vytvoří jemně rozteklou zlatavou vrstvu.',
-    alergeny: 'Alergen 7 (mléko)',
-    obrazek: 'https://images.unsplash.com/photo-1559561853-08451507cbe7?q=80&w=600&auto=format&fit=crop',
-    pizzy: ['MARGHERITA', 'PROSCIUTTO E FUNGHI', 'QUATTRO FORMAGGI', 'DIAVOLA CHILI', 'POLLO E SPINACI', 'HAWAI SPECIAL']
-  },
-  {
-    id: 'kurecimaso',
-    nazev: 'Šťavnaté Kuřecí Maso',
-    kategorie: 'maso',
-    puvod: '🇨🇿 Lokální české farmy',
-    popis: 'Čerstvá kuřecí prsa dodávaná každé ráno od prověřených regionálních farmářů. Maso marinujeme v olivovém oleji a čerstvých bylinkách pro maximální křehkost a šťavnatost.',
-    alergeny: 'Bez alergenů',
-    obrazek: 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?q=80&w=600&auto=format&fit=crop',
-    pizzy: ['POLLO E SPINACI']
-  },
-  {
-    id: 'moukacaputo',
-    nazev: 'Italská Mouka Caputo 00',
-    kategorie: 'testo',
-    puvod: '🇮🇹 Neapol, Italie',
-    popis: 'Špičková pšeničná mouka mletá z nejkvalitnějších zrn. Naše těsto kyne a zraje minimálně 48 hodin. Výsledkem je lehká, snadno stravitelná pizza s nadýchaným a křupavým okrajem.',
-    alergeny: 'Alergen 1 (lepek)',
-    obrazek: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=600&auto=format&fit=crop',
-    pizzy: ['MARGHERITA', 'PROSCIUTTO E FUNGHI', 'QUATTRO FORMAGGI', 'DIAVOLA CHILI', 'POLLO E SPINACI', 'HAWAI SPECIAL']
-  },
-  {
-    id: 'chorizospanelske',
-    nazev: 'Spaniol & Italské Chorizo',
-    kategorie: 'maso',
-    puvod: '🇪🇸 Španělsko / 🇮🇹 Itálie',
-    popis: 'Tradiční pikantní klobása sušená na vzduchu, ochucená uzenou sladkou i pálivou paprikou. Při pečení uvolňuje aromatický červený olej, který dodává pizze neodolatelný říz.',
-    alergeny: 'Bez alergenů',
-    obrazek: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=600&auto=format&fit=crop',
-    pizzy: ['DIAVOLA CHILI']
-  },
-  {
-    id: 'spinacbazalka',
-    nazev: 'Čerstvá Bazalka a Špenát',
-    kategorie: 'zelenina',
-    puvod: '🇨🇿 Čerstvá sklioze',
-    popis: 'Lístky čerstvé bazalky přidávané až po upečení pro zachování výrazného esenciálního aroma. Špenátové listy jsou jemně spařené s česnekem.',
-    alergeny: 'Bez alergenů',
-    obrazek: 'https://images.unsplash.com/photo-1608683134044-22c976a238bb?q=80&w=600&auto=format&fit=crop',
-    pizzy: ['MARGHERITA', 'POLLO E SPINACI']
-  }
-];
-
+// Data surovin a pizz s příběhem, původem a propojením (Načítají se z databáze)
+const seznamSurovin = window.seznamSurovinZDatabaze || [];
 let aktivniKategorieSurovin = 'vse';
 
 document.addEventListener('DOMContentLoaded', () => {
   renderovatIngredience();
   nastavitFiltrySurovin();
+  posunoutNaIngredienciPodleHash();
 });
+
+window.addEventListener('hashchange', () => {
+  posunoutNaIngredienciPodleHash();
+});
+
+function posunoutNaIngredienciPodleHash() {
+  const hash = window.location.hash;
+  if (!hash) return;
+  const cistyId = decodeURIComponent(hash.replace(/^#/, ''));
+  let cilPrvek = document.getElementById(cistyId) || document.getElementById(`ingredience-${cistyId}`);
+
+  if (!cilPrvek && aktivniKategorieSurovin !== 'vse') {
+    aktivniKategorieSurovin = 'vse';
+    const tlacitka = document.querySelectorAll('.tlacitko-kategorie-surovin');
+    tlacitka.forEach(b => {
+      if (b.getAttribute('data-kategorie') === 'vse') b.classList.add('aktivni');
+      else b.classList.remove('aktivni');
+    });
+    renderovatIngredience();
+    cilPrvek = document.getElementById(cistyId) || document.getElementById(`ingredience-${cistyId}`);
+  }
+
+  if (cilPrvek) {
+    setTimeout(() => {
+      cilPrvek.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 120);
+  }
+}
 
 function renderovatIngredience() {
   const mrizka = document.getElementById('mrizka-ingredienci-kontejner');
@@ -86,12 +53,12 @@ function renderovatIngredience() {
   });
 
   mrizka.innerHTML = filtrovane.map(s => {
-    // Dynamicke nalezeni pizz pro danou surovinu
+    // Dynamické nalezení pizz pro danou surovinu
     const pizzySeSurovinou = vsetkyPizzy.filter(p => p.ingredience && p.ingredience.includes(s.id));
     const pocetPizz = pizzySeSurovinou.length;
 
     return `
-      <div class="karta-ingredience">
+      <div class="karta-ingredience" id="ingredience-${s.id}" onclick="otevritNahledIngredience('${s.id}')" title="Klikněte pro zobrazení velkého náhledu">
         <div class="fotka-ingredience-obal">
           <img src="${s.obrazek}" alt="${s.nazev}" loading="lazy">
           <span class="odznak-puvodu">${s.puvod}</span>
@@ -99,8 +66,7 @@ function renderovatIngredience() {
         <div class="obsah-ingredience">
           <h3 class="nazev-ingredience">${s.nazev}</h3>
           <p class="popis-ingredience">${s.popis}</p>
-          <span class="stitek-alergen-maly">${s.alergeny}</span>
-          <button class="tlacitko-pizzy-surovina" onclick="zobrazitPizzySeSurovinou('${s.id}')">
+          <button class="tlacitko-pizzy-surovina" onclick="event.stopPropagation(); zobrazitPizzySeSurovinou('${s.id}')">
             V jakých pizzách ji ochutnáte? (${pocetPizz})
           </button>
         </div>
@@ -138,7 +104,7 @@ function zobrazitPizzySeSurovinou(idSuroviny) {
           <strong style="color: #fff; font-size: 1.1rem;">🍕 ${pizza.nazev} (${pizza.cena} Kč)</strong><br>
           <small style="color: #aaa;">${pizza.slozeni}</small>
         </div>
-        <a href="index.php#jidelni-listek" class="tlacitko tlacitko-cervene" style="padding: 6px 15px; font-size: 0.85rem;">Objednat na menu</a>
+        <button type="button" class="tlacitko tlacitko-cervene tlacitko-pridat-ze-suroviny" onclick="pridatDoKosikuZeSuroviny(${pizza.id}, this)" style="padding: 6px 15px; font-size: 0.85rem; flex-shrink: 0; cursor: pointer; border: none;">Přidat do seznamu</button>
       </div>
     `).join('');
   }
@@ -159,4 +125,180 @@ function zavritModalSuroviny() {
   const modal = document.getElementById('modal-detail-suroviny');
   if (modal) modal.classList.remove('zobrazeno');
 }
+window.zavritModalSuroviny = zavritModalSuroviny;
 
+// Stav karuselu ingrediencí na stránce ingrediencí
+let aktivniKaruselIngredienci = {
+  suroviny: [],
+  aktivniIndex: 0
+};
+
+function vykreslitObsahNahleduIngredience(sAnimaci) {
+  const telo = document.getElementById('modal-nahled-ingredience-telo');
+  if (!telo) return;
+
+  const celkem = aktivniKaruselIngredienci.suroviny.length;
+  if (celkem === 0) return;
+
+  if (aktivniKaruselIngredienci.aktivniIndex >= celkem) aktivniKaruselIngredienci.aktivniIndex = 0;
+  if (aktivniKaruselIngredienci.aktivniIndex < 0) aktivniKaruselIngredienci.aktivniIndex = celkem - 1;
+
+  const surovina = aktivniKaruselIngredienci.suroviny[aktivniKaruselIngredienci.aktivniIndex];
+  if (!surovina) return;
+
+  const index = aktivniKaruselIngredienci.aktivniIndex;
+
+  const sipkyHtml = celkem > 1 ? `
+    <button type="button" class="nahled-karusel-sipka nahled-karusel-vlevo" onclick="posunoutKaruselIngredienci(-1, event)" aria-label="Předchozí surovina" title="Předchozí surovina (šipka vlevo)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+    </button>
+    <button type="button" class="nahled-karusel-sipka nahled-karusel-vpravo" onclick="posunoutKaruselIngredienci(1, event)" aria-label="Další surovina" title="Další surovina (šipka vpravo)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </button>
+  ` : '';
+
+  const teckyHtml = celkem > 1 ? `
+    <div class="nahled-karusel-tecky-obal">
+      ${aktivniKaruselIngredienci.suroviny.map((s, i) => `
+        <button type="button" class="nahled-karusel-tecka ${i === index ? 'aktivni' : ''}" onclick="nastavitIndexKaruseluIngredienci(${i}, event)" title="${s.nazev}"></button>
+      `).join('')}
+    </div>
+  ` : '';
+
+  const infoListaHtml = celkem > 1 ? `
+    <div class="nahled-ingredience-meta-lista">
+      <span class="nahled-pizza-nazev-odznak">🌱 Suroviny Pizza od Kuřete</span>
+      <span class="nahled-pocitadlo-text">${index + 1} z ${celkem}</span>
+    </div>
+  ` : '';
+
+  telo.innerHTML = `
+    <div class="nahled-ingredience-obal ${sAnimaci ? 'animace-prepnuti' : ''}">
+      <div class="nahled-ingredience-foto-obal">
+        <img src="${surovina.obrazek}" alt="${surovina.nazev}" class="nahled-ingredience-velka-fotka">
+        ${surovina.puvod ? `<span class="odznak-puvodu nahled-puvod">${surovina.puvod}</span>` : ''}
+        ${sipkyHtml}
+        ${teckyHtml}
+      </div>
+      <div class="nahled-ingredience-popis-blok">
+        ${infoListaHtml}
+        <h2 class="nahled-ingredience-nazev">${surovina.nazev}</h2>
+        <p class="nahled-ingredience-popis">${surovina.popis || ''}</p>
+      </div>
+    </div>
+  `;
+}
+
+function otevritNahledIngredience(idSuroviny) {
+  const filtrovane = seznamSurovin.filter(s => {
+    if (aktivniKategorieSurovin === 'vse') return true;
+    return s.kategorie === aktivniKategorieSurovin;
+  });
+  const aktivniSeznam = filtrovane.length > 0 ? filtrovane : seznamSurovin;
+  let index = aktivniSeznam.findIndex(s => s.id === idSuroviny);
+  if (index === -1) index = 0;
+
+  aktivniKaruselIngredienci = {
+    suroviny: aktivniSeznam,
+    aktivniIndex: index
+  };
+
+  vykreslitObsahNahleduIngredience(false);
+  inicializovatSwipeNahledIngredience();
+
+  const modal = document.getElementById('modal-obrazek-ingredience');
+  if (modal) modal.classList.add('zobrazeno');
+}
+window.otevritNahledIngredience = otevritNahledIngredience;
+
+function posunoutKaruselIngredienci(smer, e) {
+  if (e && e.preventDefault) e.preventDefault();
+  if (e && e.stopPropagation) e.stopPropagation();
+
+  const celkem = aktivniKaruselIngredienci.suroviny.length;
+  if (celkem <= 1) return;
+
+  aktivniKaruselIngredienci.aktivniIndex = (aktivniKaruselIngredienci.aktivniIndex + smer + celkem) % celkem;
+  vykreslitObsahNahleduIngredience(true);
+}
+window.posunoutKaruselIngredienci = posunoutKaruselIngredienci;
+
+function nastavitIndexKaruseluIngredienci(novyIndex, e) {
+  if (e && e.preventDefault) e.preventDefault();
+  if (e && e.stopPropagation) e.stopPropagation();
+
+  const celkem = aktivniKaruselIngredienci.suroviny.length;
+  if (novyIndex < 0 || novyIndex >= celkem) return;
+
+  aktivniKaruselIngredienci.aktivniIndex = novyIndex;
+  vykreslitObsahNahleduIngredience(true);
+}
+window.nastavitIndexKaruseluIngredienci = nastavitIndexKaruseluIngredienci;
+
+function zavritModalObrazkuIngredience() {
+  const modal = document.getElementById('modal-obrazek-ingredience');
+  if (modal) modal.classList.remove('zobrazeno');
+}
+window.zavritModalObrazkuIngredience = zavritModalObrazkuIngredience;
+
+// Zavírání libovolného modálního okna prostým kliknutím na pozadí (overlay)
+document.addEventListener('click', (e) => {
+  if (e.target && e.target.classList && e.target.classList.contains('modalni-okno-pozadi')) {
+    e.target.classList.remove('zobrazeno');
+  }
+});
+
+// Touch swipe pro mobilní zařízení na stránce ingrediencí
+let touchStartXIngredience = 0;
+let touchStartYIngredience = 0;
+
+function inicializovatSwipeNahledIngredience() {
+  const modalOkno = document.getElementById('modal-obrazek-ingredience');
+  if (!modalOkno || modalOkno.dataset.swipeAktivni) return;
+  modalOkno.dataset.swipeAktivni = 'true';
+
+  modalOkno.addEventListener('touchstart', (e) => {
+    if (e.touches && e.touches.length === 1) {
+      touchStartXIngredience = e.touches[0].clientX;
+      touchStartYIngredience = e.touches[0].clientY;
+    }
+  }, { passive: true });
+
+  modalOkno.addEventListener('touchend', (e) => {
+    if (e.changedTouches && e.changedTouches.length === 1) {
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
+      const diffX = touchEndX - touchStartXIngredience;
+      const diffY = touchEndY - touchStartYIngredience;
+
+      if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY) * 1.3) {
+        if (diffX < 0) {
+          posunoutKaruselIngredienci(1);
+        } else {
+          posunoutKaruselIngredienci(-1);
+        }
+      }
+    }
+  }, { passive: true });
+}
+
+// Zavírání modálních oken klávesou Escape a šipky pro listování
+window.addEventListener('keydown', (e) => {
+  const modal = document.getElementById('modal-obrazek-ingredience');
+  const jeOtevren = modal && modal.classList.contains('zobrazeno');
+
+  if (e.key === 'Escape') {
+    zavritModalSuroviny();
+    zavritModalObrazkuIngredience();
+  } else if (jeOtevren && (e.key === 'ArrowLeft' || e.key === 'ArrowUp')) {
+    e.preventDefault();
+    posunoutKaruselIngredienci(-1);
+  } else if (jeOtevren && (e.key === 'ArrowRight' || e.key === 'ArrowDown')) {
+    e.preventDefault();
+    posunoutKaruselIngredienci(1);
+  }
+});

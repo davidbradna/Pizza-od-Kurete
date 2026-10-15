@@ -7,8 +7,8 @@
         "ingredience": [
             "sugomarzano",
             "mozzarella",
-            "spinacbazalka",
-            "moukacaputo"
+            "moukacaputo",
+            "spinacbazalka"
         ],
         "alergeny": "(1, 7)",
         "alergeny_cisla": [
@@ -97,8 +97,8 @@
         "ingredience": [
             "sugomarzano",
             "mozzarella",
-            "chorizospanelske",
-            "moukacaputo"
+            "moukacaputo",
+            "chorizospanelske"
         ],
         "alergeny": "(1, 7)",
         "alergeny_cisla": [
@@ -128,8 +128,8 @@
         "ingredience": [
             "mozzarella",
             "kurecimaso",
-            "spinacbazalka",
-            "moukacaputo"
+            "moukacaputo",
+            "spinacbazalka"
         ],
         "alergeny": "(1, 7)",
         "alergeny_cisla": [

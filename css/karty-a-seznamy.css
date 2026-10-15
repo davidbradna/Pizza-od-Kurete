@@ -90,10 +90,7 @@
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.medailonek-pizzy:hover img,
-.karta-pizzy:hover img {
-  transform: scale(1.08) rotate(2deg);
-}
+/* Fotka pizzy se při najetí myši na dlaždici nepohybuje */
 
 /* Název pizzy v medailonku */
 .medailonek-pizzy-nazev,
@@ -274,10 +271,7 @@
   transition: transform 0.4s ease;
 }
 
-.admin-pizza-dlazdice:hover .admin-pizza-dlazdice-fotka,
-.pizza-dlazdice:hover .pizza-dlazdice-fotka {
-  transform: scale(1.06);
-}
+/* Fotka pizzy se při najetí myši na dlaždici v administraci nepohybuje */
 
 /* Tělo dlaždice v administraci */
 .admin-pizza-dlazdice-telo {
@@ -399,7 +393,6 @@
 .surovina-karta-polozka:hover {
   border-color: var(--barva-zlata-hlavni, #f59e0b);
   box-shadow: var(--stin-karty-hover, 0 12px 32px rgba(245, 158, 11, 0.2));
-  transform: translateY(-4px);
 }
 
 .suroviny-mrizka-kontejner.pohled-seznam .surovina-karta-polozka {
